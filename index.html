@@ -6,14 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INMICEA – Master webpage generator</title>
     <meta name="author" content="FireFox986453, aka HP">
+    <link rel="stylesheet" href="src/inmicea-page/fontawesome/css/fontawesome.css">
+    <link rel="stylesheet" href="src/inmicea-page/fontawesome/css/regular.css">
+    <link rel="stylesheet" href="src/inmicea-page/fontawesome/css/solid.css">
+    <link rel="stylesheet" href="src/inmicea-page/fontawesome/css/brands.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <button type="button" onclick="appendMsg()">Click me to do something...</button>
+    <header>
+        <h1>INMICEA</h1>
+        <h2>The new generation webpage generator</h2>
+        <a href="https://github.com/FireFox986543/inmicea" target="_blank" rel="noreferrer noopener"><i class="fab fa-github"></i></a>
+    </header>
+    <main>
+        <div id="editor">
 
-    <div style="margin-bottom: 120px;"></div>
-
-    <iframe id="window-frame" src="window.html" frameborder="0" style="width: 100%; height: 600px; border: 1px solid gray; border-radius: 4px; overflow: hidden;"></iframe>
+        </div>
+        <div id="viewer">
+            <iframe id="window-frame" src="src/inmicea-page/index.html" frameborder="0" style="width: 125%; height: 600px; border: 1px solid gray; border-radius: 4px; overflow: hidden;"></iframe>
+        </div>
+    </main>
+    
 
     <script src="script.js"></script>
 </body>

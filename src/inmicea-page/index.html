@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TITLE GOES HERE</title>
+    <link rel="stylesheet" href="inmicea.css">
+    <link rel="stylesheet" href="fontawesome/css/fontawesome.css">
+    <link rel="stylesheet" href="fontawesome/css/regular.css">
+    <link rel="stylesheet" href="fontawesome/css/solid.css">
+    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+</head>
+
+<body>
+    <nav>
+        <a href="#top" style="padding-left: 12px;" class="active">
+            <img src="img/logo.png" alt="">
+            Home
+        </a>
+        <div class="subbed">
+            Dropdown
+            <div class="nav-sub">
+                <div class="subbed sub2">
+                    Option another DD
+                    <div class="nav-sub">
+                        <a href="#">Aasdasdasd</a>
+                        <a href="#">Basdasdasd</a>
+                        <a href="#">Casdasdasd</a>
+                    </div>
+                </div>
+                <a href="#">Option 1</a>
+            </div>
+        </div>
+        <div style="flex-grow: 1;"></div>
+        <a href="#">Right side</a>
+    </nav>
+
+    <header>
+        <div>
+            <h1>Webpage</h1>
+            <p>This is a simple webpage made by the inmicea generator test... Lorem ipsum dolor sit amet consectetur, adipisicing elit. Quo perspiciatis dicta, dolore nostrum pariatur nesciunt, expedita dolorem, doloribus at placeat error! Beatae voluptas mollitia officia vel nulla dolorem pariatur repellat ipsam molestiae?</p>
+        </div>
+    </header>
+
+    <main>
+        <section id="secta">
+            <h2>Section test</h2>
+            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil, quaerat. Laborum perspiciatis, quod in dolores ab laudantium expedita. Blanditiis voluptate earum doloremque a neque nisi dolores unde minima beatae facere assumenda ex, nam vel repellendus adipisci nesciunt amet minus reprehenderit cumque eius libero facilis, illum id harum. Qui minus officiis esse necessitatibus voluptas tempore, ullam doloremque animi odit, saepe doloribus voluptate assumenda fugiat ipsam ex corporis obcaecati culpa dignissimos, rerum fuga earum sit ducimus distinctio! At, debitis reprehenderit quas animi suscipit nihil temporibus, dolore vel eligendi molestias consequatur labore sunt odio. Fuga, velit praesentium? Quasi in fugiat eum harum non.</p>
+            
+            <div class="img-cont">
+                <img src="img/test1.png" alt="Test image" title="Test image" class="clickable">
+                <img src="img/test1.png" alt="Test image" title="Test image" class="clickable">
+                <img src="img/test1.png" alt="Test image" title="Test image" class="clickable">
+            </div>
+        </section>
+
+
+        <section style="width: 100%;" id="ele">
+            <h2 id="s-contact">Kapcsolat</h2>
+            <div class="contact">
+            <div style="display: flex; flex-direction: column; gap: 20px; min-width: 600px;">
+                <div class="crow">
+                    <strong><i class="fas fa-envelope"></i> Email cím</strong>
+                    <span>info@gmail.com</span>
+                </div>
+                <div class="crow">
+                    <strong><i class="fas fa-phone"></i> Telefonszám</strong>
+                    <span>+36 30 123 456</span>
+                </div>
+                <div class="crow">
+                    <strong><i class="fas fa-location-dot"></i> Helyszín</strong>
+                    <span>1234 Kukutyinfalva Senkiháza utca 71.</span>
+                </div>
+            </div>
+            <div style="flex-grow: 1; display: flex;">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5390.464267950831!2d19.04528866483766!3d47.50487028642807!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4741dc1046d4a33d%3A0x342122b8ff8f0f6e!2zT3JzesOhZ2jDoXo!5e0!3m2!1shu!2shu!4v1778517736854!5m2!1shu!2shu" width="100000" height="100000" style="border:0; border-radius: 20px; width: 100%; height: 100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+
+        <form action="#" style="margin-top: 40px; margin: 80px auto;">
+            <span class="title">Lépjen velünk kapcsolatba</span>
+            <div class="frow">
+                <label for="name">Név</label>
+                <input type="text" name="name" id="name" autocomplete="name" placeholder="Márványos Feudália">
+            </div>
+            <div class="frow">
+                <label for="email">Email cím</label>
+                <input type="email" name="email" id="email" autocomplete="email" placeholder="valaki@gmail.com">
+            </div>
+            <div class="frow">
+                <label for="message">Üzenet</label>
+                <textarea name="message" id="message" placeholder="Üzenetét írja ide" style="resize: vertical;" rows="7"></textarea>
+            </div>
+            <input type="submit" value="Küldés" class="button" style="margin-top: 32px;">
+        </form>
+        </section>
+        
+    </main>
+    <footer>
+        <p>&copy; Your name is here 2026 &nbsp;&nbsp;&nbsp;&nbsp; Minden jog fenntartva.</p>
+    </footer>
+
+    <!--    VIGYÁZAT! Bonyolult terület következik     -->
+    <!--    Belépés csak saját felelőségre!!!          -->
+
+    <div id="modal" class="hidden">
+        <img src="" id="modal-img">
+        <button type="button"><i class="fas fa-x"></i></button>
+    </div>
+
+    <script>
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modal-img');
+
+        document.querySelectorAll('img.clickable').forEach(e => {
+            e.addEventListener('click', () => {
+                showModal(e.src);
+            });
+        });
+
+        modal.querySelector('button').addEventListener('click', () => {
+            closeModal();
+        });
+
+        function showModal(src) {
+            modal.classList.remove('hidden');
+            modalImg.src = src;
+        }
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+    </script>
+</body>
+
+</html>

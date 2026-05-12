@@ -1,0 +1,20 @@
+
+
+
+HTML data card:
+ - Webpage language [hu, eng]                           ? This is the language of your webpage, this will influence built-in cards like the contact form
+ - Webpage title
+ - Webpage author
+
+HTML Navigation card:
+ - Inner cards: Nav menu
+
+ Nav menu:
+   - single option
+   - dropdown
+     - multi dropdown
+
+CSS data card:
+ - Background color
+ - Primary, secondary etc... colors
+ - Font family

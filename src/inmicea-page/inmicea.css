@@ -339,6 +339,9 @@ h3 {
     flex: 0 0 40%;
 }
 
+.img-cont .multi-cont.bigger { flex: 0 0 50%; }
+.img-cont .multi-cont.smaller { flex: 0 0 30%; }
+
 .img-cont .multi-cont img {
     width: 100%;
 }

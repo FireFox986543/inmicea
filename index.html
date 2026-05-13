@@ -24,7 +24,15 @@
             <div id="top-toolbar">
                 <button type="button" class="control-btn green-btn" onclick=""><i class="fas fa-play"></i> Preview</button>
                 <div style="flex-grow: 1;"></div>
-                <button type="button" class="control-btn" onclick="addCardRoot(new HeaderCard()); renderCards();"><i class="fas fa-plus"></i></button>
+                <button type="button" class="control-btn selector-btn">
+                    <i class="fas fa-plus"></i>
+                    <div class="card-selector-wrapper">
+                        <div class="card-selector">
+                            <div class="selector-option" onclick="addCardRoot(new HeaderCard()); renderCards();"><i class="fas fa-heading"></i> Header</div>
+                            <div class="selector-option" onclick="addCardRoot(new SectionCard()); renderCards();"><i class="fas fa-section"></i> Section</div>
+                        </div>
+                    </div>
+                </button>
             </div>
             <div id="editor-content" class="card-container">
             </div>

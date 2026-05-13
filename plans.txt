@@ -18,3 +18,15 @@ CSS data card:
  - Background color
  - Primary, secondary etc... colors
  - Font family
+
+Header card:
+ - Title
+ - Description
+ - Background image
+
+Section card:
+ - Heading
+ - Paragraphs card list
+ - Image layout [none, bottom, side]
+ - Image size [small, normal, large]
+ - Image card list

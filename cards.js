@@ -50,6 +50,16 @@ class Card {
                 </select>
             </div>`;
     }
+    static renderImageField(t, label, dataHook) {
+        const nesting = Card.getNestingFromCard(t);
+        return `<div class="card-field expandable">
+    <label>${label}:</label>
+    <div class="image-box">
+        <img src="" alt="Image" data-hook="${dataHook}">
+    </div>
+    <input type="text" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" value="${t[dataHook]}">
+</div>`;
+    }
 
     static getNestingFromCard(card) {
         return card.nesting || { id: null, list: null };
@@ -82,7 +92,7 @@ class HTMLDataCard extends Card {
     }
 
     render() {
-        return `<div class="card">
+        return `<div class="card" data-id="${this.id}">
                 ${Card.renderCardToolbar(this, false)}
                 <div class="card-content">
                     ${Card.renderInfoTo(Card.renderDropdown(this, 'Webpage language', 'webpageLanguage', [['en', 'English'], ['hu', 'Hungarian']]), 'This is the language of your webpage, this will influence built-in cards like the contact form')}
@@ -114,7 +124,7 @@ class CSSDataCard extends Card {
     }
 
     render() {
-        return `<div class="card">
+        return `<div class="card" data-id="${this.id}">
                 ${Card.renderCardToolbar(this, false)}
                 <div class="card-content">
                     ${Card.renderColorField(this, 'Background', 'backgroundColor')}
@@ -146,7 +156,7 @@ class HTMLNavigationCard extends Card {
         let rightInner = '';
         this.rightCards.forEach(c => rightInner += c.render());
 
-        return `<div class="card">
+        return `<div class="card" data-id="${this.id}">
                 ${Card.renderCardToolbar(this, false)}
                 <div class="card-content">
                     <div class="card-field card-field-nested">
@@ -205,7 +215,7 @@ class HTMLNavmenuCard extends Card {
         let subInner = '';
         this.subCards.forEach(c => subInner += c.render());
 
-        return `<div class="card">
+        return `<div class="card" data-id="${this.id}">
                 ${Card.renderCardToolbar(this, true)}
                 <div class="card-content">
                     ${this.nestingLastLevel ? '' : Card.renderDropdown(this, 'Menu type', 'type', [['simple', 'Simple'], ['dropdown', 'Dropdown']])}
@@ -238,21 +248,32 @@ class HeaderCard extends Card {
 
         this.title = 'First Webpage';
         this.description = "This is my very new webpage were i'll show you the cutest articles you'll ever see!";
+        this.backgroundImg = '';
     }
     clone() {
         const n = new HTMLDataCard();
         n.title = this.title;
         n.description = this.description;
+        n.backgroundImg = this.backgroundImg;
 
         return n;
     }
 
+    onPropertyUpdate(hook, value) {
+        if(hook === 'backgroundImg') {
+            const imgElement = document.querySelector(`.card[data-id="${this.id}"] img[data-hook="${hook}"]`);
+            console.log(imgElement);
+            imgElement.src = value;
+        }
+    }
+
     render() {
-        return `<div class="card">
+        return `<div class="card" data-id="${this.id}">
                 ${Card.renderCardToolbar(this, true)}
                 <div class="card-content">
                     ${Card.renderTextField(this, 'Title', 'title')}
                     ${Card.renderTextField(this, 'Description', 'description')}
+                    ${Card.renderImageField(this, 'Background', 'backgroundImg')}
                 </div>
             </div>`;
     }

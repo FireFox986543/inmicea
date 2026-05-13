@@ -1,9 +1,10 @@
-const cards = [];
+const allCards = [];
+const rootCardlist = [];
 const cardContainer = document.getElementById('editor-content');
 
-cards.push(new HTMLDataCard());
-cards.push(new CSSDataCard());
-cards.push(new HTMLNavigationCard());
+addCardRoot(new HTMLDataCard());
+addCardRoot(new CSSDataCard());
+addCardRoot(new HTMLNavigationCard());
 
 renderCards();
 
@@ -18,21 +19,29 @@ function appendMsg() {
         console.log('It failed....');
 }
 
+function addCard(card, list) {
+    list.push(card);
+    allCards.push(card);
+}
+function addCardRoot(card) { addCard(card, rootCardlist); }
 function handleNesting(nestId, nestList) {
-    const c = getCard(nestId, cards);
+    const c = findNestedCard(nestId);
 
     if (nestId === 'null' || c == null)
-        return cards;
+        return rootCardlist;
 
     const l = c[nestList];
 
     if (!Array.isArray(l))
-        return cards;
+        return rootCardlist;
 
     return l;
 }
 function getCard(id, arr) {
     return arr.find(c => c.id === id);
+}
+function findNestedCard(id) {
+    return allCards.find(c => c.id === id);
 }
 function moveCard(id, dir, nestId, nestList) {
     const array = handleNesting(nestId, nestList);
@@ -43,7 +52,8 @@ function moveCard(id, dir, nestId, nestList) {
     if (idx === -1)
         return;
 
-    if (target < 0 || target >= array.length)
+    const min = array === rootCardlist ? 3 : 0;
+    if (target < min || target >= array.length)
         return;
 
     moveTo(array, idx, target);
@@ -51,17 +61,20 @@ function moveCard(id, dir, nestId, nestList) {
 }
 function deleteCard(id, nestId, nestList) {
     const array = handleNesting(nestId, nestList);
-    const idx = array.indexOf(getCard(id, array));
+    const c = getCard(id, array);
+    const idx = array.indexOf(c);
+    const allIdx = allCards.indexOf(c);
 
-    if (idx === -1)
+    if (idx === -1 || allIdx === -1)
         return;
 
     deleteAt(array, idx);
+    deleteAt(allCards, allIdx);
     renderCards();
 }
-function addCardTo(nestId, nestList, card) {
+function addCardIntoList(nestId, nestList, card) {
     const array = handleNesting(nestId, nestList);
-    array.push(card);
+    addCard(card, array);
 
     renderCards();
 }
@@ -77,6 +90,7 @@ function dupeCard(id, nestId, nestList) {
     const newCard = c.clone();
     newCard.id = generateUUIDv4();
     array.splice(idx + 1, 0, newCard);
+    allCards.push(newCard);
     renderCards();
 }
 function updateProperty(t, id, nestId, nestList, hook) {
@@ -87,10 +101,11 @@ function updateProperty(t, id, nestId, nestList, hook) {
         throw new Error("Failed to get card from id", id, t, hook);
 
     c[hook] = t.value;
+    c.onPropertyUpdate(hook, t.value);
 }
 function renderCards() {
     cardContainer.innerHTML = '';
-    cards.forEach(c => cardContainer.innerHTML += c.render());
+    rootCardlist.forEach(c => cardContainer.innerHTML += c.render());
 }
 
 function generateUUIDv4() {

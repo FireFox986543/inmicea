@@ -21,7 +21,10 @@
     </header>
     <main>
         <div id="editor">
-            <div id="top-toolbar"></div>
+            <div id="top-toolbar">
+                <div style="flex-grow: 1;"></div>
+                <button type="button" class="control-btn" onclick="addCardRoot(new HeaderCard()); renderCards();"><i class="fas fa-plus"></i></button>
+            </div>
             <div id="editor-content" class="card-container">
             </div>
         </div>

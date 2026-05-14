@@ -284,6 +284,7 @@ textarea.vertical-resize {
     white-space: nowrap;
     background-color: white;
     border-radius: 2px;
+    text-align: left;
     transition: background-color .2s ease-out;
 }
 

@@ -394,12 +394,17 @@ button:hover,
     display: flex;
     gap: 64px;
     min-height: 512px;
+    justify-content: center;
 }
 
 .contact .crow {
     display: flex;
     justify-content: space-between;
     gap: 12px;
+}
+
+.contact .crow i {
+    margin-right: 12px;
 }
 
 .collapse-btn {

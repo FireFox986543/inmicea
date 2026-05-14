@@ -26,7 +26,16 @@ Header card:
 
 Section card:
  - Heading
- - Paragraphs card list
+ - Content card list [see below]
  - Image layout [none, bottom, side]
  - Image size [small, normal, large]
  - Image card list
+
+   - Content cards:
+     - Paragraph card: simple text
+     - List card: type[unordered, ordered], elements: simple text, split by newlines
+
+Contact card:
+ - Google maps link                 ? Link to google maps, leave empty if you wouldn't like to have one displayed
+ - Content cards:
+    - Contact element: type [email, location, tel, etc...], text

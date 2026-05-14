@@ -1,6 +1,7 @@
 class Card {
-    constructor() {
+    constructor(nesting) {
         this.id = generateUUIDv4();
+        this.nesting = nesting;
     }
     clone() {
         return new HTMLDataCard();
@@ -31,8 +32,8 @@ class Card {
     static renderTextareaField(t, label, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field expandable">
-                <label>${label}:</label>
-                <textarea class="vertical-resize" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">${t[dataHook]}</textarea>
+                <label style="align-self: flex-start;">${label}:</label>
+                <textarea class="vertical-resize" style="height: 100px" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">${t[dataHook]}</textarea>
             </div>`;
     }
     static renderColorField(t, label, dataHook) {
@@ -60,12 +61,26 @@ class Card {
     static renderImageField(t, label, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field expandable">
-    <label>${label}:</label>
-    <div class="image-box">
-        <img src="" alt="Image" data-hook="${dataHook}">
-    </div>
-    <input type="text" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" value="${t[dataHook]}">
-</div>`;
+                    <label style="align-self: flex-start;">${label}:</label>
+                    <div class="image-box">
+                        <img src="${t[dataHook]}" alt="Image" data-hook="${dataHook}">
+                    </div>
+                    <input type="text" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" value="${t[dataHook]}">
+                </div>`;
+    }
+
+    static renderAddButton(t, options) {
+        let inner = '';
+        options.forEach(([name, icon, code]) => inner += `<div class="selector-option" onclick="${code}; renderCards();"><i class="fas ${icon}"></i> ${name}</div>`)
+
+        return `<button type="button" class="control-btn selector-btn">
+                    <i class="fas fa-plus"></i>
+                    <div class="card-selector-wrapper">
+                        <div class="card-selector">
+                            ${inner}
+                        </div>
+                    </div>
+                </button>`
     }
 
     static getNestingFromCard(card) {
@@ -172,7 +187,7 @@ class HTMLNavigationCard extends Card {
                                 <h4>Left side</h4>
                                 <button type="button" class="control-btn tooltip" tooltip-text="Add new card" onclick="addCardIntoList('${this.id}', 'leftCards', new HTMLNavmenuCard({ id: '${this.id}', list: 'leftCards', level: 0}))"><i class="fas fa-plus"></i></button>
                             </div>
-                            <div class="left-cards card-container">
+                            <div class="card-container">
                                 ${leftInner}
                             </div>
                         </div>
@@ -183,7 +198,7 @@ class HTMLNavigationCard extends Card {
                                 <h4>Right side</h4>
                                 <button type="button" class="control-btn tooltip" tooltip-text="Add new card" onclick="addCardIntoList('${this.id}', 'rightCards', new HTMLNavmenuCard({ id: '${this.id}', list: 'rightCards', level: 0}))"><i class="fas fa-plus"></i></button>
                             </div>
-                            <div class="right-cards card-container">
+                            <div class="card-container">
                                 ${rightInner}
                             </div>
                         </div>
@@ -194,21 +209,20 @@ class HTMLNavigationCard extends Card {
 }
 class HTMLNavmenuCard extends Card {
     constructor(nesting) {
-        super();
+        super(nesting);
         this.cardTitle = 'Navigation item';
 
         this.type = 'simple';
         this.menuName = 'Menu1';
         this.destination = 'index.html';
 
-        this.nesting = nesting;
         this.subCards = [];
     }
     get icon() { return this.type === 'dropdown' ? 'fa-list-dropdown' : 'fa-diagram-cells'; }
     clone() {
-        const n = new HTMLNavmenuCard();
+        const n = new HTMLNavmenuCard(this.nesting);
         n.menuName = this.menuName;
-        n.nesting = this.nesting;
+
         return n;
     }
     onPropertyUpdate(hook, value) {
@@ -236,7 +250,7 @@ class HTMLNavmenuCard extends Card {
                                     <h4>Submenus</h4>
                                     <button type="button" class="control-btn tooltip" tooltip-text="Add new card" onclick="addCardIntoList('${this.id}', 'subCards', new HTMLNavmenuCard({ id: '${this.id}', list: 'subCards', level: ${this.nesting.level + 1}}))"><i class="fas fa-plus"></i></button>
                                 </div>
-                                <div class="sub-cards card-container">
+                                <div class="card-container">
                                     ${subInner}
                                 </div>
                             </div>
@@ -279,7 +293,7 @@ class HeaderCard extends Card {
                 ${Card.renderCardToolbar(this, true)}
                 <div class="card-content">
                     ${Card.renderTextField(this, 'Title', 'title')}
-                    ${Card.renderTextField(this, 'Description', 'description')}
+                    ${Card.renderTextareaField(this, 'Description', 'description')}
                     ${Card.renderImageField(this, 'Background', 'backgroundImg')}
                 </div>
             </div>`;
@@ -293,8 +307,9 @@ class SectionCard extends Card {
 
         this.heading = 'Creative chickens';
         this.imageType = 'none';
+        this.imageSize = 'normal';
 
-        this.paragraphCards = [];
+        this.contentCards = [];
         this.imageCards = [];
     }
     clone() {
@@ -308,10 +323,9 @@ class SectionCard extends Card {
         if(hook === 'imageType')
             renderCards();
     }
-
     render() {
-        let paraInner = '';
-        this.paragraphCards.forEach(c => paraInner += c.render());
+        let contentInner = '';
+        this.contentCards.forEach(c => contentInner += c.render());
 
         let imageInner = '';
         this.imageCards.forEach(c => imageInner += c.render());
@@ -323,11 +337,15 @@ class SectionCard extends Card {
                     <div class="card-field card-field-nested">
                         <div class="nested-card-container">
                             <div class="nested-top">
-                                <h4>Paragraphs</h4>
-                                <button type="button" class="control-btn tooltip" tooltip-text="Add new card" onclick="addCardIntoList('${this.id}', 'paragraphCards', new ParagraphCard({ id: '${this.id}', list: 'paragraphCards' }))"><i class="fas fa-plus"></i></button>
+                                <h4>Section content</h4>
+                                <button type="button" class="control-btn tooltip" tooltip-text="Add new card">
+                                ${Card.renderAddButton(this, [
+                                    ['Paragraph', 'fa-section', `addCardIntoList('${this.id}', 'contentCards', new ParagraphCard({ id: '${this.id}', list: 'contentCards' }));`],
+                                    ['List', 'fa-list-ul', `addCardIntoList('${this.id}', 'contentCards', new ListCard({ id: '${this.id}', list: 'contentCards' }));`]
+                            ])}
                             </div>
-                            <div class="paragraph-cards card-container">
-                                ${paraInner}
+                            <div class="card-container">
+                                ${contentInner}
                             </div>
                         </div>
                     </div>
@@ -335,13 +353,14 @@ class SectionCard extends Card {
                     ${
                         this.imageType === 'none' ? ''
                         : (
-                    `<div class="card-field card-field-nested">
+                    `${Card.renderDropdown(this, 'Image size', 'imageSize', [['small', 'Small'], ['normal', 'Normal'], ['large', 'Large']])}
+                    <div class="card-field card-field-nested">
                         <div class="nested-card-container">
                             <div class="nested-top">
                                 <h4>Image list</h4>
                                 <button type="button" class="control-btn tooltip" tooltip-text="Add new card" onclick="addCardIntoList('${this.id}', 'imageCards', new ImageCard({ id: '${this.id}', list: 'imageCards' }))"><i class="fas fa-plus"></i></button>
                             </div>
-                            <div class="image-cards card-container">
+                            <div class="card-container">
                                 ${imageInner}
                             </div>
                         </div>
@@ -353,17 +372,15 @@ class SectionCard extends Card {
 }
 class ParagraphCard extends Card {
     constructor(nesting) {
-        super();
+        super(nesting);
         this.cardTitle = 'Paragraph Card';
         this.icon = 'fa-paragraph';
 
         this.text = 'Lorem ipsum dolor sit amet, went amen at one point :P';
-        this.nesting = nesting;
     }
     clone() {
-        const n = new ParagraphCard();
+        const n = new ParagraphCard(this.nesting);
         n.text = this.text;
-        n.nesting = this.nesting;
 
         return n;
     }
@@ -377,17 +394,42 @@ class ParagraphCard extends Card {
             </div>`;
     }
 }
+class ListCard extends Card {
+    constructor(nesting) {
+        super(nesting);
+        this.cardTitle = 'List Card';
+        this.icon = 'fa-list-ul';
+
+        this.type = 'ul';
+        this.elements = 'First item\nSecond item\nThird item...';
+    }
+    clone() {
+        const n = new ListCard(this.nesting);
+        n.elements = this.elements;
+
+        return n;
+    }
+
+    render() {
+        return `<div class="card" data-id="${this.id}">
+                ${Card.renderCardToolbar(this, true)}
+                <div class="card-content">
+                    ${Card.renderDropdown(this, 'Type', 'type', [['ul', 'Unordered'], ['ol', 'Ordered']])}
+                    ${Card.renderTextareaField(this, 'Elements', 'elements')}
+                </div>
+            </div>`;
+    }
+}
 class ImageCard extends Card {
     constructor(nesting) {
-        super();
+        super(nesting);
         this.cardTitle = 'Image Card';
         this.icon = 'fa-image';
 
         this.image = '';
-        this.nesting = nesting;
     }
     clone() {
-        const n = new ImageCard();
+        const n = new ImageCard(this.nesting);
         n.image = this.image;
 
         return n;
@@ -404,6 +446,83 @@ class ImageCard extends Card {
                 ${Card.renderCardToolbar(this, true)}
                 <div class="card-content">
                     ${Card.renderImageField(this, 'Image', 'image')}
+                </div>
+            </div>`;
+    }
+}
+
+class ContactInfoCard extends Card {
+    constructor() {
+        super();
+        this.cardTitle = 'Contact Info Card';
+        this.icon = 'fa-id-card';
+
+        this.googleMapsLink = '';
+
+        this.contentCards = [];
+    }
+    clone() {
+        const n = new ContactInfoCard();
+        n.googleMapsLink = this.googleMapsLink;
+
+        return n;
+    }
+
+    render() {
+        let contentInner = '';
+        this.contentCards.forEach(c => contentInner += c.render());
+
+        return `<div class="card" data-id="${this.id}">
+                ${Card.renderCardToolbar(this, true)}
+                <div class="card-content">
+                    ${Card.renderTextField(this, 'Google maps', 'googleMapsLink')}
+                    <div class="card-field card-field-nested">
+                        <div class="nested-card-container">
+                            <div class="nested-top">
+                                <h4>Contact infos</h4>
+                                <button type="button" class="control-btn tooltip" tooltip-text="Add new card">
+                                <button type="button" class="control-btn tooltip" tooltip-text="Add new card" onclick="addCardIntoList('${this.id}', 'contentCards', new ContactElementCard({ id: '${this.id}', list: 'contentCards'}))"><i class="fas fa-plus"></i></button>
+                            </div>
+                            <div class="card-container">
+                                ${contentInner}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+    }
+}
+class ContactElementCard extends Card {
+    constructor(nesting) {
+        super(nesting);
+        this.cardTitle = 'Contact Element Card';
+        this.icon = 'fa-at';
+
+        this.type = 'email';
+        this.text = '';
+    }
+    clone() {
+        const n = new ContactElementCard(this.nesting);
+        n.type = this.type;
+        n.text = this.text;
+
+        return n;
+    }
+
+    render() {
+        return `<div class="card" data-id="${this.id}">
+                ${Card.renderCardToolbar(this, true)}
+                <div class="card-content">
+                    ${Card.renderDropdown(this, 'Type', 'type', [
+                        ['email', 'Email'],
+                        ['location', 'Location'],
+                        ['telephone', 'Telephone'],
+                        ['facebook', 'Facebook'],
+                        ['youtube', 'YouTube'],
+                        ['twitter', 'Twitter'],
+                        ['instagram', 'Instagram'],
+                    ])}
+                    ${Card.renderTextField(this, 'Text', 'text')}
                 </div>
             </div>`;
     }

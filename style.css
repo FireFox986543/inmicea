@@ -260,7 +260,7 @@ textarea.vertical-resize {
 .card-selector-wrapper {
     position: absolute;
     top: 0;
-    transform: translateX(-100%);
+    right: 0;
     display: none;
     z-index: 500;
 }
@@ -273,7 +273,7 @@ textarea.vertical-resize {
     border: 1px solid #eee;
     background-color: white;
     padding: 6px;
-    margin-right: 20px;
+    margin-right: 64px;
     box-shadow: rgba(0, 0, 0, 0.08) 4px 4px 8px 0;
 }
 
@@ -285,11 +285,29 @@ textarea.vertical-resize {
     background-color: white;
     border-radius: 2px;
     text-align: left;
+    color: black;
     transition: background-color .2s ease-out;
 }
 
 .card-selector .selector-option:hover {
     background-color: #f6f6f6;
+}
+
+.checkbox-btn {
+    display: block;
+    outline: 0;
+    text-decoration: 0;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 0.8rem;
+    color: black;
+    cursor: pointer;
+    transition: color .2s ease-out, color .2s ease-out;
+}
+
+.checkbox-btn:hover {
+    color: #444;
 }
 
 .control-btn {

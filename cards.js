@@ -111,6 +111,7 @@ class Card {
 class HTMLDataCard extends Card {
     constructor() {
         super();
+        this.cardType = 'HTMLDataCard';
         this.cardTitle = 'HTML Data Card';
         this.icon = 'fa-gear';
 
@@ -141,6 +142,7 @@ class HTMLDataCard extends Card {
 class CSSDataCard extends Card {
     constructor() {
         super();
+        this.cardType = 'CSSDataCard';
         this.cardTitle = 'CSS Data Card';
         this.icon = 'fa-paint-brush';
 
@@ -174,6 +176,7 @@ class CSSDataCard extends Card {
 class HTMLNavigationCard extends Card {
     constructor() {
         super();
+        this.cardType = 'HTMLNavigationCard';
         this.cardTitle = 'HTML Navigation Card';
         this.icon = 'fa-transmission';
 
@@ -224,6 +227,7 @@ class HTMLNavigationCard extends Card {
 class HTMLNavmenuCard extends Card {
     constructor(nesting) {
         super(nesting);
+        this.cardType = 'HTMLNavmenuCard';
         this.cardTitle = 'Navigation item';
 
         this.type = 'simple';
@@ -278,6 +282,7 @@ class HTMLNavmenuCard extends Card {
 class HeaderCard extends Card {
     constructor() {
         super();
+        this.cardType = 'HeaderCard';
         this.cardTitle = 'Header Card';
         this.icon = 'fa-heading';
 
@@ -297,7 +302,6 @@ class HeaderCard extends Card {
     onPropertyUpdate(hook, value) {
         if (hook === 'backgroundImg') {
             const imgElement = document.querySelector(`.card[data-id="${this.id}"] img[data-hook="${hook}"]`);
-            console.log(imgElement);
             imgElement.src = value;
         }
     }
@@ -316,6 +320,7 @@ class HeaderCard extends Card {
 class SectionCard extends Card {
     constructor() {
         super();
+        this.cardType = 'SectionCard';
         this.cardTitle = 'Section Card';
         this.icon = 'fa-section';
 
@@ -386,6 +391,7 @@ class SectionCard extends Card {
 class ParagraphCard extends Card {
     constructor(nesting) {
         super(nesting);
+        this.cardType = 'ParagraphCard';
         this.cardTitle = 'Paragraph Card';
         this.icon = 'fa-paragraph';
 
@@ -410,6 +416,7 @@ class ParagraphCard extends Card {
 class ListCard extends Card {
     constructor(nesting) {
         super(nesting);
+        this.cardType = 'ListCard';
         this.cardTitle = 'List Card';
         this.icon = 'fa-list-ul';
 
@@ -436,6 +443,7 @@ class ListCard extends Card {
 class ImageCard extends Card {
     constructor(nesting) {
         super(nesting);
+        this.cardType = 'ImageCard';
         this.cardTitle = 'Image Card';
         this.icon = 'fa-image';
 
@@ -467,6 +475,7 @@ class ImageCard extends Card {
 class ContactInfoCard extends Card {
     constructor() {
         super();
+        this.cardType = 'ContactInfoCard';
         this.cardTitle = 'Contact Info Card';
         this.icon = 'fa-id-card';
 
@@ -488,12 +497,11 @@ class ContactInfoCard extends Card {
         return `<div class="card" data-id="${this.id}">
                 ${Card.renderCardToolbar(this, true)}
                 <div class="card-content">
-                    ${Card.renderTextField(this, 'Google maps', 'googleMapsLink')}
+                    ${Card.renderInfoTo(Card.renderTextField(this, 'Google maps', 'googleMapsLink'), 'Link used for displaying google maps if required, unless leave empty')}
                     <div class="card-field card-field-nested">
                         <div class="nested-card-container">
                             <div class="nested-top">
                                 <h4>Contact infos</h4>
-                                <button type="button" class="control-btn tooltip" tooltip-text="Add new card">
                                 <button type="button" class="control-btn tooltip" tooltip-text="Add new card" onclick="addCardIntoList('${this.id}', 'contentCards', new ContactElementCard({ id: '${this.id}', list: 'contentCards'}))"><i class="fas fa-plus"></i></button>
                             </div>
                             <div class="card-container">
@@ -508,6 +516,7 @@ class ContactInfoCard extends Card {
 class ContactElementCard extends Card {
     constructor(nesting) {
         super(nesting);
+        this.cardType = 'ContactElementCard';
         this.cardTitle = 'Contact Element Card';
         this.icon = 'fa-at';
 
@@ -519,7 +528,7 @@ class ContactElementCard extends Card {
     clone() {
         const n = new ContactElementCard(this.nesting);
         n.type = this.type;
-        n.customIcon = customIcon;
+        n.customIcon = this.customIcon;
         n.text = this.text;
         n.link = this.link;
 
@@ -558,6 +567,7 @@ class ContactElementCard extends Card {
 class ContactFormCard extends Card {
     constructor() {
         super();
+        this.cardType = 'ContactFormCard';
         this.cardTitle = 'Contact Form Card';
         this.icon = 'fa-inbox-in';
 
@@ -595,5 +605,24 @@ class ContactFormCard extends Card {
                     ${Card.renderCheckBox(this, 'Has message field', 'message')}
                 </div>
             </div>`;
+    }
+}
+
+function newCardFromType(type) {
+    switch (type) {
+        case 'HTMLDataCard': return new HTMLDataCard();
+        case 'CSSDataCard': return new CSSDataCard();
+        case 'HTMLNavigationCard': return new HTMLNavigationCard();
+        case 'HTMLNavmenuCard': return new HTMLNavmenuCard();
+        case 'HeaderCard': return new HeaderCard();
+        case 'SectionCard': return new SectionCard();
+        case 'ParagraphCard': return new ParagraphCard();
+        case 'ListCard': return new ListCard();
+        case 'ImageCard': return new ImageCard();
+        case 'ContactInfoCard': return new ContactInfoCard();
+        case 'ContactElementCard': return new ContactElementCard();
+        case 'ContactFormCard': return new ContactFormCard();
+        default:
+            throw new Error("Failed to construct card from given type: " + type);
     }
 }

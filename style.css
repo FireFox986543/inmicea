@@ -213,6 +213,7 @@ textarea,
 
 textarea.vertical-resize {
     resize: vertical;
+    min-height: 100px;
 }
 
 .card input[type='color'] {

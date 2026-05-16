@@ -32,14 +32,14 @@ class Card {
     static renderCheckBox(t, label, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field">
-                <button type="button" class="checkbox-btn" value="${t[dataHook]}" onclick="Card.checkboxHelper(this); updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')"><i class='far fa-square${t[dataHook] === 'true' ? '-check' : ''}'></i> &nbsp;${label}</button>
+                <button type="button" class="checkbox-btn" value="${t[dataHook]}" onclick="Card.checkboxHelper(this); updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}'); propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')"><i class='far fa-square${t[dataHook] === 'true' ? '-check' : ''}'></i> &nbsp;${label}</button>
             </div>`;
     }
-    static renderTextareaField(t, label, dataHook) {
+    static renderTextareaField(t, label, dataHook, height = 100) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field expandable">
                 <label style="align-self: flex-start;">${label}:</label>
-                <textarea class="vertical-resize" style="height: 100px" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" onchange="propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">${t[dataHook]}</textarea>
+                <textarea class="vertical-resize" style="height: ${height}px" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" onchange="propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">${t[dataHook]}</textarea>
             </div>`;
     }
     static renderColorField(t, label, dataHook) {
@@ -92,8 +92,8 @@ class Card {
     static getNestingFromCard(card) {
         return card.nesting || { id: null, list: null };
     }
-    static renderInfoTo(str, info) {
-        return str.substring(0, str.length - 6) + `<div class="tooltip tooltip-left info" tooltip-text="${info}">
+    static renderInfoTo(str, info, right = false) {
+        return str.substring(0, str.length - 6) + `<div class="tooltip tooltip-${right ? 'right' : 'left'} info" tooltip-text="${info}">
                     <i class="far fa-circle-info"></i>
             </div>
             </div>`;
@@ -146,9 +146,15 @@ class CSSDataCard extends Card {
         this.cardTitle = 'CSS Data Card';
         this.icon = 'fa-paint-brush';
 
-        this.backgroundColor = '#2c2c2c';
-        this.primaryColor = '#e31515';
-        this.secondaryColor = '#16a8a6';
+        this.backgroundColor = '#202020';
+        this.backgroundLighterColor = '#2c2c2c';
+        this.backgroundLightestColor = '#3a3a3a';
+        this.textColor = '#efefef';
+        this.mutedColor = '#b0b0b0';
+        this.primaryColor = '#0048ff';
+        this.secondaryColor = '#00bbff';
+        this.darkColor = '#1b1b1b';
+        this.darkerColor = '#111111';
         this.fontFamily = 'Inter';
     }
     clone() {
@@ -166,8 +172,14 @@ class CSSDataCard extends Card {
                 ${Card.renderCardToolbar(this, false)}
                 <div class="card-content">
                     ${Card.renderColorField(this, 'Background', 'backgroundColor')}
+                    ${Card.renderColorField(this, 'Background lighter', 'backgroundLighterColor')}
+                    ${Card.renderColorField(this, 'Background lightest', 'backgroundLightestColor')}
+                    ${Card.renderColorField(this, 'Text', 'textColor')}
+                    ${Card.renderColorField(this, 'Muted text', 'mutedColor')}
                     ${Card.renderColorField(this, 'Primary', 'primaryColor')}
                     ${Card.renderColorField(this, 'Secondary', 'secondaryColor')}
+                    ${Card.renderColorField(this, 'Dark', 'darkColor')}
+                    ${Card.renderColorField(this, 'Darker', 'darkerColor')}
                     ${Card.renderDropdown(this, 'Font family', 'fontFamily', [['Inter', 'Inter'], ['Arial', 'Arial'], ['Times New Roman', 'Times New Roman']])}
                 </div>
             </div>`;
@@ -248,8 +260,6 @@ class HTMLNavmenuCard extends Card {
             renderCards();
     }
 
-    get nestingLastLevel() { return this.nesting.level && this.nesting.level >= 2; }
-
     render() {
         let subInner = '';
         this.subCards.forEach(c => subInner += c.render());
@@ -257,7 +267,7 @@ class HTMLNavmenuCard extends Card {
         return `<div class="card" data-id="${this.id}">
                 ${Card.renderCardToolbar(this, true)}
                 <div class="card-content">
-                    ${this.nestingLastLevel ? '' : Card.renderDropdown(this, 'Menu type', 'type', [['simple', 'Simple'], ['dropdown', 'Dropdown']])}
+                    ${Card.renderDropdown(this, 'Menu type', 'type', [['simple', 'Simple'], ['dropdown', 'Dropdown']])}
                     ${Card.renderTextField(this, 'Menu name', 'menuName')}
                     ${this.type === 'simple' ?
                 (Card.renderTextField(this, 'Destination', 'destination'))
@@ -266,7 +276,7 @@ class HTMLNavmenuCard extends Card {
                         <div class="nested-card-container">
                                 <div class="nested-top">
                                     <h4>Submenus</h4>
-                                    <button type="button" class="control-btn tooltip" tooltip-text="Add new card" onclick="addCardIntoList('${this.id}', 'subCards', new HTMLNavmenuCard({ id: '${this.id}', list: 'subCards', level: ${this.nesting.level + 1}}))"><i class="fas fa-plus"></i></button>
+                                    <button type="button" class="control-btn tooltip" tooltip-text="Add new card" onclick="addCardIntoList('${this.id}', 'subCards', new HTMLNavmenuCard({ id: '${this.id}', list: 'subCards'}))"><i class="fas fa-plus"></i></button>
                                 </div>
                                 <div class="card-container">
                                     ${subInner}
@@ -325,6 +335,8 @@ class SectionCard extends Card {
         this.icon = 'fa-section';
 
         this.heading = 'Creative chickens';
+        this.headingIsTop = 'false';
+        this.sectionId = '';
         this.imageType = 'none';
         this.imageSize = 'normal';
 
@@ -339,7 +351,7 @@ class SectionCard extends Card {
         return n;
     }
     onPropertyUpdate(hook, value) {
-        if (hook === 'imageType')
+        if (hook === 'imageType' || hook === 'imageSize')
             renderCards();
     }
     render() {
@@ -353,6 +365,8 @@ class SectionCard extends Card {
                 ${Card.renderCardToolbar(this, true)}
                 <div class="card-content">
                     ${Card.renderTextField(this, 'Heading', 'heading')}
+                    ${Card.renderInfoTo(Card.renderCheckBox(this, 'Display heading at top', 'headingIsTop'), 'Should the header be placed as the first element?', true)}
+                    ${Card.renderInfoTo(Card.renderTextField(this, 'Section id', 'sectionId'), 'A unique identifier that can be used for linking navigation links to this section')}
                     <div class="card-field card-field-nested">
                         <div class="nested-card-container">
                             <div class="nested-top">
@@ -360,7 +374,8 @@ class SectionCard extends Card {
                                 <button type="button" class="control-btn tooltip" tooltip-text="Add new card">
                                 ${Card.renderAddButton(this, [
             ['Paragraph', 'fa-section', `addCardIntoList('${this.id}', 'contentCards', new ParagraphCard({ id: '${this.id}', list: 'contentCards' }));`],
-            ['List', 'fa-list-ul', `addCardIntoList('${this.id}', 'contentCards', new ListCard({ id: '${this.id}', list: 'contentCards' }));`]
+            ['List', 'fa-list-ul', `addCardIntoList('${this.id}', 'contentCards', new ListCard({ id: '${this.id}', list: 'contentCards' }));`],
+            ['Raw HTML', 'fa-file-html', `addCardIntoList('${this.id}', 'contentCards', new RawHTMLCard({ id: '${this.id}', list: 'contentCards' }));`],
         ])}
                             </div>
                             <div class="card-container">
@@ -371,7 +386,7 @@ class SectionCard extends Card {
                     ${Card.renderDropdown(this, 'Image type', 'imageType', [['none', 'None'], ['bottom', 'Bottom'], ['top', 'Top'], ['left', 'Left'], ['right', 'Right']])}
                     ${this.imageType === 'none' ? ''
                 : (
-                    `${Card.renderDropdown(this, 'Image size', 'imageSize', [['small', 'Small'], ['normal', 'Normal'], ['large', 'Large']])}
+                    `${['left', 'right'].includes(this.imageType) ? Card.renderDropdown(this, 'Image size', 'imageSize', [['small', 'Small'], ['normal', 'Normal'], ['large', 'Large']]) : ''}
                     <div class="card-field card-field-nested">
                         <div class="nested-card-container">
                             <div class="nested-top">
@@ -447,7 +462,9 @@ class ImageCard extends Card {
         this.cardTitle = 'Image Card';
         this.icon = 'fa-image';
 
+        this.alt = '';
         this.image = '';
+        this.canBeZoomed = 'true';
     }
     clone() {
         const n = new ImageCard(this.nesting);
@@ -467,6 +484,8 @@ class ImageCard extends Card {
                 ${Card.renderCardToolbar(this, true)}
                 <div class="card-content">
                     ${Card.renderImageField(this, 'Image', 'image')}
+                    ${Card.renderTextField(this, 'Alt', 'alt')}
+                    ${Card.renderInfoTo(Card.renderCheckBox(this, 'Enable zooming', 'canBeZoomed'), 'Can the user click on it to show a scaled version on screen?', true)}
                 </div>
             </div>`;
     }
@@ -480,6 +499,8 @@ class ContactInfoCard extends Card {
         this.icon = 'fa-id-card';
 
         this.googleMapsLink = '';
+        this.sectionId;
+        this.heading = 'Contact information';
 
         this.contentCards = [];
     }
@@ -497,7 +518,9 @@ class ContactInfoCard extends Card {
         return `<div class="card" data-id="${this.id}">
                 ${Card.renderCardToolbar(this, true)}
                 <div class="card-content">
-                    ${Card.renderInfoTo(Card.renderTextField(this, 'Google maps', 'googleMapsLink'), 'Link used for displaying google maps if required, unless leave empty')}
+                    ${Card.renderInfoTo(Card.renderTextField(this, 'Google maps link', 'googleMapsLink'), 'Link used for displaying google maps if required, unless leave empty')}
+                    ${Card.renderInfoTo(Card.renderTextField(this, 'Section id', 'sectionId'), 'A unique identifier that can be used for linking navigation links to this section')}
+                    ${Card.renderTextField(this, 'Heading', 'heading')}
                     <div class="card-field card-field-nested">
                         <div class="nested-card-container">
                             <div class="nested-top">
@@ -521,8 +544,9 @@ class ContactElementCard extends Card {
         this.icon = 'fa-at';
 
         this.type = 'email';
-        this.customIcon = 'fa-dollar';
+        this.customIcon = 'fas fa-dollar';
         this.text = '';
+        this.name = '';
         this.link = '';
     }
     clone() {
@@ -539,7 +563,7 @@ class ContactElementCard extends Card {
             renderCards();
         else if (hook === 'customIcon') {
             const iconEl = document.querySelector(`.card[data-id="${this.id}"] i[data-hook="customIcon"]`);
-            iconEl.className = `fab fas ${value.replaceAll(' ', '')}`;
+            iconEl.className = `${value}`;
         }
     }
 
@@ -557,8 +581,9 @@ class ContactElementCard extends Card {
             ['instagram', 'Instagram'],
             ['custom', 'Custom']
         ])}
-                    ${this.type === 'custom' ? Card.renderInfoTo(Card.renderExtraTo(Card.renderTextField(this, 'Custom icon', 'customIcon'), `<i class="fab fas ${this.customIcon}" style="margin-left: 8px" data-hook="customIcon"></i>`), 'A font awesome icon key.') : ''}
-                    ${Card.renderTextField(this, 'Text', 'text')}
+                    ${this.type === 'custom' ? Card.renderInfoTo(Card.renderExtraTo(Card.renderTextField(this, 'Custom icon', 'customIcon'), `<i class="${this.customIcon}" style="margin-left: 8px" data-hook="customIcon"></i>`), 'A font awesome icon key.') : ''}
+                    ${Card.renderTextField(this, 'Name', 'name')}
+                    ${Card.renderTextField(this, 'Value', 'text')}
                     ${Card.renderInfoTo(Card.renderTextField(this, 'Link', 'link'), "The link used for anchor tags, unless leave empty.")}
                 </div>
             </div>`;
@@ -571,6 +596,7 @@ class ContactFormCard extends Card {
         this.cardTitle = 'Contact Form Card';
         this.icon = 'fa-inbox-in';
 
+        this.sectionId = '';
         this.text = 'Get in contact with us!';
         this.name = 'true';
         this.email = 'true';
@@ -596,6 +622,7 @@ class ContactFormCard extends Card {
         return `<div class="card" data-id="${this.id}">
                 ${Card.renderCardToolbar(this, true)}
                 <div class="card-content">
+                    ${Card.renderInfoTo(Card.renderTextField(this, 'Section id', 'sectionId'), 'A unique identifier that can be used for linking navigation links to this section')}
                     ${Card.renderTextField(this, 'Top text', 'text')}
                     ${Card.renderCheckBox(this, 'Has name field', 'name')}
                     ${Card.renderCheckBox(this, 'Has email field', 'email')}
@@ -603,6 +630,32 @@ class ContactFormCard extends Card {
                     ${Card.renderCheckBox(this, 'Has organization field', 'organization')}
                     ${Card.renderCheckBox(this, 'Has location field', 'location')}
                     ${Card.renderCheckBox(this, 'Has message field', 'message')}
+                </div>
+            </div>`;
+    }
+}
+
+class RawHTMLCard extends Card {
+    constructor(nesting) {
+        super(nesting);
+        this.cardType = 'RawHTMLCard';
+        this.cardTitle = 'Raw HTML Card';
+        this.icon = 'fa-file-html';
+
+        this.html = '<p>Hello World!</p>';
+    }
+    clone() {
+        const n = new RawHTMLCard(this.nesting);
+        n.html = this.html;
+
+        return n;
+    }
+
+    render() {
+        return `<div class="card" data-id="${this.id}">
+                ${Card.renderCardToolbar(this, true)}
+                <div class="card-content">
+                    ${Card.renderTextareaField(this, 'HTML', 'html', 320)}
                 </div>
             </div>`;
     }
@@ -622,6 +675,7 @@ function newCardFromType(type) {
         case 'ContactInfoCard': return new ContactInfoCard();
         case 'ContactElementCard': return new ContactElementCard();
         case 'ContactFormCard': return new ContactFormCard();
+        case 'RawHTMLCard': return new RawHTMLCard();
         default:
             throw new Error("Failed to construct card from given type: " + type);
     }

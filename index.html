@@ -22,7 +22,7 @@
     <main>
         <div id="editor">
             <div id="top-toolbar">
-                <button type="button" class="control-btn green-btn" onclick=""><i class="fas fa-play"></i> Preview</button>
+                <button type="button" class="control-btn green-btn" onclick="preview()"><i class="fas fa-play"></i> Preview</button>
                 <div style="flex-grow: 1;"></div>
                 <button type="button" class="control-btn tooltip" tooltip-text="Undo changes" onclick="historyUndo()"><i class="fas fa-arrow-turn-left"></i></button>
                 <button type="button" class="control-btn tooltip" tooltip-text="Redo changes" onclick="historyRedo()"><i class="fas fa-arrow-turn-right"></i></button>
@@ -34,6 +34,7 @@
                             <div class="selector-option" onclick="addCardRoot(new SectionCard()); renderCards();"><i class="fas fa-section"></i> Section</div>
                             <div class="selector-option" onclick="addCardRoot(new ContactInfoCard()); renderCards();"><i class="fas fa-id-card"></i> Contact Info</div>
                             <div class="selector-option" onclick="addCardRoot(new ContactFormCard()); renderCards();"><i class="fas fa-inbox-in"></i> Contact Form</div>
+                            <div class="selector-option" onclick="addCardRoot(new RawHTMLCard()); renderCards();"><i class="fas fa-file-html"></i> Raw HTML Card</div>
                         </div>
                     </div>
                 </button>
@@ -48,7 +49,7 @@
 
     <div id="modal" class="hidden">
         <div class="content">
-            <h1>Restore previous session?</h1>
+            <h1>Continue previous session?</h1>
             <p>There's saved data from last time. Would you like to continue, or start a new one?</p>
             <div class="modal-btns">
                 <button type="button" class="control-btn white-btn" onclick="restoreSession();">Continue editing</button>

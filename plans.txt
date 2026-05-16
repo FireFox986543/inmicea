@@ -17,7 +17,7 @@ HTML Navigation card:
      - multi dropdown
 
 CSS data card:
- - Background color
+ - Background colors
  - Primary, secondary etc... colors
  - Font family
 
@@ -28,6 +28,7 @@ Header card:
 
 Section card:
  - Heading
+ - Section id                       ? A unique identifier that can be used for linking navigation links to this section
  - Content card list [see below]
  - Image layout [none, bottom, left, right]
  - Image size [small, normal, large]
@@ -39,14 +40,26 @@ Section card:
 
 Contact card:
  - Google maps link                 ? Link to google maps, leave empty if you wouldn't like to have one displayed
+ - Section id                       ? A unique identifier that can be used for linking navigation links to this section
+ - Heading
  - Content cards:
-    - Contact element: type [email, location, tel, etc...], text
+    - Contact element: type [email, location, tel, etc...], name, text
 
 Contact form card:
  - Top text
+ - Section id                       ? A unique identifier that can be used for linking navigation links to this section
  - Has name field
  - Has email field
  - Has telephone field
  - Has location field
  - Has organization field
  - Has message field
+
+Raw HTML card:
+ - HTML (textarea that could contain html data)
+
+
+
+
+
+      AUTOFILL OPTION FOR CARDS LIKE CONTACT ELEMENT -> e.g: clicking it will fill out the name and link (e.g. telephone field)

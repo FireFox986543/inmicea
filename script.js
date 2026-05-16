@@ -13,7 +13,7 @@ saveToHistory(false); // Push default state, also don't save just yet
 
 renderCards();
 
-if(window.localStorage.getItem('currentSession')) {
+if (window.localStorage.getItem('currentSession')) {
     showModal();
 }
 
@@ -40,12 +40,11 @@ function createNew() {
     hideModal();
 }
 
-function appendMsg() {
-    console.log('It ran...');
 
+function preview() {
     var iframe = document.getElementById("window-frame");
     if (iframe && iframe.contentWindow) {
-        iframe.contentWindow.postMessage(Math.random().toString() + ' Hi!!!', "*");
+        iframe.contentWindow.postMessage(getSerializedCards(), "*");
     }
     else
         console.log('It failed....');

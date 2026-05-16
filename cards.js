@@ -26,7 +26,7 @@ class Card {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field">
                 <label>${label}:</label>
-                <input type="text" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" value="${t[dataHook]}">
+                <input type="text" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" value="${t[dataHook]}" onchange="propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">
             </div>`;
     }
     static renderCheckBox(t, label, dataHook) {
@@ -39,14 +39,14 @@ class Card {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field expandable">
                 <label style="align-self: flex-start;">${label}:</label>
-                <textarea class="vertical-resize" style="height: 100px" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">${t[dataHook]}</textarea>
+                <textarea class="vertical-resize" style="height: 100px" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" onchange="propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">${t[dataHook]}</textarea>
             </div>`;
     }
     static renderColorField(t, label, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field">
                 <label>${label}:</label>
-                <input type="color" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" value="${t[dataHook]}">
+                <input type="color" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" onchange="propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" value="${t[dataHook]}">
             </div>`;
     }
     static renderDropdown(t, label, dataHook, options) {
@@ -59,7 +59,7 @@ class Card {
 
         return `<div class="card-field">
                 <label>${label}:</label>
-                <select onchange="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">
+                <select onchange="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}'); propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">
                     ${optHTML}
                 </select>
             </div>`;
@@ -71,7 +71,7 @@ class Card {
                     <div class="image-box">
                         <img src="${t[dataHook]}" alt="Image" data-hook="${dataHook}">
                     </div>
-                    <input type="text" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" value="${t[dataHook]}">
+                    <input type="text" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" value="${t[dataHook]}" onchange="propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">
                 </div>`;
     }
 
@@ -368,7 +368,7 @@ class SectionCard extends Card {
                             </div>
                         </div>
                     </div>
-                    ${Card.renderDropdown(this, 'Image type', 'imageType', [['none', 'None'], ['bottom', 'Bottom'], ['side', 'Side']])}
+                    ${Card.renderDropdown(this, 'Image type', 'imageType', [['none', 'None'], ['bottom', 'Bottom'], ['top', 'Top'], ['left', 'Left'], ['right', 'Right']])}
                     ${this.imageType === 'none' ? ''
                 : (
                     `${Card.renderDropdown(this, 'Image size', 'imageSize', [['small', 'Small'], ['normal', 'Normal'], ['large', 'Large']])}
@@ -557,7 +557,7 @@ class ContactElementCard extends Card {
             ['instagram', 'Instagram'],
             ['custom', 'Custom']
         ])}
-                    ${this.type === 'custom' ? Card.renderInfoTo(Card.renderExtraTo(Card.renderTextField(this, 'Custom icon', 'customIcon'), `<i class="fab fas ${this.customIcon}" data-hook="customIcon"></i>`), 'A font awesome icon key.') : ''}
+                    ${this.type === 'custom' ? Card.renderInfoTo(Card.renderExtraTo(Card.renderTextField(this, 'Custom icon', 'customIcon'), `<i class="fab fas ${this.customIcon}" style="margin-left: 8px" data-hook="customIcon"></i>`), 'A font awesome icon key.') : ''}
                     ${Card.renderTextField(this, 'Text', 'text')}
                     ${Card.renderInfoTo(Card.renderTextField(this, 'Link', 'link'), "The link used for anchor tags, unless leave empty.")}
                 </div>

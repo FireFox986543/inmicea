@@ -1,5 +1,7 @@
 
-
+                                          INMICEA
+                                      The new generation webpage generator
+                                      (if that makes sense)
 
 HTML data card:
  - Webpage language [hu, eng]                           ? This is the language of your webpage, this will influence built-in cards like the contact form
@@ -27,7 +29,7 @@ Header card:
 Section card:
  - Heading
  - Content card list [see below]
- - Image layout [none, bottom, side]
+ - Image layout [none, bottom, left, right]
  - Image size [small, normal, large]
  - Image card list
 
@@ -39,3 +41,12 @@ Contact card:
  - Google maps link                 ? Link to google maps, leave empty if you wouldn't like to have one displayed
  - Content cards:
     - Contact element: type [email, location, tel, etc...], text
+
+Contact form card:
+ - Top text
+ - Has name field
+ - Has email field
+ - Has telephone field
+ - Has location field
+ - Has organization field
+ - Has message field

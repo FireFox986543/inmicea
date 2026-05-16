@@ -55,12 +55,22 @@ header {
         font-size: 2rem;
         transition: color .2s ease-out;
     }
-    a:hover, a:active {
+
+    a:hover,
+    a:active {
         color: rgb(169, 7, 7);
     }
 }
 
-h1, h2, h3, h4, h5, h6, p, ul, ol {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ul,
+ol {
     margin: 0;
 }
 
@@ -69,7 +79,6 @@ main {
     gap: 8px;
     background-color: white;
     padding: 16px;
-    flex-grow: 1;
     height: 92vh;
 }
 
@@ -330,21 +339,42 @@ textarea.vertical-resize {
     color: #444;
     border-color: #ddd;
 }
+
 .danger-btn:hover {
     color: #e60606;
     border-color: #e60606;
 }
 
-.green-btn {
+.green-btn,
+.white-btn,
+.red-btn {
     font-size: .8rem;
     background-color: #00b460;
     color: white;
     transition: background-color .2s ease-out;
 }
-.green-btn:hover {
+
+.green-btn:hover,
+.white-btn:hover,
+.red-btn:hover {
     background-color: #0ec570;
     color: white;
     border-color: transparent;
+}
+
+.red-btn {
+    background-color: #e01e1e;
+}
+
+.red-btn:hover {
+    background-color: #f53a3a;
+}
+
+.white-btn,
+.white-btn:hover {
+    color: black;
+    border: 1px solid #eee;
+    background: transparent;
 }
 
 .tooltip {
@@ -444,4 +474,43 @@ textarea.vertical-resize {
 
 .hidden {
     display: none !important;
+}
+
+#modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(5px);
+    background: linear-gradient(180deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));
+}
+
+#modal .content {
+    min-width: 600px;
+    min-height: 500px;
+    background-color: white;
+    border-radius: 8px;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+}
+
+#modal p {
+    flex-grow: 1;
+}
+
+#modal h1 {
+    font-size: 2rem;
+    color: black;
+    padding-bottom: 16px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 16px;
+}
+
+#modal .modal-btns {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    height: 40px;
 }

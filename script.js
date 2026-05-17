@@ -5,6 +5,17 @@ const cardContainer = document.getElementById('editor-content');
 let history = [];
 let historyAt = 0;
 
+let themeIsDark = false;
+
+{
+    let t = window.localStorage.getItem('theme');
+
+    if(t != null)
+        themeIsDark = t === 'true' || t === true;
+
+    setTheme(themeIsDark);
+}
+
 addCardRoot(new HTMLDataCard(), false);
 addCardRoot(new CSSDataCard(), false);
 addCardRoot(new HTMLNavigationCard(), false);
@@ -300,3 +311,13 @@ window.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.key.toUpperCase() === 'Y')
         historyRedo();
 });
+
+function setTheme(val) {
+    themeIsDark = val;
+
+    document.documentElement.classList.toggle('dark-mode', themeIsDark);
+    window.localStorage.setItem('theme', themeIsDark);
+}
+function toggleTheme() {
+    setTheme(!themeIsDark);
+}

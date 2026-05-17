@@ -7,10 +7,53 @@
 }
 
 :root {
-    --text: #0d0d0d;
-    --muted: #353535;
-    --primary: rgb(0, 72, 255);
-    --secondary: rgb(0, 187, 255);
+    --text: #0f0f0f;
+    --muted: #444;
+    --dark: #aaa;
+    --tooltip: rgba(20, 20, 20, .9);
+    --tooltip-text: white;
+
+    --background: white;
+    --highlight-bg: #f6f6f6;
+    --border: #eee;
+    --highlight-border: #ddd;
+
+    --card-shadow: rgba(0, 0, 0, 0.08);
+
+    --green: #0eb50e;
+    --green-light: #16c416;
+    --red: #ae1111;
+    --red-light: #bf1818;
+    --blue: #1431d5;
+    --blue-light: #1f3ce0;
+
+    --dark-light-button: '\f186';
+    --dark-light-button-color: #12308a;
+}
+
+:root.dark-mode {
+    --text: #f6f6f6;
+    --muted: #aaa;
+    --dark: #696969;
+    --tooltip: rgba(0, 0, 0, 0.9);
+    --tooltip-text: rgb(255, 255, 255);
+
+    --background: #141414;
+    --highlight-bg: #323232;
+    --border: #444;
+    --highlight-border: #555;
+
+    --card-shadow: rgba(128, 128, 128, 0.05);
+
+    --green: #0eb50e;
+    --green-light: #16c416;
+    --red: #ae1111;
+    --red-light: #bf1818;
+    --blue: #1431d5;
+    --blue-light: #1f3ce0;
+    
+    --dark-light-button: '\f185';
+    --dark-light-button-color: #ecb607;
 }
 
 html,
@@ -20,12 +63,13 @@ body {
     font-family: Inter, Arial, Helvetica, sans-serif;
     font-size: 1.3em;
     scroll-behavior: smooth;
+    scrollbar-color: var(--dark) transparent;
 }
 
 body {
     font-size: 1rem;
-    background-color: white;
-    color: #0f0f0f;
+    background-color: var(--background);
+    color: var(--text);
 }
 
 header {
@@ -44,21 +88,47 @@ header {
         font-size: 30%;
         text-align: center;
         width: 100%;
-        color: #444;
+        color: var(--muted);
     }
 
     a {
-        color: rgb(0, 0, 0);
+        color: var(--text);
         position: absolute;
         top: 12px;
         right: 12px;
         font-size: 2rem;
+        text-decoration: 0;
         transition: color .2s ease-out;
+    }
+
+    a.right-side {
+        left: 12px;
+        right: auto;
+        width: 50px;
+        height: 50px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    a.right-side::before {
+        content: var(--dark-light-button);
+        display: inline;
+        font-family: 'Font Awesome 7 Pro';
+        font-weight: 900;
+        font-style: normal;
+        font-size: 1.2rem;
+        color: var(--text);
+        transition: color .2s ease-out;
+    }
+
+    a.right-side:hover::before {
+        color: var(--dark-light-button-color);
     }
 
     a:hover,
     a:active {
-        color: rgb(169, 7, 7);
+        color: var(--red-light);
     }
 }
 
@@ -77,15 +147,15 @@ ol {
 main {
     display: flex;
     gap: 8px;
-    background-color: white;
+    background-color: var(--background);
     padding: 16px;
     height: 92vh;
 }
 
 #editor,
 #viewer {
-    background-color: white;
-    border: 1px solid #eee;
+    background-color: var(--background);
+    border: 1px solid var(--border);
     border-radius: 4px;
     flex: 50%;
 }
@@ -121,7 +191,7 @@ iframe {
     display: flex;
     gap: 12px;
     height: 60px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border);
     padding: 8px;
     flex-shrink: 0;
 }
@@ -137,9 +207,9 @@ iframe {
 
 .card {
     flex: 0 1 200px;
-    border: 1px solid #eee;
+    border: 1px solid var(--border);
     border-radius: 4px;
-    box-shadow: rgba(0, 0, 0, 0.08) 6px 6px 10px 0;
+    box-shadow: var(--card-shadow) 6px 6px 10px 0;
 }
 
 .card.collapsed {
@@ -157,9 +227,9 @@ iframe {
 
 .card .card-toolbar {
     font-weight: bold;
-    color: black;
+    color: var(--text);
     font-size: 0.8rem;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border);
     padding: 8px;
     margin-bottom: 8px;
     text-align: left;
@@ -207,7 +277,7 @@ iframe {
     display: flex;
     flex-direction: column;
     margin: 12px 0;
-    border: 1px solid #eee;
+    border: 1px solid var(--border);
     border-radius: 4px;
 }
 
@@ -225,7 +295,7 @@ iframe {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border);
     height: 40px;
     min-height: 40px;
     padding: 0 12px;
@@ -240,8 +310,9 @@ iframe {
 textarea,
 .card select {
     outline: 0;
-    border: 1px solid #eee;
-    background-color: white;
+    border: 1px solid var(--border);
+    background-color: var(--background);
+    color: var(--text);
     font: inherit;
     padding: 4px;
     flex-grow: 1;
@@ -261,14 +332,14 @@ textarea.vertical-resize {
 
 .card label {
     font-weight: bold;
-    color: black;
+    color: var(--text);
     min-width: 260px;
 }
 
 .card .image-box {
     width: 120px;
     aspect-ratio: 1 / 1;
-    border: 2px dashed #eee;
+    border: 2px dashed var(--border);
     border-radius: 8px;
     margin-right: 20px;
     padding: 10px;
@@ -309,11 +380,11 @@ textarea.vertical-resize {
     flex-direction: column;
     gap: 4px;
     border-radius: 4px;
-    border: 1px solid #eee;
-    background-color: white;
+    border: 1px solid var(--border);
+    background-color: var(--background);
     padding: 6px;
     margin-right: 64px;
-    box-shadow: rgba(0, 0, 0, 0.08) 4px 4px 8px 0;
+    box-shadow: var(--card-shadow) 4px 4px 8px 0;
 }
 
 .card-selector .selector-option {
@@ -321,10 +392,10 @@ textarea.vertical-resize {
     font-weight: bold;
     padding: 12px;
     white-space: nowrap;
-    background-color: white;
+    background-color: var(--background);
     border-radius: 2px;
     text-align: left;
-    color: black;
+    color: var(--text);
     transition: background-color .2s ease-out;
 }
 
@@ -333,7 +404,7 @@ textarea.vertical-resize {
 }
 
 .card-selector .selector-option:hover {
-    background-color: #f6f6f6;
+    background-color: var(--highlight-bg);
 }
 
 .checkbox-btn {
@@ -344,13 +415,13 @@ textarea.vertical-resize {
     background: transparent;
     padding: 0;
     font-size: 0.8rem;
-    color: black;
+    color: var(--text);
     cursor: pointer;
     transition: color .2s ease-out, color .2s ease-out;
 }
 
 .checkbox-btn:hover {
-    color: #444;
+    color: var(--muted);
 }
 
 .control-btn {
@@ -361,7 +432,7 @@ textarea.vertical-resize {
     background: transparent;
     padding: 8px;
     font-size: 1rem;
-    color: black;
+    color: var(--text);
     border: 1px solid transparent;
     border-radius: 4px;
     cursor: pointer;
@@ -369,8 +440,8 @@ textarea.vertical-resize {
 }
 
 .control-btn:hover {
-    color: #444;
-    border-color: #ddd;
+    color: var(--muted);
+    border-color: var(--highlight-border);
 }
 
 .danger-btn:hover {
@@ -383,7 +454,7 @@ textarea.vertical-resize {
 .blue-btn,
 .red-btn {
     font-size: .8rem;
-    background-color: #00b460;
+    background-color: var(--green);
     color: white;
     transition: background-color .2s ease-out;
 }
@@ -392,31 +463,31 @@ textarea.vertical-resize {
 .white-btn:hover,
 .blue-btn:hover,
 .red-btn:hover {
-    background-color: #0ec570;
+    background-color: var(--green-light);
     color: white;
     border-color: transparent;
 }
 
 .red-btn {
-    background-color: #e01e1e;
+    background-color: var(--red);
 }
 
 .red-btn:hover {
-    background-color: #f53a3a;
+    background-color: var(--red-light);
 }
 
 .blue-btn {
-    background-color: #2338f2;
+    background-color: var(--blue);
 }
 
 .blue-btn:hover {
-    background-color: #3a4efc;
+    background-color: var(--blue-light);
 }
 
 .white-btn,
 .white-btn:hover {
-    color: black;
-    border: 1px solid #eee;
+    color: var(--text);
+    border: 1px solid var(--border);
     background: transparent;
 }
 
@@ -431,8 +502,8 @@ textarea.vertical-resize {
     white-space: nowrap;
     font-size: .7rem;
     border-radius: 5px;
-    background: rgba(20, 20, 20, .9);
-    color: rgb(232, 232, 232);
+    background: var(--tooltip);
+    color: var(--tooltip-text);
     padding: 6px 8px;
     bottom: -12px;
     left: 50%;
@@ -467,7 +538,7 @@ textarea.vertical-resize {
 .tooltip.tooltip-top::before {
     bottom: calc(100% + 5px);
     border-color: transparent;
-    border-top-color: rgba(20, 20, 20, .9);
+    border-top-color: var(--tooltip);
 }
 
 .tooltip.tooltip-left::before {
@@ -476,7 +547,7 @@ textarea.vertical-resize {
     left: auto;
     top: 50%;
     border-color: transparent;
-    border-left-color: rgba(20, 20, 20, .9);
+    border-left-color: var(--tooltip);
     transform: translate(0, -50%);
 }
 
@@ -486,7 +557,7 @@ textarea.vertical-resize {
     right: auto;
     top: 50%;
     border-color: transparent;
-    border-right-color: rgba(20, 20, 20, .9);
+    border-right-color: var(--tooltip);
     transform: translate(0, -50%);
 }
 
@@ -497,7 +568,7 @@ textarea.vertical-resize {
     bottom: -12px;
     transform: translate(-50%);
     border: 5px solid transparent;
-    border-bottom-color: rgba(20, 20, 20, .9);
+    border-bottom-color: var(--tooltip);
     opacity: 0;
     transition: opacity .1s ease-out .2s;
     pointer-events: none;
@@ -511,7 +582,7 @@ textarea.vertical-resize {
 
 .tooltip.info {
     margin-left: 12px;
-    color: #aaa;
+    color: var(--dark);
     font-size: 1rem;
 }
 
@@ -533,7 +604,7 @@ textarea.vertical-resize {
 #modal .content {
     min-width: 600px;
     min-height: 500px;
-    background-color: white;
+    background-color: var(--background);
     border-radius: 8px;
     padding: 40px;
     display: flex;
@@ -546,9 +617,9 @@ textarea.vertical-resize {
 
 #modal h1 {
     font-size: 2rem;
-    color: black;
+    color: var(--text);
     padding-bottom: 16px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid var(--border);
     margin-bottom: 16px;
 }
 

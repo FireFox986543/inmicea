@@ -499,8 +499,9 @@ class ContactInfoCard extends Card {
         this.icon = 'fa-id-card';
 
         this.googleMapsLink = '';
-        this.sectionId;
+        this.sectionId = '';
         this.heading = 'Contact information';
+        this.displayDirection = 'horizontal';
 
         this.contentCards = [];
     }
@@ -521,6 +522,7 @@ class ContactInfoCard extends Card {
                     ${Card.renderInfoTo(Card.renderTextField(this, 'Google maps link', 'googleMapsLink'), 'Link used for displaying google maps if required, unless leave empty')}
                     ${Card.renderInfoTo(Card.renderTextField(this, 'Section id', 'sectionId'), 'A unique identifier that can be used for linking navigation links to this section')}
                     ${Card.renderTextField(this, 'Heading', 'heading')}
+                    ${Card.renderDropdown(this, 'Display direction', 'displayDirection', [['horizontal', 'Horizontal'], ['vertical', 'Vertical']])}
                     <div class="card-field card-field-nested">
                         <div class="nested-card-container">
                             <div class="nested-top">

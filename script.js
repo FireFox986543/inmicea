@@ -41,13 +41,22 @@ function createNew() {
 }
 
 
-function preview() {
+function preview(prefix = '') {
     var iframe = document.getElementById("window-frame");
     if (iframe && iframe.contentWindow) {
-        iframe.contentWindow.postMessage(getSerializedCards(), "*");
+        iframe.contentWindow.postMessage(prefix + getSerializedCards(), "*");
     }
     else
         console.log('It failed....');
+}
+function downloadPage() {
+    preview('PLZ-DONLOAD');
+}
+function previewNewPage() {
+    const base = encodeURIComponent(getSerializedCards());
+    const url = window.location.href.replace('index.html', '/src/inmicea-page/index.html?preview=' + base);
+    
+    window.open(url, '_blank');
 }
 
 function addCard(card, list, save = true) {

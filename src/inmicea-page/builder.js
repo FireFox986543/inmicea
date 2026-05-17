@@ -1,22 +1,49 @@
 let webpageLang = 'en';
+let webpageAuthor = 'John Doe';
+let webpageTitle = 'My webpage';
+let webpageStyle = [];
+
+const s = new URLSearchParams(window.location.search);
+
+if (s.get('preview'))
+    renderPage(s.get('preview'));
 
 window.addEventListener(
     "message",
     (e) => {
         console.log('Received message');
+        let m = event.data;
 
-        const content = document.getElementById('body-content');
+        if (m.startsWith('PLZ-DONLOAD')) {
+            m = event.data.substring('PLZ-DONLOAD'.length, event.data.length);
+            renderPage(m);
+            constructWholeHTML(m);
+            return;
+        }
+
+        renderPage(m);
+    },
+    false
+);
+
+function renderPage(raw) {
+    const content = document.getElementById('body-content');
+
+    try {
         content.innerHTML = '';
 
-        const cards = JSON.parse(event.data);
+        const cards = JSON.parse(raw);
         cards.forEach(c => {
             content.innerHTML += handleCard(c);
         });
 
+        content.innerHTML += `<footer><p>&copy; 2026 ${webpageAuthor} &nbsp;&nbsp;&nbsp;&nbsp; ${translate('footer-rights')}</p></footer>`
+
         hookAllImages();
-    },
-    false
-);
+    } catch (error) {
+        content.innerHTML = '<p style="color: red; font-size: 2rem"> Failed to render page!</p>';
+    }
+}
 
 function handleCard(card) {
 
@@ -24,19 +51,24 @@ function handleCard(card) {
         case 'HTMLDataCard':
             document.title = card.webpageTitle;
             webpageLang = card.webpageLanguage;
+            webpageAuthor = card.webpageAuthor;
             return '';
         case 'CSSDataCard':
             const s = document.documentElement.style;
-            s.setProperty('--background', card.backgroundColor);
-            s.setProperty('--background-lighter', card.backgroundLighterColor);
-            s.setProperty('--background-lightest', card.backgroundLightestColor);
-            s.setProperty('--text', card.textColor);
-            s.setProperty('--muted', card.mutedColor);
-            s.setProperty('--primary', card.primaryColor);
-            s.setProperty('--secondary', card.secondaryColor);
-            s.setProperty('--dark', card.darkColor);
-            s.setProperty('--dark2', card.darkerColor);
-            s.setProperty('--font-family', `'${card.fontFamily}', Arial, Helvetica, sans-serif`);
+            webpageStyle = [
+                ['--background', card.backgroundColor],
+                ['--background-lighter', card.backgroundLighterColor],
+                ['--background-lightest', card.backgroundLightestColor],
+                ['--text', card.textColor],
+                ['--muted', card.mutedColor],
+                ['--primary', card.primaryColor],
+                ['--secondary', card.secondaryColor],
+                ['--dark', card.darkColor],
+                ['--dark2', card.darkerColor],
+                ['--font-family', `'${card.fontFamily}', Arial, Helvetica, sans-serif`],
+            ];
+            
+            webpageStyle.forEach(([prop, val]) => s.setProperty(prop, val));
             return '';
         case 'HTMLNavigationCard':
             return handleNavCard(card);
@@ -177,15 +209,15 @@ function handleContactInfo(c) {
     let googleMaps = '';
 
     if (c.googleMapsLink.startsWith('https://www.google.com/maps/embed'))
-        googleMaps = `<div style="flex-grow: 1; display: flex;">
-                        <iframe src="${c.googleMapsLink}" width="100000" height="100000" style="border:0; border-radius: 20px; width: 100%; height: 100%;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        googleMaps = `<div style="width: 50%; display: flex; min-height: 512px;">
+                        <iframe src="${c.googleMapsLink}" width="100000" height="100000" style="border:0; border-radius: 20px; width: 100%; height: 100%; height: stretch;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>`;
 
     return `<section class="main">
                 <section id="${c.sectionId}" style="width: 100%;">
                     <h2>${c.heading}</h2>
-                    <div class="contact" ${googleMaps === '' ? '' : 'style="min-height: 512px;"'}>
-                        <div style="display: flex; flex-direction: column; gap: 20px; flex: 1 1 400px; max-width: 600px">
+                    <div class="contact" ${googleMaps === '' ? '' : `style="align-items: center; min-height: 512px; flex-direction: ${c.displayDirection === 'vertical' ? 'column' : 'row'}"`}>
+                        <div style="display: flex; flex-direction: column; gap: 20px; width: 50%;">
                             ${content}
                         </div>
                         ${googleMaps}
@@ -253,6 +285,89 @@ function translate(f) {
         case 'def-message': return webpageLang === 'hu' ? 'Írja ide üzenetét...' : 'Enter message here...'
 
         case 'send': return webpageLang === 'hu' ? 'Küldés' : 'Send'
+        case 'footer-rights': return webpageLang === 'hu' ? 'Minden jog fenntartva.' : 'All rights reserved.';
         default: return '';
     }
-} 
+}
+
+// CREDIT: https://coreui.io/answers/how-to-download-a-file-in-javascript/
+function downloadFile(data, filename, type = 'text/plain') {
+    const blob = new Blob([data], { type })
+    const url = URL.createObjectURL(blob)
+
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+}
+
+function constructWholeHTML() {
+    const content = document.getElementById('body-content').innerHTML;
+
+    let cssStyle = '';
+    webpageStyle.forEach(([p, s]) => {
+        cssStyle += `${p}: ${s};\n`;
+    });
+
+    const html = `<!DOCTYPE html>
+<html lang="${webpageLang}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>${webpageTitle}</title>
+    <meta name="author" content="${webpageAuthor}">
+    <link rel="stylesheet" href="fontawesome/css/fontawesome.css">
+    <link rel="stylesheet" href="fontawesome/css/regular.css">
+    <link rel="stylesheet" href="fontawesome/css/solid.css">
+    <link rel="stylesheet" href="fontawesome/css/brands.css">
+    <link rel="stylesheet" href="inmicea.css">
+    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+    <style>
+        :root {
+            ${cssStyle}
+        }
+    </style>
+</head>
+<body>
+    <div id="body-content">
+        ${content}
+    </div>
+    <div id="modal" class="hidden">
+        <img src="" id="modal-img">
+        <button type="button"><i class="fas fa-x"></i></button>
+    </div>
+    <script>
+        const modal = document.getElementById('modal');
+        const modalImg = document.getElementById('modal-img');
+
+        hookAllImages();
+
+        modal.querySelector('button').addEventListener('click', () => {
+            closeModal();
+        });
+
+        function showModal(src) {
+            modal.classList.remove('hidden');
+            modalImg.src = src;
+        }
+        function closeModal() {
+            modal.classList.add('hidden');
+        }
+
+        function hookAllImages() {
+            document.querySelectorAll('img.clickable').forEach(e => {
+                e.addEventListener('click', () => {
+                    showModal(e.src);
+                });
+            });
+        }
+    </script>
+</body>
+</html>`;
+
+    downloadFile(html, 'index.html', 'text/html; charset=utf-8');
+}

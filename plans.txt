@@ -42,6 +42,7 @@ Contact card:
  - Google maps link                 ? Link to google maps, leave empty if you wouldn't like to have one displayed
  - Section id                       ? A unique identifier that can be used for linking navigation links to this section
  - Heading
+ - Display direction [horizontal, vertical]
  - Content cards:
     - Contact element: type [email, location, tel, etc...], name, text
 

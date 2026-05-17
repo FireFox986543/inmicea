@@ -156,6 +156,10 @@ iframe {
     text-align: left;
     display: flex;
     align-self: center;
+    height: 60px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
 }
 
 .card .card-toolbar .title-wrapper {
@@ -351,6 +355,7 @@ textarea.vertical-resize {
 
 .green-btn,
 .white-btn,
+.blue-btn,
 .red-btn {
     font-size: .8rem;
     background-color: #00b460;
@@ -360,6 +365,7 @@ textarea.vertical-resize {
 
 .green-btn:hover,
 .white-btn:hover,
+.blue-btn:hover,
 .red-btn:hover {
     background-color: #0ec570;
     color: white;
@@ -372,6 +378,14 @@ textarea.vertical-resize {
 
 .red-btn:hover {
     background-color: #f53a3a;
+}
+
+.blue-btn {
+    background-color: #2338f2;
+}
+
+.blue-btn:hover {
+    background-color: #3a4efc;
 }
 
 .white-btn,

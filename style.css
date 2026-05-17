@@ -230,6 +230,9 @@ iframe {
     min-height: 40px;
     padding: 0 12px;
     cursor: pointer;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
 }
 
 .card input[type='text'],

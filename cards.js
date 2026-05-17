@@ -304,7 +304,7 @@ class SectionCard extends Card {
                     ${Card.renderTextField(this, 'Heading', 'heading')}
                     ${Card.renderInfoTo(Card.renderCheckBox(this, 'Display heading at top', 'headingIsTop'), 'Should the header be placed as the first element?', true)}
                     ${Card.renderInfoTo(Card.renderTextField(this, 'Section id', 'sectionId'), 'A unique identifier that can be used for linking navigation links to this section')}
-                    ${Card.renderNestedCards(this, 'Section content', 'contentCards', Card.renderAddButtonMultiple(this, 'contentCards', [['Paragraph', 'fa-section'], ['List', 'fa-list-ul', 'ListCard'], ['Raw HTML', 'fa-file-html', 'RawHTMLCard']]))}
+                    ${Card.renderNestedCards(this, 'Section content', 'contentCards', Card.renderAddButtonMultiple(this, 'contentCards', [['Paragraph', 'fa-section', 'ParagraphCard'], ['List', 'fa-list-ul', 'ListCard'], ['Raw HTML', 'fa-file-html', 'RawHTMLCard']]))}
                     ${Card.renderDropdown(this, 'Image type', 'imageType', [['none', 'None'], ['bottom', 'Bottom'], ['top', 'Top'], ['left', 'Left'], ['right', 'Right']])}
                     ${this.imageType === 'none' ? ''
                 : (

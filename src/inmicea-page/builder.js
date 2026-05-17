@@ -49,7 +49,7 @@ function handleCard(card) {
 
     switch (card.cardType) {
         case 'HTMLDataCard':
-            document.title = card.webpageTitle;
+            document.title = webpageTitle = card.webpageTitle;
             webpageLang = card.webpageLanguage;
             webpageAuthor = card.webpageAuthor;
             return '';

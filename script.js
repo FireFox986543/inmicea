@@ -55,7 +55,7 @@ function downloadPage() {
 function previewNewPage() {
     const base = encodeURIComponent(getSerializedCards());
     const url = window.location.href.replace('index.html', '/src/inmicea-page/index.html?preview=' + base);
-    
+
     window.open(url, '_blank');
 }
 
@@ -132,12 +132,29 @@ function dupeCard(id, nestId, nestList) {
     if (c == null || c === -1)
         return;
 
-    const newCard = c.clone();
-    newCard.id = generateUUIDv4();
-    array.splice(idx + 1, 0, newCard);
-    allCards.push(newCard);
+    const o = JSON.parse(serializeCard(c));
+    newIdsForCardObject([o]);
+    constructNewCard(o, array);
+    // Note: the constructNewCard will always push the card at the end of the array
+    moveTo(array, array.length - 1, idx + 1);
+
     saveToHistory();
     renderCards();
+}
+function collapseCard(t, id) {
+    const c = findNestedCard(id);
+
+    if (!c)
+        return;
+
+    t.parentElement.classList.toggle('collapsed');
+    c.collapsed = !c.collapsed;
+}
+function collapseNestedList(t, nestId, nestList) {
+    const c = findNestedCard(nestId);
+    const f = nestList + '_collapsed';
+    c[f] = !c[f];
+    t.parentElement.classList.toggle('collapsed', c[f]);
 }
 function updateProperty(t, id, nestId, nestList, hook) {
     const array = handleNesting(nestId, nestList);
@@ -157,6 +174,33 @@ function renderCards() {
     rootCardlist.forEach(c => cardContainer.innerHTML += c.render());
 }
 
+function newIdsForCardObject(c) {
+    const handle = (o, nesting) => {
+        const myID = generateUUIDv4();
+        o.id = myID;
+
+        if (nesting)
+            o.nesting = { id: nesting.id, list: nesting.list };
+
+        for (const k in o) {
+            if (!Object.hasOwn(o, k)) continue;
+
+            const v = o[k];
+            const thisNesting = { id: myID, list: k };
+
+            if (k.endsWith('Cards') && Array.isArray(v)) {
+                const nestArray = [];
+                v.forEach(x => {
+                    handle(x, thisNesting);
+                    nestArray.push(x);
+                });
+                o[k] = nestArray;
+            }
+        }
+    };
+
+    c.forEach(i => handle(i, i.nesting || null));
+}
 function generateUUIDv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
         const r = Math.random() * 16 | 0;
@@ -211,41 +255,43 @@ function historyRedo() {
     historyAt++;
     renderCurrentHistory();
 }
-function getSerializedCards() {
-    return JSON.stringify(rootCardlist, (k, v) => {
+function serializeCard(c) {
+    return JSON.stringify(c, (k, v) => {
         if (['cardTitle', 'icon'].includes(k))
             return undefined;
 
         return v;
     });
 }
+function getSerializedCards() {
+    return serializeCard(rootCardlist);
+}
 function constructNewCardsFrom(cards) {
     allCards.length = 0;
     rootCardlist.length = 0;
 
-    const handleSingleCard = (c, array) => {
-        const n = newCardFromType(c.cardType);
+    cards.forEach(c => constructNewCard(c, rootCardlist));
+    renderCards();
+}
+function constructNewCard(c, array) {
+    const n = newCardFromType(c.cardType);
 
-        for (const k in c) {
-            if (!Object.hasOwn(c, k)) continue;
-            const v = c[k];
+    for (const k in c) {
+        if (!Object.hasOwn(c, k)) continue;
+        const v = c[k];
 
-            // We found a nested list
-            if (k.endsWith('Cards') && Array.isArray(v)) {
-                const nestArray = [];
-                v.forEach(c => handleSingleCard(c, nestArray));
-                n[k] = nestArray;
-            }
-            else
-                n[k] = v;
+        // We found a nested list
+        if (k.endsWith('Cards') && Array.isArray(v)) {
+            const nestArray = [];
+            v.forEach(c => constructNewCard(c, nestArray));
+            n[k] = nestArray;
         }
-
-        array.push(n);
-        allCards.push(n);
+        else
+            n[k] = v;
     }
 
-    cards.forEach(c => handleSingleCard(c, rootCardlist));
-    renderCards();
+    array.push(n);
+    allCards.push(n);
 }
 
 window.addEventListener('keydown', (e) => {

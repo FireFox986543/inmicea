@@ -87,8 +87,11 @@ main {
     background-color: white;
     border: 1px solid #eee;
     border-radius: 4px;
-    overflow: hidden;
     flex: 50%;
+}
+
+#viewer {
+    overflow: hidden;
 }
 
 iframe {
@@ -126,17 +129,23 @@ iframe {
 .card-container {
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 16px;
     padding: 16px;
     flex-grow: 1;
     overflow: hidden auto;
 }
 
-#editor #editor-content .card {
+.card {
     flex: 0 1 200px;
     border: 1px solid #eee;
     border-radius: 4px;
     box-shadow: rgba(0, 0, 0, 0.08) 6px 6px 10px 0;
+}
+
+.card.collapsed {
+    overflow: hidden;
+    min-height: 60px;
+    max-height: 60px;
 }
 
 .card .card-content {
@@ -157,6 +166,7 @@ iframe {
     display: flex;
     align-self: center;
     height: 60px;
+    cursor: pointer;
     user-select: none;
     -moz-user-select: none;
     -webkit-user-drag: none;
@@ -201,13 +211,25 @@ iframe {
     border-radius: 4px;
 }
 
+.card .nested-card-container.collapsed {
+    overflow: hidden;
+    min-height: 40px;
+    max-height: 40px;
+}
+
+.card .nested-card-container.collapsed button {
+    display: none;
+}
+
 .card .nested-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-bottom: 1px solid #eee;
     height: 40px;
+    min-height: 40px;
     padding: 0 12px;
+    cursor: pointer;
 }
 
 .card input[type='text'],

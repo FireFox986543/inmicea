@@ -269,7 +269,7 @@ function historyRedo() {
 }
 function serializeCard(c) {
     return JSON.stringify(c, (k, v) => {
-        if (['cardTitle', 'icon', 'category'].includes(k))
+        if (['cardTitle', 'icon', 'category'].includes(k) || k.startsWith('_'))
             return undefined;
 
         return v;

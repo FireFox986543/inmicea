@@ -25,6 +25,16 @@
     --secondary: #00bbff;
     --dark: #1b1b1b;
     --dark2: #111111;
+    --nav-bar: #1b1b1b;
+    --nav-bar-hover: #262626;
+    --nav-text: #0048ff;
+    --nav-text-hover: #00bbff;
+    --nav-active: white;
+    --nav-active-text: #0048ff;
+    --heading-align: 'center';
+    --heading-text: #0048ff;
+    --heading-variant: 'small-caps';
+    --form-text: white;
     --font-family: Inter, Arial, Helvetica, sans-serif;
 
     --inmicea-background: url('img/test2.png');
@@ -63,8 +73,8 @@ nav {
     display: flex;
     align-items: center;
     height: 60px;
-    color: white;
-    background: var(--dark);
+    color: var(--nav-text);
+    background: var(--nav-bar);
 }
 
 nav a,
@@ -75,7 +85,7 @@ nav .subbed {
     height: 100%;
     padding: 10px 2rem;
     white-space: nowrap;
-    color: var(--primary);
+    color: var(--nav-text);
     cursor: pointer;
 }
 
@@ -107,13 +117,14 @@ nav a>img {
 
 nav a,
 nav .subbed {
-    transition: color .2s ease-out, background .2s ease-out !important;
+    color: var(--nav-text) !important;
+    transition: color .2s ease-out, background-color .2s ease-out !important;
 }
 
-nav a:hover,
+nav a:not(.active):hover,
 nav .subbed:hover {
-    background: rgba(255, 255, 255, .2);
-    color: var(--secondary);
+    color: var(--nav-text-hover) !important;
+    background: var(--nav-bar-hover) !important;
 }
 
 nav .subbed:hover>.nav-sub {
@@ -131,7 +142,7 @@ nav .subbed .nav-sub {
     left: 0;
     bottom: 0;
     transform: translateY(100%);
-    background: var(--dark2);
+    background: var(--nav-bar);
 }
 
 nav .subbed .subbed>.nav-sub {
@@ -140,8 +151,8 @@ nav .subbed .subbed>.nav-sub {
 }
 
 nav a.active {
-    background-color: white;
-    color: var(--primary)
+    background-color: var(--nav-active);
+    color: var(--nav-active-text) !important;
 }
 
 header {
@@ -291,14 +302,14 @@ button:hover,
 
 h3,
 h2 {
-    color: var(--primary);
+    color: var(--heading-text);
     font-size: 2rem;
-    font-variant: small-caps;
+    font-variant: var(--heading-variant);
     width: 100%;
 }
 
 h2 {
-    text-align: center;
+    text-align: var(--heading-align);
 }
 
 h3 {
@@ -427,7 +438,7 @@ form {
 }
 
 form .title {
-    color: white;
+    color: var(--form-text);
     font-size: 1.2rem;
     text-align: center;
     display: block;
@@ -443,12 +454,12 @@ form .title {
     width: 100%;
     background-color: var(--background-lighter);
     font-family: inherit;
-    border: 1px solid var(--primary);
+    border: 1px solid var(--form-text);
     border-radius: 5px;
     padding: 12px;
     font-size: 1rem;
     outline: 0;
-    color: white;
+    color: var(--form-text);
 }
 
 .frow label {
@@ -459,9 +470,13 @@ form .title {
     padding: 0 4px;
     transform: translate(0, -50%);
     font-size: .8rem;
+    color: var(--form-text);
 }
 
-
+.frow ::placeholder {
+    color: var(--form-text);
+    opacity: .7;
+}
 
 .bogyok {
     display: flex;

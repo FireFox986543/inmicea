@@ -65,6 +65,16 @@ function handleCard(card) {
                 ['--secondary', card.secondaryColor],
                 ['--dark', card.darkColor],
                 ['--dark2', card.darkerColor],
+                ['--nav-bar', card.navBar],
+                ['--nav-bar-hover', card.navBarHover],
+                ['--nav-text', card.navText],
+                ['--nav-text-hover', card.navTextHover],
+                ['--nav-active', card.navActive],
+                ['--nav-active-text', card.navActiveText],
+                ['--heading-align', card.headingAlign],
+                ['--heading-text', card.headingText],
+                ['--heading-variant', card.headingVariant],
+                ['--form-text', card.formText],
                 ['--font-family', `'${card.fontFamily}', Arial, Helvetica, sans-serif`],
             ];
             

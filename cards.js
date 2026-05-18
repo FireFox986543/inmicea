@@ -21,6 +21,11 @@ class Card {
                     </div>
                 </div>`
     }
+    static renderHr(text) {
+        return `<div class="card-field card-hr">
+                    <span>${text}</span>
+                </div>`;
+    }
     static renderTextField(t, label, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field">
@@ -162,32 +167,74 @@ class CSSDataCard extends Card {
         this.icon = 'fa-paint-brush';
         this.category = 'markup';
 
+        this._themeDONTUSE = 'hello';
+
         this.backgroundColor = '#202020';
         this.backgroundLighterColor = '#2c2c2c';
         this.backgroundLightestColor = '#3a3a3a';
         this.textColor = '#efefef';
         this.mutedColor = '#b0b0b0';
+        this.formText = '#ffffff';
         this.primaryColor = '#0048ff';
         this.secondaryColor = '#00bbff';
         this.darkColor = '#1b1b1b';
         this.darkerColor = '#111111';
+        this.navBar = '#1b1b1b';
+        this.navBarHover = '#262626';
+        this.navText = '#0048ff';
+        this.navTextHover = '#00bbff';
+        this.navActive = '#ffffff';
+        this.navActiveText = '#0048ff';
+        this.headingAlign = 'center';
+        this.headingText = '#0048ff';
+        this.headingVariant = 'small-caps';
         this.fontFamily = 'Inter';
+    }
+    onPropertyUpdate(hook, value) {
+        if (hook === '_themeDONTUSE') {
+            // Reset to default value
+            this._themeDONTUSE = 'hello';
+            const theme = getCSSThemes(value);
+
+            for (const k in theme) {
+                if (!Object.hasOwn(theme, k)) continue;
+
+                this[k] = theme[k];
+            }
+
+            renderCards();
+        }
     }
 
     render() {
         return `${Card.beginCard(this)}
                 ${Card.renderCardToolbar(this, false)}
-                <div class="card-content">
+                    <div class="card-content">
+                    ${Card.renderDropdown(this, 'Select theme', '_themeDONTUSE', [['hello', ''], ['dark', 'Dark (Default)'], ['light', 'Light'], ['coffee', 'Coffee'], ['sea', 'Sea'], ['cherry', 'Cherry'], ['mesa', 'Mesa']])}
+                    ${Card.renderHr('General colors')}
                     ${Card.renderColorField(this, 'Background', 'backgroundColor')}
                     ${Card.renderColorField(this, 'Background lighter', 'backgroundLighterColor')}
                     ${Card.renderColorField(this, 'Background lightest', 'backgroundLightestColor')}
-                    ${Card.renderColorField(this, 'Text', 'textColor')}
-                    ${Card.renderColorField(this, 'Muted text', 'mutedColor')}
-                    ${Card.renderColorField(this, 'Primary', 'primaryColor')}
-                    ${Card.renderColorField(this, 'Secondary', 'secondaryColor')}
                     ${Card.renderColorField(this, 'Dark', 'darkColor')}
                     ${Card.renderColorField(this, 'Darker', 'darkerColor')}
+                    ${Card.renderColorField(this, 'Primary', 'primaryColor')}
+                    ${Card.renderColorField(this, 'Secondary', 'secondaryColor')}
+                    ${Card.renderHr('Text')}
+                    ${Card.renderColorField(this, 'Text', 'textColor')}
+                    ${Card.renderColorField(this, 'Muted text', 'mutedColor')}
+                    ${Card.renderColorField(this, 'Form text', 'formText')}
                     ${Card.renderDropdown(this, 'Font family', 'fontFamily', [['Inter', 'Inter'], ['Arial', 'Arial'], ['Times New Roman', 'Times New Roman']])}
+                    ${Card.renderHr('Navmenu')}
+                    ${Card.renderColorField(this, 'Navmenu background', 'navBar')}
+                    ${Card.renderColorField(this, 'Navmenu hover background', 'navBarHover')}
+                    ${Card.renderColorField(this, 'Navmenu text', 'navText')}
+                    ${Card.renderColorField(this, 'Navmenu hover text', 'navTextHover')}
+                    ${Card.renderColorField(this, 'Navmenu active', 'navActive')}
+                    ${Card.renderColorField(this, 'Navmenu active text', 'navActiveText')}
+                    ${Card.renderHr('Heading')}
+                    ${Card.renderColorField(this, 'Heading text', 'headingText')}
+                    ${Card.renderDropdown(this, 'Heading align', 'headingAlign', [['left', 'Left'], ['center', 'Center'], ['right', 'Right']])}
+                    ${Card.renderDropdown(this, 'Heading variant', 'headingVariant', [['normal', 'Normal'], ['small-caps', 'Smallcaps']])}
                 </div>
             </div>`;
     }
@@ -535,5 +582,148 @@ function newCardFromType(type) {
         case 'RawHTMLCard': return new RawHTMLCard();
         default:
             throw new Error("Failed to construct card from given type: " + type);
+    }
+}
+
+function getCSSThemes(theme) {
+    switch (theme) {
+        case 'light':
+            return {
+                "backgroundColor": "#ffffff",
+                "backgroundLighterColor": "#fafafa",
+                "backgroundLightestColor": "#f2f2f2",
+                "textColor": "#0a0a0a",
+                "mutedColor": "#4f4f4f",
+                "primaryColor": "#0048ff",
+                "secondaryColor": "#00bbff",
+                "darkColor": "#0048ff",
+                "darkerColor": "#595959",
+                "navBar": "#0048ff",
+                "navBarHover": "#00bbff",
+                "navText": "#ffffff",
+                "navTextHover": "#ffffff",
+                "navActive": "#ffffff",
+                "navActiveText": "#0048ff",
+                "headingAlign": "center",
+                "headingText": "#0048ff",
+                "headingVariant": "small-caps",
+                "formText": "#0048ff",
+                "fontFamily": "Inter"
+            };
+        case 'coffee':
+            return {
+                "backgroundColor": "#d3a26f",
+                "backgroundLighterColor": "#ab7e54",
+                "backgroundLightestColor": "#b9824b",
+                "textColor": "#383029",
+                "mutedColor": "#68635e",
+                "primaryColor": "#572f0a",
+                "secondaryColor": "#522405",
+                "darkColor": "#b9824b",
+                "darkerColor": "#111111",
+                "navBar": "#383029",
+                "navBarHover": "#4b3d2a",
+                "navText": "#e8dbc9",
+                "navTextHover": "#ffffff",
+                "navActive": "#ffffff",
+                "navActiveText": "#543f2b",
+                "headingAlign": "center",
+                "headingText": "#594118",
+                "headingVariant": "small-caps",
+                "formText": "#ffffff",
+                "fontFamily": "Inter"
+            };
+        case 'sea':
+            return {
+                "backgroundColor": "#001f21",
+                "backgroundLighterColor": "#055050",
+                "backgroundLightestColor": "#10afaf",
+                "textColor": "#d4f2f7",
+                "mutedColor": "#afdde5",
+                "primaryColor": "#964734",
+                "secondaryColor": "#b34719",
+                "darkColor": "#055050",
+                "darkerColor": "#001f21",
+                "navBar": "#055050",
+                "navBarHover": "#964734",
+                "navText": "#afdde5",
+                "navTextHover": "#ffffff",
+                "navActive": "#ffffff",
+                "navActiveText": "#055050",
+                "headingAlign": "center",
+                "headingText": "#964734",
+                "headingVariant": "small-caps",
+                "formText": "#ffffff",
+                "fontFamily": "Inter"
+            };
+        case 'cherry':
+            return {
+                "backgroundColor": "#ebe9e1",
+                "backgroundLighterColor": "#ffa2b6",
+                "backgroundLightestColor": "#ffc2ce",
+                "textColor": "#e43d12",
+                "mutedColor": "#cc3359",
+                "primaryColor": "#e43d12",
+                "secondaryColor": "#efb11d",
+                "darkColor": "#d6536d",
+                "darkerColor": "#d6536d",
+                "navBar": "#e43d12",
+                "navBarHover": "#efb11d",
+                "navText": "#ffa2b6",
+                "navTextHover": "#ffffff",
+                "navActive": "#ffffff",
+                "navActiveText": "#e43d12",
+                "headingAlign": "center",
+                "headingText": "#efb11d",
+                "headingVariant": "small-caps",
+                "formText": "#ffffff",
+                "fontFamily": "Inter"
+            };
+        case 'mesa':
+            return {
+                "backgroundColor": "#bc4639",
+                "backgroundLighterColor": "#5c2019",
+                "backgroundLightestColor": "#5c2019",
+                "textColor": "#f2e1db",
+                "mutedColor": "#d4a59c",
+                "formText": "#ffae00",
+                "primaryColor": "#ffae00",
+                "secondaryColor": "#ffae00",
+                "darkColor": "#5c2019",
+                "darkerColor": "#d4a59c",
+                "navBar": "#5c2019",
+                "navBarHover": "#ffae00",
+                "navText": "#f2e1db",
+                "navTextHover": "#bc4639",
+                "navActive": "#ffae00",
+                "navActiveText": "#ffffff",
+                "headingAlign": "center",
+                "headingText": "#5c2019",
+                "headingVariant": "small-caps",
+                "fontFamily": "Inter"
+            };
+        default: // Dark
+            return {
+                "backgroundColor": "#202020",
+                "backgroundLighterColor": "#2c2c2c",
+                "backgroundLightestColor": "#3a3a3a",
+                "textColor": "#efefef",
+                "mutedColor": "#b0b0b0",
+                "primaryColor": "#0048ff",
+                "secondaryColor": "#00bbff",
+                "darkColor": "#1b1b1b",
+                "darkerColor": "#111111",
+                "navBar": "#1b1b1b",
+                "navBarHover": "#262626",
+                "navText": "#0048ff",
+                "navTextHover": "#00bbff",
+                "navActive": "#ffffff",
+                "navActiveText": "#0048ff",
+                "headingAlign": "center",
+                "headingText": "#0048ff",
+                "headingVariant": "small-caps",
+                "formText": "#0048ff",
+                "fontFamily": "Inter"
+            };
     }
 }

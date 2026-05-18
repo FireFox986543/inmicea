@@ -216,30 +216,31 @@ iframe {
 }
 
 .card {
+    --catcol: var(--cat-content);
     flex: 0 1 200px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--catcol);
     border-radius: 4px;
     box-shadow: var(--card-shadow) 6px 6px 10px 0;
 }
 
 .card.cat-content {
-    border-color: var(--cat-content);
+    --catcol: var(--cat-content);
 }
 
 .card.cat-markup {
-    border-color: var(--cat-markup);
+   --catcol: var(--cat-markup);
 }
 
 .card .card,
 .card .card .card .card,
 .card .card .card .card .card .card {
-    border-color: var(--cat-nest);
+    --catcol: var(--cat-nest);
 }
 
 .card .card .card,
 .card .card .card .card .card,
 .card .card .card .card .card .card .card {
-    border-color: var(--cat-nest2);
+    --catcol: var(--cat-nest2);
 }
 
 .card.collapsed {
@@ -259,7 +260,7 @@ iframe {
     font-weight: bold;
     color: var(--text);
     font-size: 0.8rem;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--catcol);
     padding: 8px;
     margin-bottom: 8px;
     text-align: left;
@@ -289,6 +290,25 @@ iframe {
     align-items: center;
     height: 40px;
     font-size: 0.8rem;
+}
+
+.card .card-hr {
+    height: auto;
+}
+
+.card .card-hr span {
+    color: var(--catcol);
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+.card .card-hr::after {
+    content: '';
+    display: block;
+    flex-grow: 1;
+    height: 1px;
+    background-color: var(--catcol);
 }
 
 .card .card-field.expandable {

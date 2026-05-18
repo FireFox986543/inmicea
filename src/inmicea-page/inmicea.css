@@ -28,7 +28,6 @@
     --font-family: Inter, Arial, Helvetica, sans-serif;
 
     --inmicea-background: url('img/test2.png');
-    --inmicea-background: url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyLuATnZXncU5twYo7lKqaWPtkCMX9l5Oyug&s');
 }
 
 ::selection {
@@ -47,7 +46,7 @@ body {
     font-family: var(--font-family);
     font-size: 1.3em;
     scroll-behavior: smooth;
-    scrollbar-color: var(--primary) transparent;
+    scrollbar-color: var(--muted) transparent;
 }
 
 body {

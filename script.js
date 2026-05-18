@@ -6,6 +6,7 @@ let history = [];
 let historyAt = 0;
 
 let themeIsDark = false;
+let sideMode = 0;
 
 {
     let t = window.localStorage.getItem('theme');
@@ -268,7 +269,7 @@ function historyRedo() {
 }
 function serializeCard(c) {
     return JSON.stringify(c, (k, v) => {
-        if (['cardTitle', 'icon'].includes(k))
+        if (['cardTitle', 'icon', 'category'].includes(k))
             return undefined;
 
         return v;
@@ -320,4 +321,17 @@ function setTheme(val) {
 }
 function toggleTheme() {
     setTheme(!themeIsDark);
+}
+
+function switchSide() {
+    const editor = document.getElementById('editor');
+    const viewer = document.getElementById('viewer');
+
+    sideMode++;
+
+    if(sideMode > 2)
+        sideMode = 0;
+
+    editor.classList.toggle('hidden', sideMode === 2);
+    viewer.classList.toggle('hidden', sideMode === 1);
 }

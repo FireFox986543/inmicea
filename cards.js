@@ -3,6 +3,7 @@ class Card {
         this.id = generateUUIDv4();
         this.nesting = nesting;
         this.collapsed = false;
+        this.category = 'content';
     }
     onPropertyUpdate(hook, value) { }
 
@@ -107,7 +108,7 @@ class Card {
     }
 
     static beginCard(t) {
-        return `<div class="card ${t.collapsed ? 'collapsed' : ''}" data-id="${t.id}">`;
+        return `<div class="card cat-${t.category} ${t.collapsed ? 'collapsed' : ''}" data-id="${t.id}">`;
     }
 
     static getNestingFromCard(card) {
@@ -135,6 +136,7 @@ class HTMLDataCard extends Card {
         this.cardType = 'HTMLDataCard';
         this.cardTitle = 'HTML Data Card';
         this.icon = 'fa-gear';
+        this.category = 'markup';
 
         this.webpageLanguage = 'en';
         this.webpageTitle = 'My first webpage';
@@ -158,6 +160,7 @@ class CSSDataCard extends Card {
         this.cardType = 'CSSDataCard';
         this.cardTitle = 'CSS Data Card';
         this.icon = 'fa-paint-brush';
+        this.category = 'markup';
 
         this.backgroundColor = '#202020';
         this.backgroundLighterColor = '#2c2c2c';
@@ -195,6 +198,7 @@ class HTMLNavigationCard extends Card {
         this.cardType = 'HTMLNavigationCard';
         this.cardTitle = 'HTML Navigation Card';
         this.icon = 'fa-transmission';
+        this.category = 'markup';
 
         this.leftCards = [];
         this.leftCards_collapsed = false;

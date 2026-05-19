@@ -26,6 +26,8 @@
     --red-light: #bf1818;
     --blue: #1431d5;
     --blue-light: #1f3ce0;
+    --purple: #af14c7;
+    --purple-light: #c120da;
 
     --cat-markup: #c76a00;
     --cat-content: #55ac0e;
@@ -56,6 +58,8 @@
     --red-light: #bf1818;
     --blue: #1431d5;
     --blue-light: #1f3ce0;
+    --purple: #af14c7;
+    --purple-light: #c120da;
 
     --cat-markup: #7f470a;
     --cat-content: #408905;
@@ -502,6 +506,7 @@ textarea.vertical-resize {
 .green-btn,
 .white-btn,
 .blue-btn,
+.purple-btn,
 .red-btn {
     font-size: .8rem;
     background-color: var(--green);
@@ -512,6 +517,7 @@ textarea.vertical-resize {
 .green-btn:hover,
 .white-btn:hover,
 .blue-btn:hover,
+.purple-btn:hover,
 .red-btn:hover {
     background-color: var(--green-light);
     color: white;
@@ -532,6 +538,14 @@ textarea.vertical-resize {
 
 .blue-btn:hover {
     background-color: var(--blue-light);
+}
+
+.purple-btn {
+    background-color: var(--purple);
+}
+
+.purple-btn:hover {
+    background-color: var(--purple-light);
 }
 
 .white-btn,

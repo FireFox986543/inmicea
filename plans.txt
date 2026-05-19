@@ -7,6 +7,7 @@ HTML data card:
  - Webpage language [hu, eng]                           ? This is the language of your webpage, this will influence built-in cards like the contact form
  - Webpage title
  - Webpage author
+ - Webpage icon
 
 HTML Navigation card:
  - Inner cards: Nav menu
@@ -15,6 +16,8 @@ HTML Navigation card:
    - single option
    - dropdown
      - multi dropdown
+   - Icon type [none, image, font-awesome]
+     - Icon href OR Icon definition
 
 CSS data card:
  - Background colors
@@ -63,9 +66,9 @@ Raw HTML card:
 
 
 
-      AUTOFILL OPTION FOR CARDS LIKE CONTACT ELEMENT -> e.g: clicking it will fill out the name and link (e.g. telephone field)
+      XXXXXX AUTOFILL OPTION FOR CARDS LIKE CONTACT ELEMENT -> e.g: clicking it will fill out the name and link (e.g. telephone field)
 
-      CSS THEMES
+      XXXXXX CSS THEMES
 
       XXXXXX CARD COLLAPSE
 
@@ -78,3 +81,5 @@ Raw HTML card:
       DIFFERENT HEADERS
 
       CARDS LIKE IN OTHER PAGES
+
+      GALLERY

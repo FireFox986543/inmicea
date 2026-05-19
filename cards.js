@@ -7,14 +7,15 @@ class Card {
     }
     onPropertyUpdate(hook, value) { }
 
-    static renderCardToolbar(t, hasTools) {
+    static renderCardToolbar(t, hasTools, hasAutofill = false) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-toolbar" onclick="collapseCard(this, '${t.id}')">
                     <div class="title-wrapper">
                         <h4><i class="fas ${t.icon}"></i> &nbsp;&nbsp; ${t.cardTitle}</h4>
                     </div>
                     <div class="card-right">
-                        ${hasTools ? `<button type="button" class="control-btn tooltip" tooltip-text="Move down" onclick="event.stopPropagation(); moveCard('${t.id}', -1, '${nesting.id}', '${nesting.list}')"><i class="fas fa-angle-down"></i></button>
+                        ${hasTools ? `${hasAutofill ? `<button type="button" class="control-btn tooltip" tooltip-text="Autofill" onclick="event.stopPropagation(); autofillCard('${t.id}')"><i class="fas fa-bolt-auto"></i></button>` : ''}
+                        <button type="button" class="control-btn tooltip" tooltip-text="Move down" onclick="event.stopPropagation(); moveCard('${t.id}', -1, '${nesting.id}', '${nesting.list}')"><i class="fas fa-angle-down"></i></button>
                         <button type="button" class="control-btn tooltip" tooltip-text="Move up" onclick="event.stopPropagation(); moveCard('${t.id}', 1, '${nesting.id}', '${nesting.list}')"><i class="fas fa-angle-up"></i></button>
                         <button type="button" class="control-btn tooltip" tooltip-text="Duplicate card" onclick="event.stopPropagation(); dupeCard('${t.id}', '${nesting.id}', '${nesting.list}')"><i class="fas fa-copy"></i></button>
                         <button type="button" class="control-btn danger-btn tooltip" tooltip-text="Delete card" onclick="event.stopPropagation(); deleteCard('${t.id}', '${nesting.id}', '${nesting.list}')"><i class="fas fa-trash-can"></i></button>` : ''}
@@ -146,6 +147,13 @@ class HTMLDataCard extends Card {
         this.webpageLanguage = 'en';
         this.webpageTitle = 'My first webpage';
         this.webpageAuthor = "It's me";
+        this.webpageIcon = '';
+    }
+    onPropertyUpdate(hook, value) {
+        if (hook === 'webpageIcon') {
+            const imgElement = document.querySelector(`.card[data-id="${this.id}"] img[data-hook="${hook}"]`);
+            imgElement.src = value;
+        }
     }
 
     render() {
@@ -155,6 +163,7 @@ class HTMLDataCard extends Card {
                     ${Card.renderInfoTo(Card.renderDropdown(this, 'Webpage language', 'webpageLanguage', [['en', 'English'], ['hu', 'Hungarian']]), 'This is the language of your webpage, this will influence built-in cards like the contact form')}
                     ${Card.renderTextField(this, 'Webpage title', 'webpageTitle')}
                     ${Card.renderTextField(this, 'Webpage author', 'webpageAuthor')}
+                    ${Card.renderImageField(this, 'Webpage logo', 'webpageIcon')}
                 </div>
             </div>`;
     }
@@ -272,6 +281,9 @@ class HTMLNavmenuCard extends Card {
         this.type = 'simple';
         this.menuName = 'Menu1';
         this.destination = 'index.html';
+        this.iconType = 'none';
+        this.iconHref = '';
+        this.iconFa = 'fas fa-font-awesome'
 
         this.subCards = [];
         this.subCards_collapsed = false;
@@ -279,8 +291,16 @@ class HTMLNavmenuCard extends Card {
     get icon() { return this.type === 'dropdown' ? 'fa-list-dropdown' : 'fa-diagram-cells'; }
 
     onPropertyUpdate(hook, value) {
-        if (hook === 'type')
+        if (hook === 'type' || hook === 'iconType')
             renderCards();
+        else if (hook === 'iconFa') {
+            const iconEl = document.querySelector(`.card[data-id="${this.id}"] i[data-hook="${hook}"]`);
+            iconEl.className = `${value}`;
+        }
+        else if (hook === 'iconHref') {
+            const imgElement = document.querySelector(`.card[data-id="${this.id}"] img[data-hook="${hook}"]`);
+            imgElement.src = value;
+        }
     }
 
     render() {
@@ -290,6 +310,8 @@ class HTMLNavmenuCard extends Card {
                     ${Card.renderDropdown(this, 'Menu type', 'type', [['simple', 'Simple'], ['dropdown', 'Dropdown']])}
                     ${Card.renderTextField(this, 'Menu name', 'menuName')}
                     ${this.type === 'simple' ? Card.renderTextField(this, 'Destination', 'destination') : Card.renderNestedCards(this, 'Submenus', 'subCards', Card.renderAddButtonSingle(this, 'subCards', 'HTMLNavmenuCard'))}
+                    ${Card.renderDropdown(this, 'Icon type', 'iconType', [['none', 'None'], ['image', 'Image'], ['fa', 'Font Awesome']])}
+                    ${this.iconType === 'image' ? Card.renderImageField(this, 'Icon', 'iconHref') : (this.iconType === 'fa' ? Card.renderInfoTo(Card.renderExtraTo(Card.renderTextField(this, 'Icon', 'iconFa'), `<i class="${this.iconFa}" style="margin-left: 8px" data-hook="iconFa"></i>`), 'A font awesome icon key.') : '')}
                 </div>
             </div>`;
     }
@@ -355,7 +377,7 @@ class SectionCard extends Card {
                     ${Card.renderTextField(this, 'Heading', 'heading')}
                     ${Card.renderInfoTo(Card.renderCheckBox(this, 'Display heading at top', 'headingIsTop'), 'Should the header be placed as the first element?', true)}
                     ${Card.renderInfoTo(Card.renderTextField(this, 'Section id', 'sectionId'), 'A unique identifier that can be used for linking navigation links to this section')}
-                    ${Card.renderNestedCards(this, 'Section content', 'contentCards', Card.renderAddButtonMultiple(this, 'contentCards', [['Paragraph', 'fa-section', 'ParagraphCard'], ['List', 'fa-list-ul', 'ListCard'], ['Raw HTML', 'fa-file-html', 'RawHTMLCard']]))}
+                    ${Card.renderNestedCards(this, 'Section content', 'contentCards', Card.renderAddButtonMultiple(this, 'contentCards', [['Paragraph', 'fa-section', 'ParagraphCard'], ['List', 'fa-list-ul', 'ListCard'], ['Raw HTML', 'fa-file-html', 'RawHTMLCard'], ['HTML Heading', 'fa-h2', 'HTMLHeadingCard']]))}
                     ${Card.renderDropdown(this, 'Image type', 'imageType', [['none', 'None'], ['bottom', 'Bottom'], ['top', 'Top'], ['left', 'Left'], ['right', 'Right']])}
                     ${this.imageType === 'none' ? ''
                 : (
@@ -436,6 +458,27 @@ class ImageCard extends Card {
             </div>`;
     }
 }
+class HTMLHeadingCard extends Card {
+    constructor(nesting) {
+        super(nesting);
+        this.cardType = 'HTMLHeadingCard';
+        this.cardTitle = 'HTML Heading Card';
+        this.icon = 'fa-h2';
+
+        this.level = 'h2';
+        this.heading = 'Interesting cats';
+    }
+
+    render() {
+        return `${Card.beginCard(this)}
+                ${Card.renderCardToolbar(this, true)}
+                <div class="card-content">
+                    ${Card.renderDropdown(this, 'Level', 'level', [['h2', 'H2'], ['h3', 'H3'], ['h4', 'H4'], ['h5', 'H5'], ['h6', 'H6'],])}
+                    ${Card.renderTextField(this, 'Heading', 'heading')}
+                </div>
+            </div>`;
+    }
+}
 
 class ContactInfoCard extends Card {
     constructor() {
@@ -491,7 +534,7 @@ class ContactElementCard extends Card {
 
     render() {
         return `${Card.beginCard(this)}
-                ${Card.renderCardToolbar(this, true)}
+                ${Card.renderCardToolbar(this, true, true)}
                 <div class="card-content">
                     ${Card.renderDropdown(this, 'Type', 'type', [
             ['email', 'Email'],
@@ -580,6 +623,7 @@ function newCardFromType(type) {
         case 'ContactElementCard': return new ContactElementCard();
         case 'ContactFormCard': return new ContactFormCard();
         case 'RawHTMLCard': return new RawHTMLCard();
+        case 'HTMLHeadingCard': return new HTMLHeadingCard();
         default:
             throw new Error("Failed to construct card from given type: " + type);
     }

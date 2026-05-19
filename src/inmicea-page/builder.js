@@ -1,6 +1,7 @@
 let webpageLang = 'en';
 let webpageAuthor = 'John Doe';
 let webpageTitle = 'My webpage';
+let webpageIcon = '';
 let webpageStyle = [];
 
 const s = new URLSearchParams(window.location.search);
@@ -41,17 +42,27 @@ function renderPage(raw) {
 
         hookAllImages();
     } catch (error) {
-        content.innerHTML = '<p style="color: red; font-size: 2rem"> Failed to render page!</p>';
+        content.innerHTML = `<p style="color: red; font-size: 2rem"> Failed to render page!<br>${error}</p>`;
     }
 }
 
 function handleCard(card) {
-
     switch (card.cardType) {
         case 'HTMLDataCard':
             document.title = webpageTitle = card.webpageTitle;
             webpageLang = card.webpageLanguage;
             webpageAuthor = card.webpageAuthor;
+            webpageIcon = card.webpageIcon;
+
+            // CREDIT: https://stackoverflow.com/questions/260857/changing-website-favicon-dynamically
+            var link = document.querySelector("link[rel~='icon']");
+            if (!link) {
+                link = document.createElement('link');
+                link.rel = 'icon';
+                document.head.appendChild(link);
+            }
+            link.href = webpageIcon;
+
             return '';
         case 'CSSDataCard':
             const s = document.documentElement.style;
@@ -77,7 +88,7 @@ function handleCard(card) {
                 ['--form-text', card.formText],
                 ['--font-family', `'${card.fontFamily}', Arial, Helvetica, sans-serif`],
             ];
-            
+
             webpageStyle.forEach(([prop, val]) => s.setProperty(prop, val));
             return '';
         case 'HTMLNavigationCard':
@@ -97,8 +108,10 @@ function handleCard(card) {
             return handleContactForm(card);
         case 'RawHTMLCard':
             return card.html;
+        case 'HTMLHeadingCard':
+            return `<h${card.level}>${card.heading}</h${card.level}>`;
         default:
-            throw new Error("Failed to construct card from given type: " + type);
+            return renderRenderError("Failed to construct card from given type: " + type);
     }
 }
 
@@ -110,6 +123,14 @@ function handleNavCard(c) {
     return `<nav>${content}</nav>`;
 }
 function handleNavSubCards(arr) {
+    const getMenuName = (c) => {
+        if(c.iconType === 'image')
+            return `<img src="${c.iconHref}" class="nav-icon"> ${c.menuName}`;
+        else if(c.iconType === 'fa')
+            return `<i class="${c.iconFa}"></i> &nbsp; ${c.menuName}`;
+        else
+            return c.menuName;
+    };
     const handleInner = (c) => {
         let inner = '';
 
@@ -118,11 +139,11 @@ function handleNavSubCards(arr) {
         });
 
         if (c.type === 'simple') {
-            return `<a href="${c.destination}">${c.menuName}</a>`;
+            return `<a href="${c.destination}">${getMenuName(c)}</a>`;
         }
         else { // dropdown
             return `<div class="subbed">
-                ${c.menuName}
+                ${getMenuName(c)}
                 <div class="nav-sub">
                     ${inner}
                 </div>
@@ -192,8 +213,10 @@ function handleSectionContent(cc) {
             return `<${cc.type}>${liContent}</${cc.type}>`;
         case 'RawHTMLCard':
             return cc.html;
+        case 'HTMLHeadingCard':
+            return `<${cc.level}>${cc.heading}</${cc.level}>`;
         default:
-            return '!Error! Missing card handle for ' + cc.cardType;
+            return renderRenderError('!Error! while handling !*SECTION CONTENT*! Missing card handle for ' + cc.cardType);
     }
 }
 
@@ -204,7 +227,7 @@ function handleContactInfo(c) {
         const icon = getIcon(cc.type, cc.customIcon);
         const link = cc.link.trim();
 
-        if (link.startsWith('http'))
+        if (link.startsWith('http') || link.startsWith('tel') || link.startsWith('mailto'))
             content += `<div class="crow">
                         <strong><i class="${icon}"></i> ${cc.name}</strong>
                         <span><a href="${cc.link}" target="_blank" rel="noreferrer noopener">${cc.text}</a></span>
@@ -278,6 +301,11 @@ function handleContactForm(card) {
             </section>`;
 }
 
+function renderRenderError(err) {
+    console.log('Error while rendering: ' + err);
+    return `<div class="render-error">${err}</div>`;
+}
+
 function translate(f) {
     switch (f) {
         case 'name': return webpageLang === 'hu' ? 'Név' : 'Name'
@@ -335,7 +363,7 @@ function constructWholeHTML() {
     <link rel="stylesheet" href="fontawesome/css/solid.css">
     <link rel="stylesheet" href="fontawesome/css/brands.css">
     <link rel="stylesheet" href="inmicea.css">
-    <link rel="shortcut icon" href="img/logo.png" type="image/x-icon">
+    <link rel="shortcut icon" href="${webpageIcon}" type="image/x-icon">
     <style>
         :root {
             ${cssStyle}

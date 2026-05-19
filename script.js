@@ -153,6 +153,23 @@ function dupeCard(id, nestId, nestList) {
     saveToHistory();
     renderCards();
 }
+function autofillCard(id) {
+    const c = findNestedCard(id);
+
+    switch (c.cardType) {
+        case 'ContactElementCard':
+            if(c.type === 'telephone' && c.text.length > 6)
+                c.link = 'tel:' + c.text.replaceAll(' ', '');
+            else if(c.type === 'email')
+                c.link = 'mailto:' + c.text.replaceAll(' ', '');
+            break;
+        default:
+            break;
+    }
+
+    saveToHistory();
+    renderCards();
+}
 function collapseCard(t, id) {
     const c = findNestedCard(id);
 

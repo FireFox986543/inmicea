@@ -11,7 +11,7 @@ let sideMode = 0;
 {
     let t = window.localStorage.getItem('theme');
 
-    if(t != null)
+    if (t != null)
         themeIsDark = t === 'true' || t === true;
 
     setTheme(themeIsDark);
@@ -79,13 +79,16 @@ function addCard(card, list, save = true) {
         saveToHistory();
 }
 function addCardRoot(card, save = true) { addCard(card, rootCardlist, save); }
-function handleNesting(nestId, nestList) {
-    const c = findNestedCard(nestId);
-
-    if (nestId === 'null' || c == null)
+function handleNesting(nesting) {
+    if (nesting == null)
         return rootCardlist;
 
-    const l = c[nestList];
+    const c = findNestedCard(nesting.id);
+
+    if (c == null)
+        return rootCardlist;
+
+    const l = c[nesting.list];
 
     if (!Array.isArray(l))
         return rootCardlist;
@@ -98,8 +101,12 @@ function getCard(id, arr) {
 function findNestedCard(id) {
     return allCards.find(c => c.id === id);
 }
-function moveCard(id, dir, nestId, nestList) {
-    const array = handleNesting(nestId, nestList);
+function moveCard(id, dir) {
+    const c = findNestedCard(id);
+
+    if (c == null) return;
+
+    const array = handleNesting(c.nesting);
 
     const idx = array.indexOf(getCard(id, array));
     const target = idx - dir;
@@ -113,11 +120,19 @@ function moveCard(id, dir, nestId, nestList) {
 
     moveTo(array, idx, target);
     saveToHistory();
-    renderCards();
+
+    //https://stackoverflow.com/questions/34913953/move-an-element-one-place-up-or-down-in-the-dom-tree-with-javascript
+    const dom = document.getElementById('card_' + c.id);
+    if (dir === 1 && dom.previousElementSibling)
+        dom.parentNode.insertBefore(dom, dom.previousElementSibling);
+    else if (dir === -1 && dom.nextElementSibling)
+        dom.parentNode.insertBefore(dom.nextElementSibling, dom);
 }
-function deleteCard(id, nestId, nestList) {
-    const array = handleNesting(nestId, nestList);
-    const c = getCard(id, array);
+function deleteCard(id) {
+    const c = findNestedCard(id);
+    if (c == null) return;
+
+    const array = handleNesting(c.nesting);
     const idx = array.indexOf(c);
     const allIdx = allCards.indexOf(c);
 
@@ -127,19 +142,26 @@ function deleteCard(id, nestId, nestList) {
     deleteAt(array, idx);
     deleteAt(allCards, allIdx);
     saveToHistory();
-    renderCards();
+
+    const dom = document.getElementById('card_' + c.id);
+    dom.remove();
 }
 function addCardIntoList(nestId, nestList, card) {
-    const array = handleNesting(nestId, nestList);
+    const array = handleNesting({ id: nestId, list: nestList });
     addCard(card, array);
 
-    renderCards();
-}
-function dupeCard(id, nestId, nestList) {
-    const array = handleNesting(nestId, nestList);
+    const parent = findNestedCard(nestId);
 
-    const c = getCard(id, array);
+    if (parent == null)
+        throw new Error("Well this didn't work adding :/");
+
+    renderCard(parent);
+}
+function dupeCard(id) {
+    const c = findNestedCard(id);
+    const array = handleNesting(c.nesting);
     const idx = array.indexOf(c);
+    const targetIdx = idx + 1;
 
     if (c == null || c === -1)
         return;
@@ -148,19 +170,29 @@ function dupeCard(id, nestId, nestList) {
     newIdsForCardObject([o]);
     constructNewCard(o, array);
     // Note: the constructNewCard will always push the card at the end of the array
-    moveTo(array, array.length - 1, idx + 1);
+    const newCard = array.at(-1);
+    moveTo(array, array.length - 1, targetIdx);
 
+    const htmlList = document.getElementById('card_' + id).parentElement;
+    const cardHtml = document.createElement('div');
+    
+    console.log(htmlList.children[targetIdx]);
+    htmlList.insertBefore(cardHtml, htmlList.children[targetIdx]);
+    
+    cardHtml.outerHTML = newCard.render();
     saveToHistory();
-    renderCards();
 }
 function autofillCard(id) {
     const c = findNestedCard(id);
 
+    if (c == null)
+        return;
+
     switch (c.cardType) {
         case 'ContactElementCard':
-            if(c.type === 'telephone' && c.text.length > 6)
+            if (c.type === 'telephone' && c.text.length > 6)
                 c.link = 'tel:' + c.text.replaceAll(' ', '');
-            else if(c.type === 'email')
+            else if (c.type === 'email')
                 c.link = 'mailto:' + c.text.replaceAll(' ', '');
             break;
         default:
@@ -168,7 +200,7 @@ function autofillCard(id) {
     }
 
     saveToHistory();
-    renderCards();
+    renderCard(c);
 }
 function collapseCard(t, id) {
     const c = findNestedCard(id);
@@ -179,15 +211,18 @@ function collapseCard(t, id) {
     t.parentElement.classList.toggle('collapsed');
     c.collapsed = !c.collapsed;
 }
-function collapseNestedList(t, nestId, nestList) {
-    const c = findNestedCard(nestId);
-    const f = nestList + '_collapsed';
+function collapseNestedList(t, cardId, list) {
+    const c = findNestedCard(cardId);
+
+    if (c == null)
+        return;
+
+    const f = list + '_collapsed';
     c[f] = !c[f];
     t.parentElement.classList.toggle('collapsed', c[f]);
 }
-function updateProperty(t, id, nestId, nestList, hook) {
-    const array = handleNesting(nestId, nestList);
-    const c = this.getCard(id, array);
+function updateProperty(t, id, hook) {
+    const c = findNestedCard(id);
 
     if (c == null)
         throw new Error("Failed to get card from id", id, t, hook);
@@ -195,8 +230,12 @@ function updateProperty(t, id, nestId, nestList, hook) {
     c[hook] = t.value;
     c.onPropertyUpdate(hook, t.value);
 }
-function propertyChanged(t, id, nestId, nestList, hook) {
+function propertyChanged(t, id, hook) {
     saveToHistory();
+}
+function renderCard(c) {
+    const dom = document.getElementById('card_' + c.id);
+    dom.outerHTML = c.render();
 }
 function renderCards() {
     cardContainer.innerHTML = '';
@@ -254,10 +293,11 @@ function saveToHistory(autoSave = true) {
 
     const ser = getSerializedCards();
     history.push(ser);
-    historyAt = history.length - 1;
 
     if (history.length > 50)
         history.shift();
+
+    historyAt = history.length - 1;
 
     if (autoSave)
         window.localStorage.setItem('currentSession', ser);
@@ -346,7 +386,7 @@ function switchSide() {
 
     sideMode++;
 
-    if(sideMode > 2)
+    if (sideMode > 2)
         sideMode = 0;
 
     editor.classList.toggle('hidden', sideMode === 2);

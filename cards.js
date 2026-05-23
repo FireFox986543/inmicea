@@ -15,10 +15,10 @@ class Card {
                     </div>
                     <div class="card-right">
                         ${hasTools ? `${hasAutofill ? `<button type="button" class="control-btn tooltip" tooltip-text="Autofill" onclick="event.stopPropagation(); autofillCard('${t.id}')"><i class="fas fa-bolt-auto"></i></button>` : ''}
-                        <button type="button" class="control-btn tooltip" tooltip-text="Move down" onclick="event.stopPropagation(); moveCard('${t.id}', -1, '${nesting.id}', '${nesting.list}')"><i class="fas fa-angle-down"></i></button>
-                        <button type="button" class="control-btn tooltip" tooltip-text="Move up" onclick="event.stopPropagation(); moveCard('${t.id}', 1, '${nesting.id}', '${nesting.list}')"><i class="fas fa-angle-up"></i></button>
-                        <button type="button" class="control-btn tooltip" tooltip-text="Duplicate card" onclick="event.stopPropagation(); dupeCard('${t.id}', '${nesting.id}', '${nesting.list}')"><i class="fas fa-copy"></i></button>
-                        <button type="button" class="control-btn danger-btn tooltip" tooltip-text="Delete card" onclick="event.stopPropagation(); deleteCard('${t.id}', '${nesting.id}', '${nesting.list}')"><i class="fas fa-trash-can"></i></button>` : ''}
+                        <button type="button" class="control-btn tooltip" tooltip-text="Move down" onclick="event.stopPropagation(); moveCard('${t.id}', -1)"><i class="fas fa-angle-down"></i></button>
+                        <button type="button" class="control-btn tooltip" tooltip-text="Move up" onclick="event.stopPropagation(); moveCard('${t.id}', 1)"><i class="fas fa-angle-up"></i></button>
+                        <button type="button" class="control-btn tooltip" tooltip-text="Duplicate card" onclick="event.stopPropagation(); dupeCard('${t.id}')"><i class="fas fa-copy"></i></button>
+                        <button type="button" class="control-btn danger-btn tooltip" tooltip-text="Delete card" onclick="event.stopPropagation(); deleteCard('${t.id}')"><i class="fas fa-trash-can"></i></button>` : ''}
                     </div>
                 </div>`
     }
@@ -31,27 +31,27 @@ class Card {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field">
                 <label>${label}:</label>
-                <input type="text" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" value="${t[dataHook]}" onchange="propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">
+                <input type="text" oninput="updateProperty(this, '${t.id}', '${dataHook}')" value="${t[dataHook]}" onchange="propertyChanged(this, '${t.id}', '${dataHook}')">
             </div>`;
     }
     static renderCheckBox(t, label, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field">
-                <button type="button" class="checkbox-btn" value="${t[dataHook]}" onclick="Card.checkboxHelper(this); updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}'); propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')"><i class='far fa-square${t[dataHook] === 'true' ? '-check' : ''}'></i> &nbsp;${label}</button>
+                <button type="button" class="checkbox-btn" value="${t[dataHook]}" onclick="Card.checkboxHelper(this); updateProperty(this, '${t.id}', '${dataHook}'); propertyChanged(this, '${t.id}', '${dataHook}')"><i class='far fa-square${t[dataHook] === 'true' ? '-check' : ''}'></i> &nbsp;${label}</button>
             </div>`;
     }
     static renderTextareaField(t, label, dataHook, height = 100) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field expandable">
                 <label style="align-self: flex-start;">${label}:</label>
-                <textarea class="vertical-resize" style="height: ${height}px" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" onchange="propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">${t[dataHook]}</textarea>
+                <textarea class="vertical-resize" style="height: ${height}px" oninput="updateProperty(this, '${t.id}', '${dataHook}')" onchange="propertyChanged(this, '${t.id}', '${dataHook}')">${t[dataHook]}</textarea>
             </div>`;
     }
     static renderColorField(t, label, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field">
                 <label>${label}:</label>
-                <input type="color" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" onchange="propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" value="${t[dataHook]}">
+                <input type="color" oninput="updateProperty(this, '${t.id}', '${dataHook}')" onchange="propertyChanged(this, '${t.id}', '${dataHook}')" value="${t[dataHook]}">
             </div>`;
     }
     static renderDropdown(t, label, dataHook, options) {
@@ -64,7 +64,7 @@ class Card {
 
         return `<div class="card-field">
                 <label>${label}:</label>
-                <select onchange="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}'); propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">
+                <select onchange="updateProperty(this, '${t.id}', '${dataHook}'); propertyChanged(this, '${t.id}', '${dataHook}')">
                     ${optHTML}
                 </select>
             </div>`;
@@ -76,8 +76,11 @@ class Card {
                     <div class="image-box">
                         <img src="${t[dataHook]}" alt="Image" data-hook="${dataHook}">
                     </div>
-                    <input type="text" oninput="updateProperty(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')" value="${t[dataHook]}" onchange="propertyChanged(this, '${t.id}', '${nesting.id}', '${nesting.list}', '${dataHook}')">
+                    <input type="text" oninput="updateProperty(this, '${t.id}', '${dataHook}')" value="${t[dataHook]}" onchange="propertyChanged(this, '${t.id}', '${dataHook}')">
                 </div>`;
+    }
+    static renderFaField(t, label, dataHook) {
+        return Card.renderInfoTo(Card.renderExtraTo(Card.renderTextField(t, label, dataHook), `<i class="${t[dataHook]}" style="margin-left: 8px" data-hook="${dataHook}"></i>`), 'A font awesome icon key.');
     }
 
     static renderNestedCards(t, label, list, buttonStr) {
@@ -101,7 +104,7 @@ class Card {
     }
     static renderAddButtonMultiple(t, list, options) {
         let inner = '';
-        options.forEach(([name, icon, type]) => inner += `<div class="selector-option" onclick="event.stopPropagation(); addCardIntoList('${t.id}', '${list}', new ${type}({ id: '${t.id}', list: '${list}' })); renderCards();"><i class="fas ${icon}"></i> ${name}</div>`)
+        options.forEach(([name, icon, type]) => inner += `<div class="selector-option" onclick="event.stopPropagation(); addCardIntoList('${t.id}', '${list}', new ${type}({ id: '${t.id}', list: '${list}' }));"><i class="fas ${icon}"></i> ${name}</div>`)
 
         return `<button type="button" class="control-btn selector-btn">
                     <i class="fas fa-plus"></i>
@@ -114,7 +117,20 @@ class Card {
     }
 
     static beginCard(t) {
-        return `<div class="card cat-${t.category} ${t.collapsed ? 'collapsed' : ''}" data-id="${t.id}">`;
+        return `<div class="card cat-${t.category} ${t.collapsed ? 'collapsed' : ''}" id="card_${t.id}">`;
+    }
+
+    static updateImageField(t, hook, value, targetHook) {
+        if (hook === targetHook) {
+            const imgElement = document.querySelector(`#card_${t.id} img[data-hook="${hook}"]`);
+            imgElement.src = value;
+        }
+    }
+    static updateFaField(t, hook, value, targetHook) {
+        if (hook === targetHook) {
+            const iconEl = document.querySelector(`#card_${t.id} i[data-hook="${hook}"]`);
+            iconEl.className = `${value}`;
+        }
     }
 
     static getNestingFromCard(card) {
@@ -150,10 +166,7 @@ class HTMLDataCard extends Card {
         this.webpageIcon = '';
     }
     onPropertyUpdate(hook, value) {
-        if (hook === 'webpageIcon') {
-            const imgElement = document.querySelector(`.card[data-id="${this.id}"] img[data-hook="${hook}"]`);
-            imgElement.src = value;
-        }
+        Card.updateImageField(this, hook, value, 'webpageIcon');
     }
 
     render() {
@@ -211,7 +224,7 @@ class CSSDataCard extends Card {
                 this[k] = theme[k];
             }
 
-            renderCards();
+            renderCard(this);
         }
     }
 
@@ -292,15 +305,10 @@ class HTMLNavmenuCard extends Card {
 
     onPropertyUpdate(hook, value) {
         if (hook === 'type' || hook === 'iconType')
-            renderCards();
-        else if (hook === 'iconFa') {
-            const iconEl = document.querySelector(`.card[data-id="${this.id}"] i[data-hook="${hook}"]`);
-            iconEl.className = `${value}`;
-        }
-        else if (hook === 'iconHref') {
-            const imgElement = document.querySelector(`.card[data-id="${this.id}"] img[data-hook="${hook}"]`);
-            imgElement.src = value;
-        }
+            renderCard(this);
+        
+        Card.updateFaField(this, hook, value, 'iconFa');
+        Card.updateImageField(this, hook, value, 'iconHref');
     }
 
     render() {
@@ -311,7 +319,7 @@ class HTMLNavmenuCard extends Card {
                     ${Card.renderTextField(this, 'Menu name', 'menuName')}
                     ${this.type === 'simple' ? Card.renderTextField(this, 'Destination', 'destination') : Card.renderNestedCards(this, 'Submenus', 'subCards', Card.renderAddButtonSingle(this, 'subCards', 'HTMLNavmenuCard'))}
                     ${Card.renderDropdown(this, 'Icon type', 'iconType', [['none', 'None'], ['image', 'Image'], ['fa', 'Font Awesome']])}
-                    ${this.iconType === 'image' ? Card.renderImageField(this, 'Icon', 'iconHref') : (this.iconType === 'fa' ? Card.renderInfoTo(Card.renderExtraTo(Card.renderTextField(this, 'Icon', 'iconFa'), `<i class="${this.iconFa}" style="margin-left: 8px" data-hook="iconFa"></i>`), 'A font awesome icon key.') : '')}
+                    ${this.iconType === 'image' ? Card.renderImageField(this, 'Icon', 'iconHref') : (this.iconType === 'fa' ? Card.renderFaField(this, 'Icon', 'iconFa') : '')}
                 </div>
             </div>`;
     }
@@ -330,10 +338,7 @@ class HeaderCard extends Card {
     }
 
     onPropertyUpdate(hook, value) {
-        if (hook === 'backgroundImg') {
-            const imgElement = document.querySelector(`.card[data-id="${this.id}"] img[data-hook="${hook}"]`);
-            imgElement.src = value;
-        }
+        Card.updateImageField(this, hook, value, 'backgroundImg');
     }
 
     render() {
@@ -368,7 +373,7 @@ class SectionCard extends Card {
 
     onPropertyUpdate(hook, value) {
         if (hook === 'imageType' || hook === 'imageSize')
-            renderCards();
+            renderCard(this);
     }
     render() {
         return `${Card.beginCard(this)}
@@ -441,10 +446,7 @@ class ImageCard extends Card {
     }
 
     onPropertyUpdate(hook, value) {
-        if (hook === 'image') {
-            const imgElement = document.querySelector(`.card[data-id="${this.id}"] img[data-hook="${hook}"]`);
-            imgElement.src = value;
-        }
+        Card.updateImageField(this, hook, value, 'image');
     }
 
     render() {
@@ -525,11 +527,9 @@ class ContactElementCard extends Card {
 
     onPropertyUpdate(hook, value) {
         if (hook === 'type')
-            renderCards();
-        else if (hook === 'customIcon') {
-            const iconEl = document.querySelector(`.card[data-id="${this.id}"] i[data-hook="customIcon"]`);
-            iconEl.className = `${value}`;
-        }
+            renderCard(this);
+        
+        Card.updateFaField(this, hook, value, 'customIcon');
     }
 
     render() {
@@ -546,7 +546,7 @@ class ContactElementCard extends Card {
             ['instagram', 'Instagram'],
             ['custom', 'Custom']
         ])}
-                    ${this.type === 'custom' ? Card.renderInfoTo(Card.renderExtraTo(Card.renderTextField(this, 'Custom icon', 'customIcon'), `<i class="${this.customIcon}" style="margin-left: 8px" data-hook="customIcon"></i>`), 'A font awesome icon key.') : ''}
+                    ${this.type === 'custom' ? Card.renderFaField(this, 'Custom icon', 'customIcon') : ''}
                     ${Card.renderTextField(this, 'Name', 'name')}
                     ${Card.renderTextField(this, 'Value', 'text')}
                     ${Card.renderInfoTo(Card.renderTextField(this, 'Link', 'link'), "The link used for anchor tags, unless leave empty.")}

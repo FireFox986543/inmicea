@@ -238,8 +238,9 @@ function renderCard(c) {
     dom.outerHTML = c.render();
 }
 function renderCards() {
-    cardContainer.innerHTML = '';
-    rootCardlist.forEach(c => cardContainer.innerHTML += c.render());
+    let ihtml = '';
+    rootCardlist.forEach(c => ihtml += c.render());
+    cardContainer.innerHTML = ihtml;
 }
 
 function newIdsForCardObject(c) {

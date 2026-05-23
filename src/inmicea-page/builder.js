@@ -31,14 +31,15 @@ function renderPage(raw) {
     const content = document.getElementById('body-content');
 
     try {
-        content.innerHTML = '';
+        let ihtml = '';
 
         const cards = JSON.parse(raw);
         cards.forEach(c => {
-            content.innerHTML += handleCard(c);
+            ihtml += handleCard(c);
         });
 
-        content.innerHTML += `<footer><p>&copy; 2026 ${webpageAuthor} &nbsp;&nbsp;&nbsp;&nbsp; ${translate('footer-rights')}</p></footer>`
+        ihtml += `<footer><p>&copy; 2026 ${webpageAuthor} &nbsp;&nbsp;&nbsp;&nbsp; ${translate('footer-rights')}</p></footer>`
+        content.innerHTML = ihtml;
 
         hookAllImages();
     } catch (error) {

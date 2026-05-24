@@ -69,6 +69,7 @@ function handleCard(card) {
             const s = document.documentElement.style;
             webpageStyle = [
                 ['--background', card.backgroundColor],
+                ['--background-rgb', hexToRgb(card.backgroundColor)],
                 ['--background-lighter', card.backgroundLighterColor],
                 ['--background-lightest', card.backgroundLightestColor],
                 ['--text', card.textColor],
@@ -95,9 +96,12 @@ function handleCard(card) {
         case 'HTMLNavigationCard':
             return handleNavCard(card);
         case 'HeaderCard':
-            return `<header style="background-image: url('${card.backgroundImg}')">
+            return `<header style="background-image: url('${card.backgroundImg}')" class="${card.style}">
+                        <div class="top">
+                            ${card.style !== 'style2' ? '' : `<img src="${card.headingIcon}" alt="Heading logo">`}
+                            ${card.title}
+                        </div>
                         <div>
-                            <h1>${card.title}</h1>
                             <p>${card.description}</p>
                         </div>
                     </header>`;
@@ -328,6 +332,8 @@ function translate(f) {
         default: return '';
     }
 }
+
+function hexToRgb(hex) { return `${Number('0x' + hex.substring(1, 3))}, ${Number('0x' + hex.substring(3, 5))}, ${Number('0x' + hex.substring(5, 7))}`; }
 
 // CREDIT: https://coreui.io/answers/how-to-download-a-file-in-javascript/
 function downloadFile(data, filename, type = 'text/plain') {

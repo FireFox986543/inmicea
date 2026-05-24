@@ -40,6 +40,7 @@ Section card:
    - Content cards:
      - Paragraph card: simple text
      - List card: type[unordered, ordered], elements: simple text, split by newlines
+     - HTML heading card: level [h2, h3, h4, h5, h6], heading text
 
 Contact card:
  - Google maps link                 ? Link to google maps, leave empty if you wouldn't like to have one displayed
@@ -74,12 +75,20 @@ Raw HTML card:
 
       XXXXXX INTERFACE LIGHT - DARK MODE
 
-      INTERFACE LANGUAGE OPTIONS
+      INTERFACE LANGUAGE OPTIONS — ENGLISH, MAGYAR
 
-      UPDATE RENDER METHOD: ONLY RENDER NEEDED PARTS. E.G: ONLY UPDATE THE CHANGED CARD...
+      XXXXXX UPDATE RENDER METHOD: ONLY RENDER NEEDED PARTS. E.G: ONLY UPDATE THE CHANGED CARD...
 
-      DIFFERENT HEADERS
+      XXXXXX DIFFERENT HEADERS
 
       CARDS LIKE IN OTHER PAGES
 
       GALLERY
+
+      COLLAPSE AND EXPAND ALL CARDS
+
+      COPY AND PASTING CARDS
+
+      ADVANCED TAB INSIDE CARDS. e.g: not every card should have all "advanced" option visible, only if expanded
+
+      PROJECTS AND THEIR TABS

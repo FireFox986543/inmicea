@@ -381,7 +381,7 @@ textarea.vertical-resize {
 
 .card input[type='color'] {
     max-width: 200px;
-    padding: 1 3px;
+    padding: 1px 3px;
 }
 
 .card label {

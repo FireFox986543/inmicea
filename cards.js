@@ -87,7 +87,7 @@ class Card {
         let inner = '';
         t[list].forEach(c => inner += c.render());
 
-        return `<div class="card-field card-field-nested">
+        return `<div class="card-field card-field-nested" data-list="${list}">
                     <div class="nested-card-container ${t[list + '_collapsed'] ? 'collapsed' : ''}">
                         <div class="nested-top" onclick="collapseNestedList(this, '${t.id}', '${list}')">
                             <h4>${label}</h4>
@@ -335,10 +335,16 @@ class HeaderCard extends Card {
         this.title = 'First Webpage';
         this.description = "This is my very new webpage were i'll show you the cutest articles you'll ever see!";
         this.backgroundImg = '';
+        this.style = 'style1';
+        this.headingIcon = '';
     }
 
     onPropertyUpdate(hook, value) {
         Card.updateImageField(this, hook, value, 'backgroundImg');
+        Card.updateImageField(this, hook, value, 'headingIcon');
+
+        if(hook === 'style')
+            renderCard(this);
     }
 
     render() {
@@ -348,6 +354,8 @@ class HeaderCard extends Card {
                     ${Card.renderTextField(this, 'Title', 'title')}
                     ${Card.renderTextareaField(this, 'Description', 'description')}
                     ${Card.renderImageField(this, 'Background', 'backgroundImg')}
+                    ${Card.renderDropdown(this, 'Style', 'style', [['style1', 'Style 1'], ['style2', 'Style 2']])}
+                    ${this.style !== 'style2' ? '' : Card.renderImageField(this, 'Icon', 'headingIcon')}
                 </div>
             </div>`;
     }

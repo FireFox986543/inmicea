@@ -80,7 +80,7 @@ function addCard(card, list, save = true) {
 }
 function addCardRoot(card, save = true) { addCard(card, rootCardlist, save); }
 function handleNesting(nesting) {
-    if (nesting == null)
+    if (nesting == null || nesting.id == null)
         return rootCardlist;
 
     const c = findNestedCard(nesting.id);
@@ -150,12 +150,19 @@ function addCardIntoList(nestId, nestList, card) {
     const array = handleNesting({ id: nestId, list: nestList });
     addCard(card, array);
 
-    const parent = findNestedCard(nestId);
+    let htmlList = null;
 
-    if (parent == null)
-        throw new Error("Well this didn't work adding :/");
+    if (nestId == null)
+        htmlList = document.getElementById('editor-content');
+    else
+        htmlList = document.getElementById('card_' + nestId).querySelector(`*[data-list="${nestList}"] .card-container`);
 
-    renderCard(parent);
+    if (htmlList == null)
+        throw new Error("Failed to find nested list!!!");
+
+    const cardHtml = document.createElement('div');
+    htmlList.appendChild(cardHtml);
+    cardHtml.outerHTML = card.render();
 }
 function dupeCard(id) {
     const c = findNestedCard(id);
@@ -175,10 +182,9 @@ function dupeCard(id) {
 
     const htmlList = document.getElementById('card_' + id).parentElement;
     const cardHtml = document.createElement('div');
-    
-    console.log(htmlList.children[targetIdx]);
+
     htmlList.insertBefore(cardHtml, htmlList.children[targetIdx]);
-    
+
     cardHtml.outerHTML = newCard.render();
     saveToHistory();
 }

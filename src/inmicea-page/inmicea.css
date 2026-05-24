@@ -207,7 +207,7 @@ header.style1>.top {
     text-align: center;
 }
 
-header p {
+header.style1 p {
     display: inline;
     margin: 32px 0 0;
     font-size: 1rem;

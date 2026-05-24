@@ -17,30 +17,42 @@
 <body>
     <header>
         <h1>INMICEA</h1>
-        <h2>The new generation webpage generator</h2>
-        <a class="git-icon" href="https://github.com/FireFox986543/inmicea" target="_blank" rel="noreferrer noopener"><i class="fab fa-github"></i></a>
-        <a class="right-side theme-icon" href="javascript:void(0);" rel="noreferrer noopener" onclick="toggleTheme()"></a>
-        <a class="right-side" href="javascript:void(0);" style="left: 72px; font-size: 1.2rem;" rel="noreferrer noopener" onclick="switchSide()"><i class="fas fa-square-half-stroke"></i></a>
+        <h2 data-trkey="tit2">The new generation webpage generator</h2>
+        <!--<a class="git-icon" href="https://github.com/FireFox986543/inmicea" target="_blank" rel="noreferrer noopener"><i class="fab fa-github"></i></a>-->
+        <div class="floating-container">
+            <a class="float-button theme-icon" href="javascript:void(0);" rel="noreferrer noopener" onclick="toggleTheme()"></a>
+            <a class="float-button" href="javascript:void(0);" onclick="switchSide()"><i class="fas fa-square-half-stroke"></i></a>
+            <a class="float-button selector-btn dropover-right" href=" javascript:void(0);">
+                <i class="fas fa-language"></i>
+                <div class="dropover-selector-wrapper">
+                    <div class="dropover-selector">
+                        <div class="selector-option" onclick="setLanguage(0)"><i class="fas fa-sterling-sign"></i> <span data-trkey="english">English</span></div>
+                        <div class="selector-option" onclick="setLanguage(1)"><i class="fas fa-pepper-hot"></i> <span data-trkey="hungarian">Hungarian</span></div>
+                    </div>
+                </div>
+            </a>
+        </div>
     </header>
     <main>
         <div id="editor">
             <div id="top-toolbar">
-                <button type="button" class="control-btn purple-btn tooltip" tooltip-text="Save" onclick="saveToHistory(true)"><i class="fas fa-save"></i></button>
-                <button type="button" class="control-btn blue-btn tooltip" tooltip-text="Download" onclick="downloadPage()"><i class="fas fa-file-arrow-down"></i></button>
-                <button type="button" class="control-btn blue-btn tooltip" tooltip-text="Open in newtab" onclick="previewNewPage()"><i class="fas fa-arrow-up-right-from-square"></i></button>
-                <button type="button" class="control-btn green-btn" onclick="preview()"><i class="fas fa-play"></i> Preview</button>
+                <button type="button" class="control-btn purple-btn tooltip" tooltip-text="Save" data-trkey="save|tt" onclick="saveToHistory(true)"><i class="fas fa-save"></i></button>
+                <button type="button" class="control-btn blue-btn tooltip" tooltip-text="Download" data-trkey="download|tt" onclick="downloadPage()"><i class="fas fa-file-arrow-down"></i></button>
+                <button type="button" class="control-btn blue-btn tooltip" tooltip-text="Open in newtab" data-trkey="open_newtab|tt" onclick="previewNewPage()"><i class="fas fa-arrow-up-right-from-square"></i></button>
+                <button type="button" class="control-btn green-btn" onclick="preview()"><i class="fas fa-play"></i> <span data-trkey="preview">Preview</span></button>
                 <div style="flex-grow: 1;"></div>
-                <button type="button" class="control-btn tooltip" tooltip-text="Undo changes" onclick="historyUndo()"><i class="fas fa-arrow-turn-left"></i></button>
-                <button type="button" class="control-btn tooltip" tooltip-text="Redo changes" onclick="historyRedo()"><i class="fas fa-arrow-turn-right"></i></button>
+                <button type="button" class="control-btn tooltip" tooltip-text="Undo changes" data-trkey="undo|tt" onclick="historyUndo()"><i class="fas fa-arrow-turn-left"></i></button>
+                <button type="button" class="control-btn tooltip" tooltip-text="Redo changes" data-trkey="redo|tt" onclick="historyRedo()"><i class="fas fa-arrow-turn-right"></i></button>
+                <button type="button" class="control-btn tooltip" tooltip-text="Collapse/expand all" data-trkey="collapse_expand|tt" onclick="collapseExpandAll()"><i class="fas fa-compress"></i></button>
                 <button type="button" class="control-btn selector-btn">
                     <i class="fas fa-plus"></i>
-                    <div class="card-selector-wrapper">
-                        <div class="card-selector">
-                            <div class="selector-option" onclick="addCardIntoList(null, null, new HeaderCard())"><i class="fas fa-heading"></i> Header</div>
-                            <div class="selector-option" onclick="addCardIntoList(null, null, new SectionCard())"><i class="fas fa-section"></i> Section</div>
-                            <div class="selector-option" onclick="addCardIntoList(null, null, new ContactInfoCard())"><i class="fas fa-id-card"></i> Contact Info</div>
-                            <div class="selector-option" onclick="addCardIntoList(null, null, new ContactFormCard())"><i class="fas fa-inbox-in"></i> Contact Form</div>
-                            <div class="selector-option" onclick="addCardIntoList(null, null, new RawHTMLCard())"><i class="fas fa-file-html"></i> Raw HTML Card</div>
+                    <div class="dropover-selector-wrapper">
+                        <div class="dropover-selector">
+                            <div class="selector-option" onclick="addCardIntoList(null, null, new HeaderCard())"><i class="fas fa-heading"></i> <span data-trkey="header_card">Header</span></div>
+                            <div class="selector-option" onclick="addCardIntoList(null, null, new SectionCard())"><i class="fas fa-section"></i> <span data-trkey="section_card">Section</span></div>
+                            <div class="selector-option" onclick="addCardIntoList(null, null, new ContactInfoCard())"><i class="fas fa-id-card"></i> <span data-trkey="contact_info_card">Contact Info</span></div>
+                            <div class="selector-option" onclick="addCardIntoList(null, null, new ContactFormCard())"><i class="fas fa-inbox-in"></i> <span data-trkey="contact_form_card">Contact Form</span></div>
+                            <div class="selector-option" onclick="addCardIntoList(null, null, new RawHTMLCard())"><i class="fas fa-file-html"></i> <span data-trkey="raw_html_card">Raw HTML Card</span></div>
                         </div>
                     </div>
                 </button>
@@ -55,15 +67,16 @@
 
     <div id="modal" class="hidden">
         <div class="content">
-            <h1>Continue previous session?</h1>
-            <p>There's saved data from last time. Would you like to continue, or start a new one?</p>
+            <h1 data-trkey="restore_tit">Continue previous session?</h1>
+            <p data-trkey="restore_desc">There's saved data from last time. Would you like to continue, or start a new one?</p>
             <div class="modal-btns">
-                <button type="button" class="control-btn white-btn" onclick="restoreSession();">Continue editing</button>
-                <button type="button" class="control-btn red-btn" onclick="createNew();">Start new</button>
+                <button type="button" class="control-btn white-btn" onclick="restoreSession();" data-trkey="restore_cont">Continue editing</button>
+                <button type="button" class="control-btn red-btn" onclick="createNew();" data-trkey="restore_new">Start new</button>
             </div>
         </div>
     </div>
 
+    <script src="translator.js"></script>
     <script src="cards.js"></script>
     <script src="script.js"></script>
 </body>

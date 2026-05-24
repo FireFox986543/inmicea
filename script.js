@@ -227,6 +227,15 @@ function collapseNestedList(t, cardId, list) {
     c[f] = !c[f];
     t.parentElement.classList.toggle('collapsed', c[f]);
 }
+function collapseExpandAll() {
+    let allCollapsed = rootCardlist.every(c => c.collapsed);
+    rootCardlist.forEach(c => {
+        if(c.collapsed === allCollapsed) {
+            c.collapsed = !allCollapsed 
+            document.getElementById('card_' + c.id).classList.toggle('collapsed', c.collapsed);
+        }
+    });
+}
 function updateProperty(t, id, hook) {
     const c = findNestedCard(id);
 

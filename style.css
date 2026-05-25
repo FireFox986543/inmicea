@@ -15,7 +15,8 @@
     --tooltip-text: white;
 
     --background: white;
-    --highlight-bg: #f6f6f6;
+    --background-darker: #fafafa;
+    --highlight-bg: #f5f5f5;
     --border: #eee;
     --highlight-border: #ddd;
 
@@ -48,6 +49,7 @@
     --tooltip-text: rgb(255, 255, 255);
 
     --background: #141414;
+    --background-darker: #222;
     --highlight-bg: #323232;
     --border: #444;
     --highlight-border: #555;
@@ -86,10 +88,12 @@ body {
     font-size: 1rem;
     background-color: var(--background);
     color: var(--text);
+    height: 100vh;
 }
 
 header {
     width: 100%;
+    height: 65px;
     font-size: 2rem;
     position: relative;
 }
@@ -141,7 +145,7 @@ header a.theme-icon:hover::before {
 header .floating-container {
     display: flex;
     gap: 8px;
-    position: fixed;
+    position: absolute;
     top: 12px;
     left: 12px;
 }
@@ -163,7 +167,7 @@ main {
     gap: 8px;
     background-color: var(--background);
     padding: 16px;
-    height: 92vh;
+    height: calc(100% - 65px);
 }
 
 #editor,
@@ -732,4 +736,153 @@ textarea.vertical-resize {
     justify-content: flex-end;
     gap: 8px;
     height: 40px;
+}
+
+.main-panel {
+    display: flex;
+    align-items: stretch;
+    height: 100%;
+    width: 100%;
+}
+
+.toolbar-panel {
+    position: relative;
+    min-width: 64px;
+    max-width: 9999px;
+    width: 320px;
+    overflow: hidden;
+    border-right: 1px solid var(--dark);
+    margin-right: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 0;
+    transition: width .2s ease-out;
+}
+
+.toolbar-panel.collapsed {
+    width: 64px;
+    max-width: 64px;
+    transition: width .2s ease-out, max-width 1ms .2s;
+}
+
+.toolbar-panel .flippy-icon {
+    transition: transform .2s ease-out;
+}
+
+.toolbar-panel.collapsed .flippy-icon {
+    transform: rotate(180deg);
+}
+
+.toolbar-panel .flippy-btn {
+    position: absolute;
+    align-self: flex-end;
+    width: 48px;
+    height: 48px;
+    top: calc((64px - 48px) / 2);
+    right: calc((64px - 48px) / 2);
+}
+
+.toolbar-top {
+    height: 40px;
+    display: flex;
+    padding-right: 32px;
+    align-items: center;
+    overflow: hidden;
+    max-width: 100%;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+}
+
+
+.toolbar-top img {
+    display: block;
+    height: 100%;
+    width: auto;
+    margin-right: 20px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
+}
+
+:root:not(.dark-mode) .toolbar-top img {
+    filter: invert(1);
+}
+
+.toolbar-panel .toolbar-hiding {
+    opacity: 1;
+    pointer-events: all;
+    transition: opacity .2s .2s ease-out;
+}
+
+.toolbar-panel.collapsed .toolbar-hiding {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 60ms ease-out;
+}
+
+.toolbar-buttons {
+    display: flex;
+    gap: 8px;
+    margin: 12px 0 20px;
+}
+
+.project-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    width: 100%;
+    padding: 0 12px;
+}
+
+.project {
+    position: relative;
+    font-size: .8rem;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: var(--background-darker);
+    width: 100%;
+    height: 36px;
+    cursor: pointer;
+    transition: background-color .2s ease-out;
+}
+
+.project button {
+    position: absolute;
+    height: 30px;
+    width: 30px;
+    top: 3px;
+    right: 3px;
+    z-index: 10;
+    padding: 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s ease-out;
+}
+
+.project:hover button {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.project button:hover {
+    border: 0;
+    color: var(--text);
+}
+
+.project:hover {
+    background-color: var(--highlight-bg);
+}
+
+.project .project-title {
+    display: block;
+    white-space: nowrap;
+    max-width: 95%;
+    overflow: hidden;
+    mask: linear-gradient(to right, white 85%, transparent 97%);
+}
+
+.project .dropover-selector {
+    margin-right: 32px;
 }

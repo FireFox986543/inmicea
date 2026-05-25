@@ -26,7 +26,9 @@ const _translateTable = {
     "move_up": ['Move up', 'Felfelé mozdítás'],
     "duplicate": ['Duplicate', 'Másolat'],
     "delete": ['Delete', 'Törlés'],
+    "rename": ['Rename', 'Átnevezés'],
     "add_card": ['Add new card', 'Kárty hozzáadása'],
+    "create_project": ['Create new project', 'Új projekt létrehozása'],
 
     "html_data_card": ['HTML Data Card', 'HTML Adat Kártya'],
     "css_data_card": ['CSS Data Card', 'CSS Adat Kártya'],

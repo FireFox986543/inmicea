@@ -29,6 +29,10 @@ if (window.localStorage.getItem('currentSession')) {
     showModal();
 }
 
+function toggleSidebar(t) {
+    t.parentElement.classList.toggle('collapsed');
+}
+
 function showModal() {
     document.getElementById('modal').classList.remove('hidden');
 }

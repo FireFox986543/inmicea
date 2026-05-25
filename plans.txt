@@ -91,4 +91,4 @@ Raw HTML card:
 
       XXXXXX ADVANCED TAB INSIDE CARDS. e.g: not every card should have all "advanced" option visible, only if expanded
 
-      PROJECTS AND THEIR TABS
+      XXXXXX PROJECTS AND THEIR TABS

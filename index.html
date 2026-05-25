@@ -23,74 +23,9 @@
                 <h1>INMICEA</h1>
             </div>
             <div class="toolbar-buttons toolbar-hiding">
-                <button type="button" class="control-btn tooltip" tooltip-text="Create new project" data-trkey="create_project|tt"><i class="fas fa-plus"></i></button>
+                <button type="button" class="control-btn tooltip" tooltip-text="Create new project" data-trkey="create_project|tt" onclick="addProject()"><i class="fas fa-plus"></i></button>
             </div>
-            <div class="project-container toolbar-hiding">
-                <div class="project">
-                    <span class="project-title">This is my project</span>
-                    <button type="button" class="control-btn selector-btn">
-                        <i class="fas fa-ellipsis-vertical"></i>
-                        <div class="dropover-selector-wrapper">
-                            <div class="dropover-selector">
-                                <div class="selector-option">
-                                    <i class="fas fa-pencil"></i>
-                                    <span data-trkey="rename">Rename</span>
-                                </div>
-                                <div class="selector-option">
-                                    <i class="fas fa-copy"></i>
-                                    <span data-trkey="duplicate">Duplicate</span>
-                                </div>
-                                <div class="selector-option">
-                                    <i class="fas fa-trash-can"></i>
-                                    <span data-trkey="delete">Delete</span>
-                                </div>
-                            </div>
-                        </div>
-                    </button>
-                </div>
-                <div class="project">
-                    <span class="project-title">This is my project, but longer</span>
-                    <button type="button" class="control-btn selector-btn">
-                        <i class="fas fa-ellipsis-vertical"></i>
-                        <div class="dropover-selector-wrapper">
-                            <div class="dropover-selector">
-                                <div class="selector-option">
-                                    <i class="fas fa-pencil"></i>
-                                    <span data-trkey="rename">Rename</span>
-                                </div>
-                                <div class="selector-option">
-                                    <i class="fas fa-copy"></i>
-                                    <span data-trkey="duplicate">Duplicate</span>
-                                </div>
-                                <div class="selector-option">
-                                    <i class="fas fa-trash-can"></i>
-                                    <span data-trkey="delete">Delete</span>
-                                </div>
-                            </div>
-                        </div>
-                    </button>
-                </div>
-                <div class="project">
-                    <span class="project-title">This is my project and it has an even longer title LOL</span>
-                    <button type="button" class="control-btn selector-btn">
-                        <i class="fas fa-ellipsis-vertical"></i>
-                        <div class="dropover-selector-wrapper">
-                            <div class="dropover-selector">
-                                <div class="selector-option">
-                                    <i class="fas fa-pencil"></i> <span data-trkey="rename">Rename</span>
-                                </div>
-                                <div class="selector-option">
-                                    <i class="fas fa-copy"></i>
-                                    <span data-trkey="duplicate">Duplicate</span>
-                                </div>
-                                <div class="selector-option">
-                                    <i class="fas fa-trash-can"></i>
-                                    <span data-trkey="delete">Delete</span>
-                                </div>
-                            </div>
-                        </div>
-                    </button>
-                </div>
+            <div class="toolbar-hiding" id="project-container">
             </div>
         </div>
         <div style="flex-grow: 1;">
@@ -115,7 +50,7 @@
             <main>
                 <div id="editor">
                     <div id="top-toolbar">
-                        <button type="button" class="control-btn purple-btn tooltip" tooltip-text="Save" data-trkey="save|tt" onclick="saveToHistory(true)"><i class="fas fa-save"></i></button>
+                        <button type="button" class="control-btn purple-btn tooltip" tooltip-text="Save" data-trkey="save|tt" onclick="saveCurrentDraft()"><i class="fas fa-save"></i></button>
                         <button type="button" class="control-btn blue-btn tooltip" tooltip-text="Download" data-trkey="download|tt" onclick="downloadPage()"><i class="fas fa-file-arrow-down"></i></button>
                         <button type="button" class="control-btn blue-btn tooltip" tooltip-text="Open in newtab" data-trkey="open_newtab|tt" onclick="previewNewPage()"><i class="fas fa-arrow-up-right-from-square"></i></button>
                         <button type="button" class="control-btn green-btn" onclick="preview()"><i class="fas fa-play"></i> <span data-trkey="preview">Preview</span></button>

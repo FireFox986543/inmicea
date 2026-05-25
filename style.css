@@ -8,6 +8,7 @@
 
 :root {
     --text: #0f0f0f;
+    --inverted: white;
     --muted: #444;
     --dark: #aaa;
     --darker: #222;
@@ -42,6 +43,7 @@
 
 :root.dark-mode {
     --text: #f6f6f6;
+    --inverted: black;
     --muted: #aaa;
     --dark: #696969;
     --darker: #333;
@@ -828,7 +830,7 @@ textarea.vertical-resize {
     margin: 12px 0 20px;
 }
 
-.project-container {
+#project-container {
     display: flex;
     flex-direction: column;
     gap: 3px;
@@ -848,6 +850,11 @@ textarea.vertical-resize {
     transition: background-color .2s ease-out;
 }
 
+.project.active {
+    background-color: var(--text);
+    color: var(--inverted);
+}
+
 .project button {
     position: absolute;
     height: 30px;
@@ -858,6 +865,7 @@ textarea.vertical-resize {
     padding: 0;
     opacity: 0;
     pointer-events: none;
+    color: inherit;
     transition: opacity .2s ease-out;
 }
 
@@ -868,10 +876,10 @@ textarea.vertical-resize {
 
 .project button:hover {
     border: 0;
-    color: var(--text);
+    color: inherit;
 }
 
-.project:hover {
+.project:not(.active):hover {
     background-color: var(--highlight-bg);
 }
 

@@ -2,11 +2,14 @@ const allCards = [];
 const rootCardlist = [];
 const cardContainer = document.getElementById('editor-content');
 
-let history = [];
-let historyAt = 0;
-
 let themeIsDark = false;
 let sideMode = 0;
+let projects = [];
+let currentProject = null;
+let currentDirty = false;
+
+let history = [];
+let historyAt = 0;
 
 {
     let t = window.localStorage.getItem('theme');
@@ -17,15 +20,27 @@ let sideMode = 0;
     setTheme(themeIsDark);
 }
 
-addCardRoot(new HTMLDataCard(), false);
-addCardRoot(new CSSDataCard(), false);
-addCardRoot(new HTMLNavigationCard(), false);
+{
+    const v = window.localStorage.getItem('projects'); 
 
-saveToHistory(false); // Push default state, also don't save just yet
+    if(v)
+        projects = JSON.parse(v);
+}
 
-renderCards();
+showDefaultDraft();
+renderProjectList();
 
-if (window.localStorage.getItem('currentSession')) {
+// Backwards-compatibility for older saves
+{
+    const c = window.localStorage.getItem('currentSession');
+
+    if(c) {
+        window.localStorage.setItem('draftProject', c);
+        window.localStorage.removeItem('currentSession');
+    }
+}
+
+if (window.localStorage.getItem('draftProject')) {
     showModal();
 }
 
@@ -41,8 +56,9 @@ function hideModal() {
 }
 function restoreSession() {
     try {
-        const s = window.localStorage.getItem('currentSession');
+        const s = window.localStorage.getItem('draftProject');
         constructNewCardsFrom(JSON.parse(s));
+        currentDirty = true;
     } catch (error) {
         alert('Failed to restore previous session!');
         console.error(error);
@@ -52,7 +68,7 @@ function restoreSession() {
     }
 }
 function createNew() {
-    window.localStorage.removeItem('currentSession');
+    window.localStorage.removeItem('draftProject');
     hideModal();
 }
 
@@ -234,8 +250,8 @@ function collapseNestedList(t, cardId, list) {
 function collapseExpandAll() {
     let allCollapsed = rootCardlist.every(c => c.collapsed);
     rootCardlist.forEach(c => {
-        if(c.collapsed === allCollapsed) {
-            c.collapsed = !allCollapsed 
+        if (c.collapsed === allCollapsed) {
+            c.collapsed = !allCollapsed
             document.getElementById('card_' + c.id).classList.toggle('collapsed', c.collapsed);
         }
     });
@@ -319,8 +335,14 @@ function saveToHistory(autoSave = true) {
 
     historyAt = history.length - 1;
 
-    if (autoSave)
-        window.localStorage.setItem('currentSession', ser);
+    if (autoSave) {
+        if(currentProject == null) {
+            window.localStorage.setItem('draftProject', ser);
+            currentDirty = true;
+        }
+        else
+            saveCurrentProject();
+    }
 }
 function clearHistory() {
     historyAt = 0;
@@ -411,4 +433,185 @@ function switchSide() {
 
     editor.classList.toggle('hidden', sideMode === 2);
     viewer.classList.toggle('hidden', sideMode === 1);
+}
+
+function renderProjectList() {
+    const pc = document.getElementById('project-container');
+    let html = '';
+
+    projects.forEach(p => {
+        html += `<div class="project ${p.id === currentProject ? 'active' : ''}" onclick="loadProject('${p.id}')">
+                    <span class="project-title">${p.name}</span>
+                    <button type="button" class="control-btn selector-btn">
+                        <i class="fas fa-ellipsis-vertical"></i>
+                        <div class="dropover-selector-wrapper">
+                            <div class="dropover-selector">
+                                <div class="selector-option" onclick="renameProject('${p.id}'); event.stopPropagation();">
+                                    <i class="fas fa-pencil"></i>
+                                    <span data-trkey="rename">Rename</span>
+                                </div>
+                                <div class="selector-option" onclick="duplicateProject('${p.id}'); event.stopPropagation();">
+                                    <i class="fas fa-copy"></i>
+                                    <span data-trkey="duplicate">Duplicate</span>
+                                </div>
+                                <div class="selector-option" onclick="deleteProject('${p.id}'); event.stopPropagation();">
+                                    <i class="fas fa-trash-can"></i>
+                                    <span data-trkey="delete">Delete</span>
+                                </div>
+                            </div>
+                        </div>
+                    </button>
+                </div>`;
+    });
+
+    pc.innerHTML = html;
+}
+function getProject(pid) { return projects.find(x => x.id === pid); }
+function addProject(preserve = false) {
+    const pName = prompt(translate('enter_pname'), translate('pname_def'));
+
+    if (pName == null || pName === '') {
+        alert(translate('pname_invalid'));
+        return;
+    }
+    if (projects.find(p => p.name === pName)) {
+        alert(translate('pname_exists'));
+        return;
+    }
+
+    // This is a draft, and also there are changes!
+    if(currentProject == null && currentDirty && !preserve) {
+        alert('PLZ Save everything bfore trying to load other projectcies!');
+        return;
+    }
+
+    if(!preserve)
+        showDefaultDraft();
+
+    const id = generateUUIDv4();
+    currentProject = id;
+
+    projects.push({ name: pName, id: id, cards: getSerializedCards() });
+    saveProjects();
+    renderProjectList();
+}
+function saveProjects() {
+    window.localStorage.setItem('projects', JSON.stringify(projects));
+}
+function saveCurrentProject() {
+    const p = projects.find(x => x.id === currentProject);
+
+    if(!p)
+        throw new Error("Failed to get project while trying to save: " + currentProject);
+
+    p.cards = getSerializedCards();
+    saveProjects();
+}
+function loadProject(pid) {
+    const p = getProject(pid);
+
+    if(!p)
+        throw new Error("Failed to load project with id: " + pid);
+
+    // This is a draft, and also there are changes!
+    if(currentProject == null && currentDirty) {
+        alert('PLZ Save everything bfore trying to load other projectcies!');
+        return;
+    }
+
+    currentProject = p.id;
+
+    constructNewCardsFrom(JSON.parse(p.cards));
+    historyAt = 0;
+    history = [];
+    renderProjectList();
+}
+function renameProject(pid) {
+    const p = getProject(pid);
+
+    if(!p)
+        throw new Error("Failed to find project with id: " + pid);
+
+    const newName = prompt(translate('project_rename'), translate('prename_def'));
+
+    if (newName == null || newName === '') {
+        alert(translate('pname_invalid'));
+        return;
+    }
+
+    if(newName === p.name || projects.find(p => p.name === newName)) {
+        alert(translate('pname_exists'));
+        return;
+    }
+
+    p.name = newName;
+    saveProjects();
+    renderProjectList();
+}
+function duplicateProject(pid) {
+    const p = getProject(pid);
+    const newP = JSON.parse(JSON.stringify(p)); // A deep-copy
+    newP.id = generateUUIDv4();
+    newP.name += ' ' + translate('copy');
+
+    projects.push(newP);
+    saveProjects();
+    renderProjectList();
+    loadProject(newP.id);
+}
+function deleteProject(pid) {
+    const p = getProject(pid);
+
+    if(!p)
+        throw new Error("Failed to find project with id: " + pid);
+
+    const response = prompt(translate('project_delete'));
+
+    if(response !== translate('yes')) {
+        alert(translate('project_delete_fail'));
+        return;
+    }
+
+    if(currentProject === pid) {
+        showDefaultDraft();
+        currentProject = null;
+        currentDirty = false;
+    }
+
+    removeProjectFromArray(pid);
+    saveProjects();
+    renderProjectList();
+}
+function removeProjectFromArray(pid) {
+    projects.forEach(p => {
+        if(p.id === pid)
+            p.id = null;
+    });
+    const n = projects.filter(p => p.id != null);
+    projects = n;
+}
+
+function showDefaultDraft() {
+    history = [];
+    historyAt = 0;
+
+    allCards.length = 0;
+    rootCardlist.length = 0;
+
+    addCardRoot(new HTMLDataCard(), false);
+    addCardRoot(new CSSDataCard(), false);
+    addCardRoot(new HTMLNavigationCard(), false);
+
+    saveToHistory(false); // Push default state, also don't save just yet
+
+    renderCards();
+}
+
+function saveCurrentDraft() {
+    if(currentProject == null) {
+        addProject(true);
+        window.localStorage.removeItem('draftProject');
+    }
+    else
+        saveCurrentProject();
 }

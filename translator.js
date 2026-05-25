@@ -137,7 +137,7 @@ const _translateTable = {
     "small": ['Small', 'Kicsi'],
     "large": ['Large', 'Nagy'],
     "image_list": ['Image list', 'Kép lista'],
-    "type": ['type', 'Típus'],
+    "type": ['Type', 'Típus'],
     "list_ul": ['Unordered list', 'Pontozott lista'],
     "list_ol": ['Ordered list', 'Számozott lista'],
     "elements": ['Elements', 'Elemek'],

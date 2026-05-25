@@ -5,7 +5,7 @@ const cardContainer = document.getElementById('editor-content');
 let themeIsDark = false;
 let sideMode = 0;
 let projects = [];
-let currentProject = null;
+let currentProject = window.localStorage.getItem('currentProject'); // ID if exists or Null
 let currentDirty = false;
 
 let history = [];
@@ -21,20 +21,24 @@ let historyAt = 0;
 }
 
 {
-    const v = window.localStorage.getItem('projects'); 
+    const v = window.localStorage.getItem('projects');
 
-    if(v)
+    if (v)
         projects = JSON.parse(v);
 }
 
-showDefaultDraft();
-renderProjectList();
+if (currentProject == null) {
+    showDefaultDraft();
+    renderProjectList();
+}
+else
+    loadProject(currentProject);
 
 // Backwards-compatibility for older saves
 {
     const c = window.localStorage.getItem('currentSession');
 
-    if(c) {
+    if (c) {
         window.localStorage.setItem('draftProject', c);
         window.localStorage.removeItem('currentSession');
     }
@@ -85,9 +89,16 @@ function downloadPage() {
     preview('PLZ-DONLOAD');
 }
 function previewNewPage() {
-    const base = encodeURIComponent(getSerializedCards());
-    const url = window.location.href.replace('index.html', '/src/inmicea-page/index.html?preview=' + base);
+    const data = encodeURIComponent(getSerializedCards());
+    let url = window.location.href;
 
+    if (url.endsWith('.html'))
+        url = url.replace('index.html', '');
+
+    if (url.endsWith('/'))
+        url = url.substring(0, url.length - 1);
+
+    url += '/src/inmicea-page/index.html?preview=' + data;
     window.open(url, '_blank');
 }
 
@@ -336,7 +347,7 @@ function saveToHistory(autoSave = true) {
     historyAt = history.length - 1;
 
     if (autoSave) {
-        if(currentProject == null) {
+        if (currentProject == null) {
             window.localStorage.setItem('draftProject', ser);
             currentDirty = true;
         }
@@ -408,8 +419,12 @@ function constructNewCard(c, array) {
 window.addEventListener('keydown', (e) => {
     if (e.ctrlKey && e.key.toUpperCase() === 'Z')
         historyUndo();
-    if (e.ctrlKey && e.key.toUpperCase() === 'Y')
+    else if (e.ctrlKey && e.key.toUpperCase() === 'Y')
         historyRedo();
+    else if (e.ctrlKey && e.key.toUpperCase() === 'S') {
+        saveCurrentDraft();
+        e.preventDefault();
+    }
 });
 
 function setTheme(val) {
@@ -480,16 +495,17 @@ function addProject(preserve = false) {
     }
 
     // This is a draft, and also there are changes!
-    if(currentProject == null && currentDirty && !preserve) {
+    if (currentProject == null && currentDirty && !preserve) {
         alert('PLZ Save everything bfore trying to load other projectcies!');
         return;
     }
 
-    if(!preserve)
+    if (!preserve)
         showDefaultDraft();
 
     const id = generateUUIDv4();
     currentProject = id;
+    window.localStorage.setItem('currentProject', currentProject);
 
     projects.push({ name: pName, id: id, cards: getSerializedCards() });
     saveProjects();
@@ -501,7 +517,7 @@ function saveProjects() {
 function saveCurrentProject() {
     const p = projects.find(x => x.id === currentProject);
 
-    if(!p)
+    if (!p)
         throw new Error("Failed to get project while trying to save: " + currentProject);
 
     p.cards = getSerializedCards();
@@ -510,16 +526,17 @@ function saveCurrentProject() {
 function loadProject(pid) {
     const p = getProject(pid);
 
-    if(!p)
+    if (!p)
         throw new Error("Failed to load project with id: " + pid);
 
     // This is a draft, and also there are changes!
-    if(currentProject == null && currentDirty) {
+    if (currentProject == null && currentDirty) {
         alert('PLZ Save everything bfore trying to load other projectcies!');
         return;
     }
 
     currentProject = p.id;
+    window.localStorage.setItem('currentProject', currentProject);
 
     constructNewCardsFrom(JSON.parse(p.cards));
     historyAt = 0;
@@ -529,7 +546,7 @@ function loadProject(pid) {
 function renameProject(pid) {
     const p = getProject(pid);
 
-    if(!p)
+    if (!p)
         throw new Error("Failed to find project with id: " + pid);
 
     const newName = prompt(translate('project_rename'), translate('prename_def'));
@@ -539,7 +556,7 @@ function renameProject(pid) {
         return;
     }
 
-    if(newName === p.name || projects.find(p => p.name === newName)) {
+    if (newName === p.name || projects.find(p => p.name === newName)) {
         alert(translate('pname_exists'));
         return;
     }
@@ -562,20 +579,21 @@ function duplicateProject(pid) {
 function deleteProject(pid) {
     const p = getProject(pid);
 
-    if(!p)
+    if (!p)
         throw new Error("Failed to find project with id: " + pid);
 
     const response = prompt(translate('project_delete'));
 
-    if(response !== translate('yes')) {
+    if (response !== translate('yes')) {
         alert(translate('project_delete_fail'));
         return;
     }
 
-    if(currentProject === pid) {
+    if (currentProject === pid) {
         showDefaultDraft();
         currentProject = null;
         currentDirty = false;
+        window.localStorage.setItem('currentProject', currentProject);
     }
 
     removeProjectFromArray(pid);
@@ -584,7 +602,7 @@ function deleteProject(pid) {
 }
 function removeProjectFromArray(pid) {
     projects.forEach(p => {
-        if(p.id === pid)
+        if (p.id === pid)
             p.id = null;
     });
     const n = projects.filter(p => p.id != null);
@@ -603,12 +621,11 @@ function showDefaultDraft() {
     addCardRoot(new HTMLNavigationCard(), false);
 
     saveToHistory(false); // Push default state, also don't save just yet
-
     renderCards();
 }
 
 function saveCurrentDraft() {
-    if(currentProject == null) {
+    if (currentProject == null) {
         addProject(true);
         window.localStorage.removeItem('draftProject');
     }

@@ -98,7 +98,7 @@ function handleCard(card) {
         case 'HeaderCard':
             return `<header style="background-image: url('${card.backgroundImg}')" class="${card.style}">
                         <div class="top">
-                            ${card.style !== 'style2' ? '' : `<img src="${card.headingIcon}" alt="Heading logo">`}
+                            ${(card.style !== 'style2' || !card.headingIcon.startsWith('http')) ? '' : `<img src="${card.headingIcon}" alt="Heading logo">`}
                             ${card.title}
                         </div>
                         <div>
@@ -165,7 +165,7 @@ function handleNavSubCards(arr) {
 }
 
 function handleSection(c) {
-    const heading = `<h2>${c.heading}</h2>`
+    const heading = c.heading.length > 0 ? `<h2>${c.heading}</h2>` : '';
     let content = c.headingIsTop === 'true' ? '' : heading;
     let images = '';
 
@@ -177,23 +177,24 @@ function handleSection(c) {
     });
 
     let inner = '';
+    const imageSize = c.imageSize === 'small' ? 'smaller' : (c.imageSize === 'normal' ? '' : 'bigger');
 
     switch (c.imageType) {
         case 'bottom':
-            inner = `${content}<div class="img-cont">${images}</div>`;
+            inner = `${content}<div class="img-cont ${imageSize}">${images}</div>`;
             break;
         case 'top':
-            inner = `<div class="img-cont">${images}</div>${content}`;
+            inner = `<div class="img-cont ${imageSize}">${images}</div>${content}`;
             break;
         case 'right':
-            inner = `<div class="img-cont">
+            inner = `<div class="horizontal-section">
                         <div style="flex-grow: 1">${content}</div>
-                        <div class="multi-cont ${c.imageSize === 'small' ? 'smaller' : (c.imageSize === 'normal' ? '' : 'bigger')}">${images}</div>
+                        <div class="multi-cont ${imageSize}">${images}</div>
                     </div>`;
             break;
         case 'left':
-            inner = `<div class="img-cont">
-                        <div class="multi-cont ${c.imageSize === 'small' ? 'smaller' : (c.imageSize === 'normal' ? '' : 'bigger')}">${images}</div>
+            inner = `<div class="horizontal-section">
+                        <div class="multi-cont ${imageSize}">${images}</div>
                         <div style="flex-grow: 1">${content}</div>
                     </div>`;
             break;

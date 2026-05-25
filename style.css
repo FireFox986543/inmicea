@@ -420,7 +420,8 @@ textarea.vertical-resize {
     padding: 1px 3px;
 }
 
-.card label {
+.card .card-field>span:first-child {
+    display: block;
     font-weight: bold;
     color: var(--text);
     min-width: 260px;

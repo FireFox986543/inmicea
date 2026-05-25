@@ -30,7 +30,7 @@ class Card {
     static renderTextField(t, trkey, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field">
-                <label data-trkey="${trkey}">${translate(trkey)}</label>
+                <span data-trkey="${trkey}">${translate(trkey)}</span>
                 <input type="text" oninput="updateProperty(this, '${t.id}', '${dataHook}')" value="${t[dataHook]}" onchange="propertyChanged(this, '${t.id}', '${dataHook}')">
             </div>`;
     }
@@ -43,14 +43,14 @@ class Card {
     static renderTextareaField(t, trkey, dataHook, height = 100) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field expandable">
-                <label style="align-self: flex-start;" data-trkey="${trkey}">${translate(trkey)}</label>
+                <span style="align-self: flex-start;" data-trkey="${trkey}">${translate(trkey)}</span>
                 <textarea class="vertical-resize" style="height: ${height}px" oninput="updateProperty(this, '${t.id}', '${dataHook}')" onchange="propertyChanged(this, '${t.id}', '${dataHook}')">${t[dataHook]}</textarea>
             </div>`;
     }
     static renderColorField(t, trkey, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field">
-                <label data-trkey="${trkey}">${translate(trkey)}</label>
+                <span data-trkey="${trkey}">${translate(trkey)}</span>
                 <input type="color" oninput="updateProperty(this, '${t.id}', '${dataHook}')" onchange="propertyChanged(this, '${t.id}', '${dataHook}')" value="${t[dataHook]}">
             </div>`;
     }
@@ -63,7 +63,7 @@ class Card {
         });
 
         return `<div class="card-field">
-                <label data-trkey="${trkey}">${translate(trkey)}</label>
+                <span data-trkey="${trkey}">${translate(trkey)}</span>
                 <select onchange="updateProperty(this, '${t.id}', '${dataHook}'); propertyChanged(this, '${t.id}', '${dataHook}')">
                     ${optHTML}
                 </select>
@@ -72,7 +72,7 @@ class Card {
     static renderImageField(t, trkey, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field expandable">
-                    <label style="align-self: flex-start;" data-trkey="${trkey}">${translate(trkey)}</label>
+                    <span style="align-self: flex-start;" data-trkey="${trkey}">${translate(trkey)}</span>
                     <div class="image-box">
                         <img src="${t[dataHook]}" alt="Image" data-hook="${dataHook}">
                     </div>
@@ -310,7 +310,7 @@ class HTMLNavmenuCard extends Card {
     onPropertyUpdate(hook, value) {
         if (hook === 'type' || hook === 'iconType')
             renderCard(this);
-        
+
         Card.updateFaField(this, hook, value, 'iconFa');
         Card.updateImageField(this, hook, value, 'iconHref');
     }
@@ -347,7 +347,7 @@ class HeaderCard extends Card {
         Card.updateImageField(this, hook, value, 'backgroundImg');
         Card.updateImageField(this, hook, value, 'headingIcon');
 
-        if(hook === 'style')
+        if (hook === 'style')
             renderCard(this);
     }
 
@@ -397,7 +397,7 @@ class SectionCard extends Card {
                     ${Card.renderDropdown(this, 'image_type', 'imageType', [['none', 'none'], ['bottom', 'bottom'], ['top', 'top'], ['left', 'left'], ['right', 'right']])}
                     ${this.imageType === 'none' ? ''
                 : (
-                    `${['left', 'right'].includes(this.imageType) ? Card.renderDropdown(this, 'image_size', 'imageSize', [['small', 'small'], ['normal', 'normal'], ['large', 'large']]) : ''}
+                    `${Card.renderDropdown(this, 'image_size', 'imageSize', [['small', 'small'], ['normal', 'normal'], ['large', 'large']])}
                     ${Card.renderNestedCards(this, 'image_list', 'imageCards', Card.renderAddButtonSingle(this, 'imageCards', 'ImageCard'))}`
                 )}
                 </div>
@@ -539,7 +539,7 @@ class ContactElementCard extends Card {
     onPropertyUpdate(hook, value) {
         if (hook === 'type')
             renderCard(this);
-        
+
         Card.updateFaField(this, hook, value, 'customIcon');
     }
 

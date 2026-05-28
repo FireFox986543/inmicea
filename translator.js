@@ -54,6 +54,7 @@ const _translateTable = {
     "contact_element_card": ['Contact Element Card', 'Kapcsolat Elem Kártya'],
     "contact_form_card": ['Contact Form Card', 'Kapcsolati Űrlap Kártya'],
     "raw_html_card": ['Raw HTML Card', 'RAW HTML Kártya'],
+    "gallery_card": ['Gallery Card', 'Galléria Kártya'],
 
     "fa_key_info": ['A fontawesome icon key', 'Egy fontawesome ikon azonosító'],
     "advanced": ['Advanced', 'Haladó'],
@@ -122,6 +123,9 @@ const _translateTable = {
     "style": ['Style', 'Stílus'],
     "style_1": ['Style 1', 'Stílus 1.'],
     "style_2": ['Style 2', 'Stílus 2.'],
+    "style_3": ['Style 3', 'Stílus 3.'],
+    "style_4": ['Style 4', 'Stílus 4.'],
+    "style_5": ['Style 5', 'Stílus 5.'],
 
     "heading_top_tt": ['Should the header be placed as the first element?', 'A címsort a legelső elemként helyezzük el?'],
     "heading_top": ['Display heading at top', 'Címsor fenti elhelyezése'],
@@ -177,6 +181,7 @@ const _translateTable = {
     "has_loc": ['Has location field', 'Van lakcím mező'],
     "has_msg": ['Has message field', 'Van üzenet mező'],
     "html": ['HTML', 'HTML'],
+    "gallery_cols": ['Gallery columns number', 'Galléria oszlopok száma'],
 
     "def_wbpt": ['My first webpage', 'Az én első weboldalam'],
     "def_wbpa": ["It's me", 'Én vagyok'],
@@ -184,6 +189,7 @@ const _translateTable = {
     "def_hc_title": ['First Webpage', 'Első weboldalam'],
     "def_hc_desc": ["This is my very new webpage were i'll show you the cutest articles you'll ever see!", 'Ez az én legelső weboldalam, ahol megmutatom nektek a egcukibb cikkeket amit valaha láthattok.'],
     "def_sct_h": ['Creative Chickens', 'Kreatív csirkék'],
+    "def_gal_h": ['My Photography', 'Az én fényképeim'],
     "def_pc_txt": ['Lorem ipsum dolor sit amet, went amen at one point :P', 'Lorem ipsum dolor sit amet...'],
     "def_lc_el": ['First item\nSecond item\nThird item...', 'Első\nMásodik\nHarmadik...\nDikk?'],
     "def_htmlc_h": ['Interesting cats', 'Érdekes cicusok'],
@@ -198,6 +204,10 @@ window.localStorage.setItem('lang', language);
 translateWholePage();
 
 function translate(key, fallback = 'Error') {
+    // These are absolute strings - they don't need to be translated
+    if(key.startsWith('#'))
+        return key.substring(1, key.length);
+
     const arr = _translateTable[key];
 
     if (arr == null)

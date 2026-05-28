@@ -618,6 +618,37 @@ class RawHTMLCard extends Card {
             </div>`;
     }
 }
+class GalleryCard extends Card {
+    constructor() {
+        super();
+        this.cardType = 'GalleryCard';
+        this.cardTitle = 'gallery_card';
+        this.icon = 'fa-image-stack';
+
+        this.heading = translate('def_gal_h');
+        this.sectionId = '';
+        this.imageSize = 'normal';
+        this.galleryCols = '3';
+        this.style = 'style1';
+
+        this.imageCards = [];
+        this.imageCards_collapsed = false;
+    }
+
+    render() {
+        return `${Card.beginCard(this)}
+                ${Card.renderCardToolbar(this, true)}
+                <div class="card-content">
+                    ${Card.renderTextField(this, 'heading', 'heading')}
+                    ${Card.renderAdvancedSection(this, Card.renderInfoTo(Card.renderTextField(this, 'section_id', 'sectionId'), 'section_id_tt'))}
+                    ${Card.renderDropdown(this, 'style', 'style', [['style1', 'style_1'], ['style2', 'style_2']])}
+                    ${Card.renderDropdown(this, 'gallery_cols', 'galleryCols', [['1', '#1'], ['2', '#2'], ['3', '#3'], ['4', '#4'], ['5', '#5']])}
+                    ${Card.renderDropdown(this, 'image_size', 'imageSize', [['small', 'small'], ['normal', 'normal'], ['large', 'large']])}
+                    ${Card.renderNestedCards(this, 'image_list', 'imageCards', Card.renderAddButtonSingle(this, 'imageCards', 'ImageCard'))}
+                </div>
+            </div>`;
+    }
+}
 
 function newCardFromType(type) {
     switch (type) {
@@ -635,6 +666,7 @@ function newCardFromType(type) {
         case 'ContactFormCard': return new ContactFormCard();
         case 'RawHTMLCard': return new RawHTMLCard();
         case 'HTMLHeadingCard': return new HTMLHeadingCard();
+        case 'GalleryCard': return new GalleryCard();
         default:
             throw new Error("Failed to construct card from given type: " + type);
     }

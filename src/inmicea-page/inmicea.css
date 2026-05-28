@@ -554,87 +554,85 @@ form .title {
     opacity: .7;
 }
 
-.bogyok {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    height: 256px;
-}
-
-.bogyok a {
-    flex: 25%;
-    border-radius: 20px;
-    overflow: hidden;
-    cursor: pointer;
-    border: 1px solid #eee;
-    transition: transform .2s ease-out;
-    display: flex;
-    flex-direction: column;
-    justify-content: end;
-    align-items: stretch;
-    font-size: 1.5rem;
-    color: var(--dark);
-    text-align: center;
-    padding-bottom: 18px;
-    background-image: var(--img);
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    position: relative;
-}
-
-.bogyok a::before,
-.gallery .gal-cont::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    top: auto;
-    height: 64px;
-    background-color: white;
-    border-top: 2px solid #eee;
-    z-index: 2;
-}
-
-.bogyok a:hover {
-    transform: scale(1.04);
-}
-
-.gallery {
+.gallery,
+.gallery2 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
     width: 100%;
-    display: flex;
-    flex-wrap: wrap;
     gap: 32px;
 }
 
-.gallery span {
-    z-index: 4;
+:is(.gallery, .gallery2).gal-cols-1 {
+    grid-template-columns: repeat(1, 1fr);
 }
 
-.gallery .gal-cont {
+:is(.gallery, .gallery2).gal-cols-2 {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+:is(.gallery, .gallery2).gal-cols-4 {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+:is(.gallery, .gallery2).gal-cols-5 {
+    grid-template-columns: repeat(5, 1fr);
+}
+
+.gallery span {
+    display: block;
+    height: 64px;
+    background-color: var(--background-lighter);
+    width: 100%;
     position: relative;
-    flex: 30%;
+    z-index: 10;
+}
+
+.gallery .gallery-item {
     aspect-ratio: 25 / 32;
+    text-align: center;
+    font-size: 1.2rem;
     overflow: hidden;
-    border-radius: 20px;
-    background-image: var(--img);
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    transition: transform .2s ease-out;
     cursor: pointer;
-    border: 1px solid #eee;
+    transition: transform .2s ease-out;
+}
+
+.gallery.smaller .gallery-item {
+    aspect-ratio: 1 / 1;
+}
+
+.gallery.bigger .gallery-item {
+    aspect-ratio: 20 / 32;
+}
+
+.gallery .gallery-wrapper {
+    width: 100%;
+    height: 100%;
+}
+
+.gallery .gallery-item img {
+    object-fit: cover;
+    object-position: center center;
+    width: 100%;
+    height: 100%;
+}
+
+.gallery .gallery-item:hover {
+    transform: scale(1.04);
+}
+
+.gallery2 .gallery-column {
     display: flex;
     flex-direction: column;
-    justify-content: end;
-    align-items: stretch;
-    font-size: 1.2rem;
-    color: var(--dark);
-    text-align: center;
-    padding-bottom: 18px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 32px;
+    height: 100%;
+    overflow: hidden;
 }
 
-.gallery .gal-cont:hover {
-    transform: scale(1.04);
+.gallery2 img {
+    width: 100%;
+    height: auto;
 }
 
 .hidden {
@@ -692,6 +690,10 @@ form .title {
     .main {
         max-width: 1200px;
     }
+
+    :is(.gallery, .gallery2).gal-cols-5 {
+        grid-template-columns: repeat(4, 1fr);
+    }
 }
 
 @media only screen and (max-width: 1300px) {
@@ -705,6 +707,14 @@ form .title {
 
     .main {
         max-width: 1000px;
+    }
+
+    :is(.gallery).gal-cols-4 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    :is(.gallery, .gallery2).gal-cols-5 {
+        grid-template-columns: repeat(3, 1fr);
     }
 }
 
@@ -725,6 +735,18 @@ form .title {
     header p {
         width: 100%;
     }
+
+    :is(.gallery) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    :is(.gallery, .gallery2).gal-cols-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    :is(.gallery, .gallery2).gal-cols-5 {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media only screen and (max-width: 600px) {
@@ -744,8 +766,8 @@ form .title {
 }
 
 @media only screen and (max-width: 450px) {
-    .gallery .gal-cont {
-        flex: 100%;
+    :is(.gallery, .gallery2) {
+        grid-template-columns: repeat(1, 1fr) !important;
     }
 }
 

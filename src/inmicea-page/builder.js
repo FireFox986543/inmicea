@@ -115,6 +115,8 @@ function handleCard(card) {
             return card.html;
         case 'HTMLHeadingCard':
             return `<h${card.level}>${card.heading}</h${card.level}>`;
+        case 'GalleryCard':
+            return handleGalleryCard(card);
         default:
             return renderRenderError("Failed to construct card from given type: " + type);
     }
@@ -164,6 +166,8 @@ function handleNavSubCards(arr) {
     return inner;
 }
 
+function renderImage(c) { return `<img ${c.canBeZoomed === 'true' ? 'class="clickable"' : ''} src="${c.image}" alt="${c.alt}" title="${c.alt}">`; }
+function getImageSize(imgs) { return imgs === 'small' ? 'smaller' : (imgs === 'normal' ? '' : 'bigger'); }
 function handleSection(c) {
     const heading = c.heading.length > 0 ? `<h2>${c.heading}</h2>` : '';
     let content = c.headingIsTop === 'true' ? '' : heading;
@@ -172,12 +176,10 @@ function handleSection(c) {
     c.contentCards.forEach(cc => {
         content += handleSectionContent(cc);
     });
-    c.imageCards.forEach(i => {
-        images += `<img src="${i.image}" alt="${i.alt}" title="${i.alt}" ${i.canBeZoomed === 'true' ? 'class="clickable"' : ''}>`;
-    });
+    c.imageCards.forEach(i => { images += renderImage(i); });
 
     let inner = '';
-    const imageSize = c.imageSize === 'small' ? 'smaller' : (c.imageSize === 'normal' ? '' : 'bigger');
+    const imageSize = getImageSize(c.imageSize);
 
     switch (c.imageType) {
         case 'bottom':
@@ -303,6 +305,52 @@ function handleContactForm(card) {
                         ${content}
                         <input type="submit" value="${translate('send')}" class="button" style="margin-top: 32px;">
                     </form>
+                </section>
+            </section>`;
+}
+
+function handleGalleryCard(card) {
+    if(card.style === 'style2') {
+        let colAmount = Math.min(card.galleryCols, card.imageCards.length);
+        let cols = new Array(colAmount);
+        let inner = '';
+
+        for (let i = 0; i < cols.length; i++) { cols[i] = []; }
+
+        card.imageCards.forEach((c, idx) => { cols[idx % colAmount].push(renderImage(c)); });
+
+        cols.forEach(c => {
+            let thisInner = '';
+            //c.forEach(c => { thisInner += `<div class="gallery-item">${c}</div>`; });
+            c.forEach(c => { thisInner += c; }); 
+
+            inner += `<div class="gallery-column">
+                        ${thisInner}
+                      </div>`
+        });
+
+        console.log(cols, colAmount);
+        return `<section class="main">
+                ${card.heading.length > 0 ? `<h2>${card.heading}</h2>` : ''}
+                <section class="gallery2 gal-cols-${card.galleryCols} ${getImageSize(card.imageSize)}" id="${card.sectionId}">
+                    ${inner}
+                </section>
+            </section>`;
+    }
+
+    let inner = '';
+    card.imageCards.forEach(c => {
+        inner += `<div class="gallery-item">
+                        <div class="gallery-wrapper">
+                            ${renderImage(c)}
+                        </div>
+                    </div>`;
+    });
+
+    return `<section class="main">
+                ${card.heading.length > 0 ? `<h2>${card.heading}</h2>` : ''}
+                <section class="gallery gal-cols-${card.galleryCols} ${getImageSize(card.imageSize)}" id="${card.sectionId}">
+                    ${inner}
                 </section>
             </section>`;
 }

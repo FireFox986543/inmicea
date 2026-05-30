@@ -453,6 +453,7 @@ function switchSide() {
 function renderProjectList() {
     const pc = document.getElementById('project-container');
     let html = '';
+    const ordered = projects.sort((a, b) => b.lastModify - a.lastModify);
 
     projects.forEach(p => {
         html += `<div class="project ${p.id === currentProject ? 'active' : ''}" onclick="loadProject('${p.id}')">
@@ -507,7 +508,7 @@ function addProject(preserve = false) {
     currentProject = id;
     window.localStorage.setItem('currentProject', currentProject);
 
-    projects.push({ name: pName, id: id, cards: getSerializedCards() });
+    projects.push({ name: pName, id: id, lastModify: Date.now(), cards: getSerializedCards() });
     saveProjects();
     renderProjectList();
 }
@@ -521,6 +522,7 @@ function saveCurrentProject() {
         throw new Error("Failed to get project while trying to save: " + currentProject);
 
     p.cards = getSerializedCards();
+    p.lastModify = Date.now();
     saveProjects();
 }
 function loadProject(pid) {
@@ -570,6 +572,7 @@ function duplicateProject(pid) {
     const newP = JSON.parse(JSON.stringify(p)); // A deep-copy
     newP.id = generateUUIDv4();
     newP.name += ' ' + translate('copy');
+    newP.lastModify = Date.now();
 
     projects.push(newP);
     saveProjects();

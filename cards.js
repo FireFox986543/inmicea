@@ -14,11 +14,20 @@ class Card {
                         <h4><i class="fas ${t.icon}"></i> &nbsp;&nbsp; <span data-trkey="${t.cardTitle}">${translate(t.cardTitle)}</span></h4>
                     </div>
                     <div class="card-right">
-                        ${hasTools ? `${hasAutofill ? `<button type="button" class="control-btn tooltip" tooltip-text="${translate('autofill')}" data-trkey="autofill|tt" onclick="event.stopPropagation(); autofillCard('${t.id}')"><i class="fas fa-bolt-auto"></i></button>` : ''}
-                        <button type="button" class="control-btn tooltip" tooltip-text="${translate('move_down')}" data-trkey="move_down|tt" onclick="event.stopPropagation(); moveCard('${t.id}', -1)"><i class="fas fa-angle-down"></i></button>
-                        <button type="button" class="control-btn tooltip" tooltip-text="${translate('move_up')}" data-trkey="move_up|tt" onclick="event.stopPropagation(); moveCard('${t.id}', 1)"><i class="fas fa-angle-up"></i></button>
-                        <button type="button" class="control-btn tooltip" tooltip-text="${translate('duplicate')}" data-trkey="duplicate|tt" onclick="event.stopPropagation(); dupeCard('${t.id}')"><i class="fas fa-copy"></i></button>
-                        <button type="button" class="control-btn danger-btn tooltip" tooltip-text="${translate('delete')}" data-trkey="delete|tt" onclick="event.stopPropagation(); deleteCard('${t.id}')"><i class="fas fa-trash-can"></i></button>` : ''}
+                        ${hasAutofill ? `<button type="button" class="control-btn tooltip" tooltip-text="${translate('autofill')}" data-trkey="autofill|tt" onclick="event.stopPropagation(); autofillCard('${t.id}')"><i class="fas fa-bolt-auto"></i></button>` : ''}
+                        <button type="button" class="control-btn selector-btn" onclick="event.stopPropagation(); dupeCard(this, '${t.id}')">
+                            <i class="fas fa-copy"></i>
+                            <div class="dropover-selector-wrapper" onclick="event.stopPropagation();">
+                                <div class="dropover-selector">
+                                    ${hasTools ? `<div class="selector-option" onclick="event.stopPropagation(); dupeCard(null, '${t.id}')"><i class="fas fa-copy"></i> <span data-trkey="duplicate">${translate('duplicate')}</span></div>` : '' }
+                                    <div class="selector-option" onclick="event.stopPropagation(); copyCard('${t.id}')"><i class="fas fa-clipboard"></i> <span data-trkey="copy_cb">${translate('copy_cb')}</span></div>
+                                    <div class="selector-option" onclick="event.stopPropagation(); pasteCard('${t.id}')"><i class="fas fa-paste"></i> <span data-trkey="paste_cb">${translate('paste_cb')}</span></div>
+                                </div>
+                            </div>
+                        </button>
+                        ${hasTools ? `<button type="button" class="control-btn tooltip" tooltip-text="${translate('move_down')}" data-trkey="move_down|tt" onclick="event.stopPropagation(); moveCard(this, '${t.id}', -1)"><i class="fas fa-angle-down"></i></button>
+                        <button type="button" class="control-btn tooltip" tooltip-text="${translate('move_up')}" data-trkey="move_up|tt" onclick="event.stopPropagation(); moveCard(this, '${t.id}', 1)"><i class="fas fa-angle-up"></i></button>
+                        <button type="button" class="control-btn danger-btn tooltip" tooltip-text="${translate('delete')}" data-trkey="delete|tt" onclick="event.stopPropagation(); deleteCard(this, '${t.id}');"><i class="fas fa-trash-can"></i></button>` : ''}
                     </div>
                 </div>`
     }

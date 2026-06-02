@@ -87,8 +87,10 @@ Raw HTML card:
 
       XXXXXX COLLAPSE AND EXPAND ALL CARDS
 
-      COPY AND PASTING CARDS
+      XXXXXX COPY AND PASTING CARDS
 
       XXXXXX ADVANCED TAB INSIDE CARDS. e.g: not every card should have all "advanced" option visible, only if expanded
 
       XXXXXX PROJECTS AND THEIR TABS
+
+      TABLES

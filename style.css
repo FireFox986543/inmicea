@@ -90,7 +90,7 @@ body {
     font-size: 1rem;
     background-color: var(--background);
     color: var(--text);
-    height: 100vh;
+    height: 100dvh;
 }
 
 header {
@@ -259,6 +259,10 @@ iframe {
     max-height: 60px;
 }
 
+.card.collapsed .selector-btn {
+    display: none;
+}
+
 .card .advanced-section>.advanced-content {
     display: flex;
     flex-direction: column;
@@ -320,9 +324,41 @@ iframe {
 }
 
 .card .card-toolbar .card-right {
+    position: relative;
     display: flex;
     gap: 4px;
     align-self: center;
+}
+
+.card .card-toolbar .card-right::after {
+    content: '\f142';
+    display: block;
+    font-family: 'Font Awesome 7 Pro';
+    font-weight: 900;
+    color: var(--text);
+    position: absolute;
+    top: 50%;
+    right: 17px;
+    opacity: 1;
+    transform: translate(0, -50%);
+    transition: opacity .1s .2s ease-out;
+    pointer-events: none;
+}
+
+.card .card-toolbar .card-right:hover::after {
+    opacity: 0;
+    transition-delay: .1s;
+}
+
+.card .card-toolbar .card-right button {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .2s .2s ease-out;
+}
+
+.card .card-toolbar .card-right:hover button {
+    opacity: 1;
+    pointer-events: all;
 }
 
 .card .card-field {
@@ -336,11 +372,13 @@ iframe {
     height: auto;
 }
 
-.card .card-hr span {
+.card .card-field.card-hr>span:first-child {
     color: var(--catcol);
     font-size: 0.7rem;
     font-weight: bold;
     margin-right: 20px;
+    width: auto;
+    min-width: 0;
 }
 
 .card .card-hr::after {

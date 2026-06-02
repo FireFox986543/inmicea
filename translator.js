@@ -39,6 +39,8 @@ const _translateTable = {
     "project_rename": ['Enter the new name for this project: ', 'Írja be az új nevét a projektnek: '],
     "prename_def": ['This is a 1000 times better name', 'Egy 1000-szer jobb név'],
     "copy": ['Copy', 'Másolat'],
+    "copy_cb": ['Copy to clipboard', 'Másolás vágólapra'],
+    "paste_cb": ['Paste from clipboard', 'Beillesztés vágólapról'],
 
     "html_data_card": ['HTML Data Card', 'HTML Adat Kártya'],
     "css_data_card": ['CSS Data Card', 'CSS Adat Kártya'],
@@ -203,15 +205,21 @@ window.localStorage.setItem('lang', language);
 
 translateWholePage();
 
-function translate(key, fallback = 'Error') {
+function translate(key, fallback = 'Invalid key!') {
     // These are absolute strings - they don't need to be translated
     if(key.startsWith('#'))
         return key.substring(1, key.length);
 
     const arr = _translateTable[key];
 
-    if (arr == null)
+    if (arr == null) {
+        console.error('Invalid translation key for: ' + key);
         return fallback;
+    }
+
+    // Fallback to english now
+    if(arr.length > 0)
+        fallback = arr[0];
 
     return arr[language] || fallback;
 }

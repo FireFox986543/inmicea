@@ -132,7 +132,10 @@ function getCard(id, arr) {
 function findNestedCard(id) {
     return allCards.find(c => c.id === id);
 }
-function moveCard(id, dir) {
+function moveCard(el, id, dir) {
+    if (el && el.computedStyleMap().get('opacity').value < .8)
+        return;
+
     const c = findNestedCard(id);
 
     if (c == null) return;
@@ -159,7 +162,10 @@ function moveCard(id, dir) {
     else if (dir === -1 && dom.nextElementSibling)
         dom.parentNode.insertBefore(dom.nextElementSibling, dom);
 }
-function deleteCard(id) {
+function deleteCard(el, id) {
+    if (el && el.computedStyleMap().get('opacity').value < .8)
+        return;
+
     const c = findNestedCard(id);
     if (c == null) return;
 
@@ -195,7 +201,10 @@ function addCardIntoList(nestId, nestList, card) {
     htmlList.appendChild(cardHtml);
     cardHtml.outerHTML = card.render();
 }
-function dupeCard(id) {
+function dupeCard(el, id) {
+    if (el && el.computedStyleMap().get('opacity').value < .8)
+        return;
+
     const c = findNestedCard(id);
     const array = handleNesting(c.nesting);
     const idx = array.indexOf(c);
@@ -217,6 +226,51 @@ function dupeCard(id) {
     htmlList.insertBefore(cardHtml, htmlList.children[targetIdx]);
 
     cardHtml.outerHTML = newCard.render();
+    saveToHistory();
+}
+function copyCard(id) {
+    const c = findNestedCard(id);
+
+    if (!c)
+        return;
+
+    window.localStorage.setItem('clipboard', serializeCard(c));
+    console.log('Copied card ', c, serializeCard(c));
+}
+function pasteCard(id) {
+    const targetCard = findNestedCard(id);
+    const cb = window.localStorage.getItem('clipboard');
+
+    console.log('Pasting card ', cb);
+
+    if (!cb || !targetCard)
+        return;
+
+    const o = JSON.parse(cb);
+
+    if (o.cardType !== targetCard.cardType) {
+        console.log('Haha mismathching typess');
+        return;
+    }
+
+    o.id = targetCard.id;
+    newIdsForCardObject([o], false);
+
+    for (const k in o) {
+        if (!Object.hasOwn(o, k)) continue;
+        const v = o[k];
+
+        // We found a nested list
+        if (k.endsWith('Cards') && Array.isArray(v)) {
+            const nestArray = [];
+            v.forEach(c => constructNewCard(c, nestArray));
+            targetCard[k] = nestArray;
+        }
+        else if (k !== 'id')
+            targetCard[k] = v;
+    }
+
+    renderCard(targetCard);
     saveToHistory();
 }
 function autofillCard(id) {
@@ -289,9 +343,9 @@ function renderCards() {
     cardContainer.innerHTML = ihtml;
 }
 
-function newIdsForCardObject(c) {
-    const handle = (o, nesting) => {
-        const myID = generateUUIDv4();
+function newIdsForCardObject(c, topLevelNewId = true) {
+    const handle = (o, nesting, tlni = true) => {
+        const myID = tlni ? generateUUIDv4() : o.id;
         o.id = myID;
 
         if (nesting)
@@ -301,12 +355,12 @@ function newIdsForCardObject(c) {
             if (!Object.hasOwn(o, k)) continue;
 
             const v = o[k];
-            const thisNesting = { id: myID, list: k };
-
+            
             if (k.endsWith('Cards') && Array.isArray(v)) {
+                const thisNesting = { id: myID, list: k };
                 const nestArray = [];
                 v.forEach(x => {
-                    handle(x, thisNesting);
+                    handle(x, thisNesting, true);
                     nestArray.push(x);
                 });
                 o[k] = nestArray;
@@ -314,7 +368,9 @@ function newIdsForCardObject(c) {
         }
     };
 
-    c.forEach(i => handle(i, i.nesting || null));
+    // The top level new id determines whether the first level of cards should get new ids
+    // This is used for card pasting
+    c.forEach(i => handle(i, i.nesting || null, topLevelNewId));
 }
 function generateUUIDv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {

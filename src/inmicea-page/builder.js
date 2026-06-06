@@ -444,7 +444,7 @@ function constructWholeHTML() {
             closeModal();
         });
 
-        function showModal(src) {
+        function modals.showModal(src) {
             modal.classList.remove('hidden');
             modalImg.src = src;
         }
@@ -455,7 +455,7 @@ function constructWholeHTML() {
         function hookAllImages() {
             document.querySelectorAll('img.clickable').forEach(e => {
                 e.addEventListener('click', () => {
-                    showModal(e.src);
+                    modals.showModal(e.src);
                 });
             });
         }

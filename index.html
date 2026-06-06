@@ -17,14 +17,14 @@
 <body>
     <div class="main-panel">
         <div class="toolbar-panel collapsed">
-            <button type="button" class="control-btn flippy-btn" onclick="toggleSidebar(this)"><i class="fas fa-chevron-left flippy-icon"></i></button>
+            <button type="button" class="control-btn flippy-btn" onclick="interface.toggleSidebar(this)"><i class="fas fa-chevron-left flippy-icon"></i></button>
             <div class="toolbar-top toolbar-hiding">
                 <img src="src/icon.svg" alt="I" draggable="false">
                 <h1>INMICEA</h1>
             </div>
             <div class="toolbar-buttons toolbar-hiding">
-                <button type="button" class="control-btn tooltip" tooltip-text="Create new project" data-trkey="create_project|tt" onclick="addProject()"><i class="fas fa-plus"></i></button>
-                <button type="button" class="control-btn tooltip" tooltip-text="Create new draft" data-trkey="create_draft|tt" onclick="createDraft()"><i class="fas fa-sheet-plastic"></i></button>
+                <button type="button" class="control-btn tooltip" tooltip-text="Create new project" data-trkey="create_project|tt" onclick="createProjectBtnClick()"><i class="fas fa-plus"></i></button>
+                <button type="button" class="control-btn tooltip" tooltip-text="Create new draft" data-trkey="create_draft|tt" onclick="createDraftBtnClick()"><i class="fas fa-sheet-plastic"></i></button>
             </div>
             <div class="toolbar-hiding" id="project-container">
             </div>
@@ -35,9 +35,9 @@
                 <h2 data-trkey="tit2">The new generation webpage generator</h2>
                 <!--<a class="git-icon" href="https://github.com/FireFox986543/inmicea" target="_blank" rel="noreferrer noopener"><i class="fab fa-github"></i></a>-->
                 <div class="floating-container">
-                    <a class="float-button theme-icon" href="javascript:void(0);" rel="noreferrer noopener" onclick="toggleTheme()"></a>
-                    <a class="float-button" href="javascript:void(0);" onclick="switchSide()"><i class="fas fa-square-half-stroke"></i></a>
-                    <a class="float-button selector-btn dropover-right" href=" javascript:void(0);">
+                    <a class="float-button theme-icon" href="javascript:void(0);" rel="noreferrer noopener" onclick="theme.toggleTheme()"></a>
+                    <a class="float-button" href="javascript:void(0);" onclick="interface.switchSide()"><i class="fas fa-square-half-stroke"></i></a>
+                    <a class="float-button selector-btn dropover-right" href="javascript:void(0);">
                         <i class="fas fa-language"></i>
                         <div class="dropover-selector-wrapper">
                             <div class="dropover-selector">
@@ -51,7 +51,7 @@
             <main>
                 <div id="editor">
                     <div id="top-toolbar">
-                        <button type="button" class="control-btn purple-btn tooltip" tooltip-text="Save" data-trkey="save|tt" onclick="saveCurrentDraft()"><i class="fas fa-save"></i></button>
+                        <button type="button" class="control-btn purple-btn tooltip" tooltip-text="Save" data-trkey="save|tt" onclick="saveBtnClick()"><i class="fas fa-save"></i></button>
                         <button type="button" class="control-btn blue-btn tooltip" tooltip-text="Download" data-trkey="download|tt" onclick="downloadPage()"><i class="fas fa-file-arrow-down"></i></button>
                         <button type="button" class="control-btn blue-btn tooltip" tooltip-text="Open in newtab" data-trkey="open_newtab|tt" onclick="previewNewPage()"><i class="fas fa-arrow-up-right-from-square"></i></button>
                         <button type="button" class="control-btn green-btn" onclick="preview()"><i class="fas fa-play"></i> <span data-trkey="preview">Preview</span></button>
@@ -88,15 +88,18 @@
             <h1></h1>
             <p></p>
             <div class="modal-btns">
-                <button type="button" id="modal-button-0" class="control-btn white-btn" onclick="modalButtonClicked(0)"></button>
-                <button type="button" id="modal-button-1" class="control-btn red-btn" onclick="modalButtonClicked(1)"></button>
+                <button type="button" id="modal-button-0" class="control-btn white-btn" onclick="modals.modalButtonClicked(0)"></button>
+                <button type="button" id="modal-button-1" class="control-btn red-btn" onclick="modals.modalButtonClicked(1)"></button>
             </div>
         </div>
     </div>
 
-    <script src="translator.js"></script>
-    <script src="cards.js"></script>
-    <script src="script.js"></script>
+    <script src="src/scripts/helpers.js"></script>
+    <script src="src/scripts/translator.js"></script>
+    <script src="src/scripts/cards.js"></script>
+    <script src="src/scripts/interface.js"></script>
+    <script src="src/scripts/script.js"></script>
+    <script src="src/scripts/projects.js"></script>
 </body>
 
 </html>

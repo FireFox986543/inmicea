@@ -17,6 +17,7 @@ const _translateTable = {
     "discard": ['Discard', 'Elvetés'],
     "cancel": ['Cancel', 'Mégse'],
     "collapse_expand": ['Collapse/expand all', 'Kártyák kinyitása/becsukása'],
+    "no_projects": ['No projects created yet.', 'Nincsenek még projektjei.'],
 
     "restore_tit": ['Continue previous draft?', 'Folytatja az előző piszkozatot?'],
     "restore_desc": [`There's a draft that hasn't been saved yet. Would you like to continue editing or to discard this draft?`, 'Szeretné folytatni az előző piszkozatot vagy újat kezdeni?'],
@@ -26,6 +27,7 @@ const _translateTable = {
     "restore_fail_desc": ['Failed to restore your previous work.', 'Nem sikerült előző munkáját betölteni.'],
     "discard_before_title": ['Discard draft?', 'Elveti a piszkozatát?'],
     "discard_before_continue": ['Would you like to discard this draft in order to {0}?', 'Elveti ezt a piszkozatot hogy {0}?'],
+    "discard_discarded": ["Your draft wasn't discarded. Because project creation failed.", 'A piszkozata nem került törlésre, mivel a projekt létrehozása nem történt meg.'],
 
     "discard_in0": ['create a new project', 'új projektet hozzon létre'],
     "discard_in1": ['create a new draft', 'új piszkozatot hozzon létre'],
@@ -48,7 +50,7 @@ const _translateTable = {
     "pname_exists": ['Project with that name already exists!', 'Már létezik egy projekt ezzel a névvel!'],
     "pname_def": ['My best project', 'A legjobb projektem'],
     "project_delete": ['Enter the word "yes" to delete this project: ', 'Írja be az "igen" szót ahoz, hogy megsemmisítse a projektet: '],
-    "project_delete_fail": ["Thus the project wasn't deleted!", 'Ez által a projekt nem semmisült meg!'],
+    "project_delete_fail": ["Thus the project wasn't deleted!", 'Ezáltal a projekt nem semmisült meg!'],
     "yes": ['yes', 'igen'],
     "project_rename": ['Enter the new name for this project: ', 'Írja be az új nevét a projektnek: '],
     "prename_def": ['This is a 1000 times better name', 'Egy 1000-szer jobb név'],

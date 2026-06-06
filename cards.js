@@ -33,33 +33,33 @@ class Card {
     }
     static renderHr(trkey) {
         return `<div class="card-field card-hr">
-                    <span data-trkey="${trkey}">${translate(trkey)}</span>
+                    <span data-trkey="${Card.sanitizeTrkey(trkey)}">${translate(trkey)}</span>
                 </div>`;
     }
     static renderTextField(t, trkey, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field">
-                <span data-trkey="${trkey}">${translate(trkey)}</span>
+                <span data-trkey="${Card.sanitizeTrkey(trkey)}">${translate(trkey)}</span>
                 <input type="text" oninput="updateProperty(this, '${t.id}', '${dataHook}')" value="${t[dataHook]}" onchange="propertyChanged(this, '${t.id}', '${dataHook}')">
             </div>`;
     }
     static renderCheckBox(t, trkey, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field">
-                <button type="button" class="checkbox-btn" value="${t[dataHook]}" onclick="Card.checkboxHelper(this); updateProperty(this, '${t.id}', '${dataHook}'); propertyChanged(this, '${t.id}', '${dataHook}')"><i class='far fa-square${t[dataHook] === 'true' ? '-check' : ''}'></i> &nbsp; <span data-trkey="${trkey}">${translate(trkey)}</span></button><div style="flex-grow: 1"></div>
+                <button type="button" class="checkbox-btn" value="${t[dataHook]}" onclick="Card.checkboxHelper(this); updateProperty(this, '${t.id}', '${dataHook}'); propertyChanged(this, '${t.id}', '${dataHook}')"><i class='far fa-square${t[dataHook] === 'true' ? '-check' : ''}'></i> &nbsp; <span data-trkey="${Card.sanitizeTrkey(trkey)}">${translate(trkey)}</span></button><div style="flex-grow: 1"></div>
             </div>`;
     }
     static renderTextareaField(t, trkey, dataHook, height = 100) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field expandable">
-                <span style="align-self: flex-start;" data-trkey="${trkey}">${translate(trkey)}</span>
+                <span style="align-self: flex-start;" data-trkey="${Card.sanitizeTrkey(trkey)}">${translate(trkey)}</span>
                 <textarea class="vertical-resize" style="height: ${height}px" oninput="updateProperty(this, '${t.id}', '${dataHook}')" onchange="propertyChanged(this, '${t.id}', '${dataHook}')">${t[dataHook]}</textarea>
             </div>`;
     }
     static renderColorField(t, trkey, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field">
-                <span data-trkey="${trkey}">${translate(trkey)}</span>
+                <span data-trkey="${Card.sanitizeTrkey(trkey)}">${translate(trkey)}</span>
                 <input type="color" oninput="updateProperty(this, '${t.id}', '${dataHook}')" onchange="propertyChanged(this, '${t.id}', '${dataHook}')" value="${t[dataHook]}">
             </div>`;
     }
@@ -68,11 +68,11 @@ class Card {
         const selected = t[dataHook];
         let optHTML = '';
         options.forEach(([v, tr]) => {
-            optHTML += `<option value="${v}" ${v === selected ? 'selected' : ''} data-trkey="${tr}">${translate(tr)}</option>`;
+            optHTML += `<option value="${v}" ${v === selected ? 'selected' : ''} data-trkey="${Card.sanitizeTrkey(tr)}">${translate(tr)}</option>`;
         });
 
         return `<div class="card-field">
-                <span data-trkey="${trkey}">${translate(trkey)}</span>
+                <span data-trkey="${Card.sanitizeTrkey(trkey)}">${translate(trkey)}</span>
                 <select onchange="updateProperty(this, '${t.id}', '${dataHook}'); propertyChanged(this, '${t.id}', '${dataHook}')">
                     ${optHTML}
                 </select>
@@ -81,7 +81,7 @@ class Card {
     static renderImageField(t, trkey, dataHook) {
         const nesting = Card.getNestingFromCard(t);
         return `<div class="card-field expandable">
-                    <span style="align-self: flex-start;" data-trkey="${trkey}">${translate(trkey)}</span>
+                    <span style="align-self: flex-start;" data-trkey="${Card.sanitizeTrkey(trkey)}">${translate(trkey)}</span>
                     <div class="image-box">
                         <img src="${t[dataHook]}" alt="Image" data-hook="${dataHook}">
                     </div>
@@ -103,7 +103,7 @@ class Card {
         return `<div class="card-field card-field-nested" data-list="${list}">
                     <div class="nested-card-container ${t[list + '_collapsed'] ? 'collapsed' : ''}">
                         <div class="nested-top" onclick="collapseNestedList(this, '${t.id}', '${list}')">
-                            <h4 data-trkey="${trkey}">${translate(trkey)}</h4>
+                            <h4 data-trkey="${Card.sanitizeTrkey(trkey)}">${translate(trkey)}</h4>
                             ${buttonStr}
                         </div>
                         <div class="card-container">
@@ -117,7 +117,7 @@ class Card {
     }
     static renderAddButtonMultiple(t, list, options) {
         let inner = '';
-        options.forEach(([trkey, icon, type]) => inner += `<div class="selector-option" onclick="event.stopPropagation(); addCardIntoList('${t.id}', '${list}', new ${type}({ id: '${t.id}', list: '${list}' }));"><i class="fas ${icon}"></i> <span data-trkey="${trkey}">${translate(trkey)}</span></div>`)
+        options.forEach(([trkey, icon, type]) => inner += `<div class="selector-option" onclick="event.stopPropagation(); addCardIntoList('${t.id}', '${list}', new ${type}({ id: '${t.id}', list: '${list}' }));"><i class="fas ${icon}"></i> <span data-trkey="${Card.sanitizeTrkey(trkey)}">${translate(trkey)}</span></div>`)
 
         return `<button type="button" class="control-btn selector-btn">
                     <i class="fas fa-plus"></i>
@@ -150,7 +150,7 @@ class Card {
         return card.nesting || { id: null, list: null };
     }
     static renderInfoTo(str, trkey, right = false) {
-        return str.substring(0, str.length - 6) + `<div class="tooltip tooltip-${right ? 'right' : 'left'} info" tooltip-text="${translate(trkey)}" data-trkey="${trkey}|tt">
+        return str.substring(0, str.length - 6) + `<div class="tooltip tooltip-${right ? 'right' : 'left'} info" tooltip-text="${translate(trkey)}" data-trkey="${Card.sanitizeTrkey(trkey)}|tt">
                     <i class="far fa-circle-info"></i>
             </div>
             </div>`;
@@ -163,6 +163,8 @@ class Card {
         t.parentElement.querySelector('i').classList.toggle('fa-square', t.value === 'false');
         t.parentElement.querySelector('i').classList.toggle('fa-square-check', t.value === 'true');
     }
+
+    static sanitizeTrkey(trkey) { return trkey.replaceAll('&', '&amp;'); }
 }
 
 class HTMLDataCard extends Card {
@@ -367,7 +369,7 @@ class HeaderCard extends Card {
                     ${Card.renderTextField(this, 'title', 'title')}
                     ${Card.renderTextareaField(this, 'description', 'description')}
                     ${Card.renderImageField(this, 'bg', 'backgroundImg')}
-                    ${Card.renderDropdown(this, 'style', 'style', [['style1', 'style_1'], ['style2', 'style_2']])}
+                    ${Card.renderDropdown(this, 'style', 'style', [['style1', 'style_x&#1'], ['style2', 'style_x&#2']])}
                     ${this.style !== 'style2' ? '' : Card.renderImageField(this, 'icon', 'headingIcon')}
                 </div>
             </div>`;
@@ -650,7 +652,7 @@ class GalleryCard extends Card {
                 <div class="card-content">
                     ${Card.renderTextField(this, 'heading', 'heading')}
                     ${Card.renderAdvancedSection(this, Card.renderInfoTo(Card.renderTextField(this, 'section_id', 'sectionId'), 'section_id_tt'))}
-                    ${Card.renderDropdown(this, 'style', 'style', [['style1', 'style_1'], ['style2', 'style_2']])}
+                    ${Card.renderDropdown(this, 'style', 'style', [['style1', 'style_x&#1'], ['style2', 'style_x&#2']])}
                     ${Card.renderDropdown(this, 'gallery_cols', 'galleryCols', [['1', '#1'], ['2', '#2'], ['3', '#3'], ['4', '#4'], ['5', '#5']])}
                     ${Card.renderDropdown(this, 'image_size', 'imageSize', [['small', 'small'], ['normal', 'normal'], ['large', 'large']])}
                     ${Card.renderNestedCards(this, 'image_list', 'imageCards', Card.renderAddButtonSingle(this, 'imageCards', 'ImageCard'))}

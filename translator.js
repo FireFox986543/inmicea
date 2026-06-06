@@ -3,9 +3,9 @@ let language = 0; // By default it's english
 const _translateTable = {
     "_empty_": [' ', ' '],
 
-    "lang": ['English', 'Hungarian'],
-    "english": ['English', 'Angol'],
-    "hungarian": ['Hungarian', 'Magyar'],
+    "lang": ['English', 'Magyar'],
+    "english": ['English'],
+    "hungarian": ['Magyar'],
     "tit1": ['INMICEA – Master webpage generator', 'INMICEA – Professzionális weboldal generátor'],
     "tit2": ['The new generation webpage generator', 'Az új generációs weboldal generátor'],
     "save": ['Save', 'Mentés'],
@@ -14,12 +14,25 @@ const _translateTable = {
     "preview": ['Preview', 'Előnézet'],
     "undo": ['Undo changes', 'Visszavonás'],
     "redo": ['Redo changes', 'Újra'],
+    "discard": ['Discard', 'Elvetés'],
+    "cancel": ['Cancel', 'Mégse'],
     "collapse_expand": ['Collapse/expand all', 'Kártyák kinyitása/becsukása'],
 
-    "restore_tit": ['Continue previous session?', 'Folytatja az előző projektet?'],
-    "restore_desc": [`There's saved data from last time. Would you like to continue, or start a new one?`, 'Szeretné folytatni az előző szerkesztést vagy újat kezdeni?'],
+    "restore_tit": ['Continue previous draft?', 'Folytatja az előző piszkozatot?'],
+    "restore_desc": [`There's a draft that hasn't been saved yet. Would you like to continue editing or to discard this draft?`, 'Szeretné folytatni az előző piszkozatot vagy újat kezdeni?'],
     "restore_cont": ['Continue editing', 'Szerkesztés folytatása'],
     "restore_new": ['Start new', 'Új kezdése'],
+    "restore_fail_title": ['Restoring failed', 'Sikertelen betöltés'],
+    "restore_fail_desc": ['Failed to restore your previous work.', 'Nem sikerült előző munkáját betölteni.'],
+    "discard_before_title": ['Discard draft?', 'Elveti a piszkozatát?'],
+    "discard_before_continue": ['Would you like to discard this draft in order to {0}?', 'Elveti ezt a piszkozatot hogy {0}?'],
+
+    "discard_in0": ['create a new project', 'új projektet hozzon létre'],
+    "discard_in1": ['create a new draft', 'új piszkozatot hozzon létre'],
+    "discard_in2": ['switch to another project', 'másik projektre váltson'],
+
+    "please_save": ['You must save your draft before loading or creating projects.', 'Mielőtt új projektet hoz létre vagy megynit el kell mentenie a jelenlegi piszkozatát.'],
+    "info": ['Information', 'Információ'],
 
     "autofill": ['Autofill', 'Gyors kitöltés'],
     "move_down": ['Move down', 'Lefelé mozdítás'],
@@ -29,6 +42,7 @@ const _translateTable = {
     "rename": ['Rename', 'Átnevezés'],
     "add_card": ['Add new card', 'Kárty hozzáadása'],
     "create_project": ['Create new project', 'Új projekt létrehozása'],
+    "create_draft": ['Create new draft', 'Új piszkozat létrehozása'],
     "enter_pname": ['Enter project name: ', 'Írja ide a projekt nevét: '],
     "pname_invalid": ['Invalid project name!', 'Érvénytelen projekt név'],
     "pname_exists": ['Project with that name already exists!', 'Már létezik egy projekt ezzel a névvel!'],
@@ -41,6 +55,8 @@ const _translateTable = {
     "copy": ['Copy', 'Másolat'],
     "copy_cb": ['Copy to clipboard', 'Másolás vágólapra'],
     "paste_cb": ['Paste from clipboard', 'Beillesztés vágólapról'],
+    "invalid_paste": ["Can't paste card here.", 'A beillesztés ezen nem végrehajtható.'],
+    'ok': ['Ok', 'Ok'],
 
     "html_data_card": ['HTML Data Card', 'HTML Adat Kártya'],
     "css_data_card": ['CSS Data Card', 'CSS Adat Kártya'],
@@ -123,11 +139,7 @@ const _translateTable = {
     "title": ['Title', 'Cím'],
     "description": ['Description', 'Leírás'],
     "style": ['Style', 'Stílus'],
-    "style_1": ['Style 1', 'Stílus 1.'],
-    "style_2": ['Style 2', 'Stílus 2.'],
-    "style_3": ['Style 3', 'Stílus 3.'],
-    "style_4": ['Style 4', 'Stílus 4.'],
-    "style_5": ['Style 5', 'Stílus 5.'],
+    "style_x": ['Style {0}', 'Stílus {0}.'],
 
     "heading_top_tt": ['Should the header be placed as the first element?', 'A címsort a legelső elemként helyezzük el?'],
     "heading_top": ['Display heading at top', 'Címsor fenti elhelyezése'],
@@ -151,29 +163,29 @@ const _translateTable = {
     "ena_zoom": ['Enable zooming', 'Zoomolás engedélyezése'],
     "ena_zoom_tt": ['Can the user click on it to show a scaled version on screen?', 'Rá tud-e kattintani a felhasználó, hogy egy nagyobb képet megjeleníthessen?'],
     "level": ['Level', 'Szint'],
-    "h2": ['H2', 'H2'],
-    "h3": ['H3', 'H3'],
-    "h4": ['H4', 'H4'],
-    "h5": ['H5', 'H5'],
-    "h6": ['H6', 'H6'],
+    "h2": ['H2'],
+    "h3": ['H3'],
+    "h4": ['H4'],
+    "h5": ['H5'],
+    "h6": ['H6'],
     "google_maps_link": ['Google Maps link', 'Google Maps link'],
     "google_maps_link_tt": ['Link used for displaying google maps if required, unless leave empty.', 'Egy Google maps link, amivel megjeleníthető a térkép, amennyiben szükséges.'],
     "display_dir": ['Display direction', 'Megjelenítés iránya'],
     "contact_infos": ['Contact infos', 'Kapcsolati inforációk'],
     "horizontal": ['Horizontal', 'Vízszintes'],
     "vertical": ['Vertical', 'Függöleges'],
-    "email": ['Email', 'Email'],
+    "email": ['Email'],
     "location": ['Location', 'Helyszín'],
     "telephone": ['Telephone', 'Telefon'],
-    "facebook": ['Facebook', 'Facebook'],
-    "youtube": ['YouTube', 'YouTuve'],
-    "twitter": ['Twitter', 'Twitter'],
-    "instagram": ['Instagram', 'Instagram'],
+    "facebook": ['Facebook'],
+    "youtube": ['YouTube'],
+    "twitter": ['Twitter'],
+    "instagram": ['Instagram'],
     "custom": ['Custom', 'Egyedi'],
     "custom_icon": ['Custom icon', 'Egyedi ikon'],
     "name": ['Name', 'Név'],
     "value": ['Value', 'Érték'],
-    "link": ['Link', 'Link'],
+    "link": ['Link'],
     "link_tt": ['The link used for anchor tags, unless leave empty.', 'Egy link a hiperhivatkozásokhoz. Hagyja üresen, ha nem szándékoz rá hivatkozni.'],
     "top_text": ['Top text', 'Felső szöveg'],
     "has_name": ['Has name field', 'Van név mező'],
@@ -182,7 +194,7 @@ const _translateTable = {
     "has_org": ['Has organization field', 'Van vállalat mező'],
     "has_loc": ['Has location field', 'Van lakcím mező'],
     "has_msg": ['Has message field', 'Van üzenet mező'],
-    "html": ['HTML', 'HTML'],
+    "html": ['HTML'],
     "gallery_cols": ['Gallery columns number', 'Galléria oszlopok száma'],
 
     "def_wbpt": ['My first webpage', 'Az én első weboldalam'],
@@ -206,9 +218,19 @@ window.localStorage.setItem('lang', language);
 translateWholePage();
 
 function translate(key, fallback = 'Invalid key!') {
+    // Remove additional target indicators e.g: |tt
+    const targetPartIdx = key.indexOf('|');
+    if (targetPartIdx !== -1)
+        key = key.substring(0, targetPartIdx);
+
     // These are absolute strings - they don't need to be translated
-    if(key.startsWith('#'))
+    if (key.startsWith('#'))
         return key.substring(1, key.length);
+
+    // Search for sub parts
+    const sub = key.split('&');
+    // This will be the actual translation key
+    key = sub[0];
 
     const arr = _translateTable[key];
 
@@ -218,10 +240,22 @@ function translate(key, fallback = 'Invalid key!') {
     }
 
     // Fallback to english now
-    if(arr.length > 0)
+    if (arr.length > 0)
         fallback = arr[0];
 
-    return arr[language] || fallback;
+    let output = arr[language];
+
+    // No sub parts
+    if (sub.length === 1)
+        return output || fallback;
+
+    // Handle sub parts
+    for (let i = 1; i < sub.length; i++) {
+        const s = sub[i];
+        output = output.replaceAll(`{${i - 1}}`, translate(s));
+    }
+
+    return output;
 }
 
 function translateWholePage() {

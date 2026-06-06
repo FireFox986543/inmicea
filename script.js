@@ -11,6 +11,8 @@ let currentDirty = false;
 let history = [];
 let historyAt = 0;
 
+let modalActions = [];
+
 {
     let t = window.localStorage.getItem('theme');
 
@@ -45,26 +47,20 @@ else
 }
 
 if (window.localStorage.getItem('draftProject')) {
-    showModal();
+    showModal('restore_tit', 'restore_desc', [['restore_cont', () => { restoreSession(); }], ['restore_new', () => { createNew(); }]]);
 }
 
 function toggleSidebar(t) {
     t.parentElement.classList.toggle('collapsed');
 }
 
-function showModal() {
-    document.getElementById('modal').classList.remove('hidden');
-}
-function hideModal() {
-    document.getElementById('modal').classList.add('hidden');
-}
 function restoreSession() {
     try {
         const s = window.localStorage.getItem('draftProject');
         constructNewCardsFrom(JSON.parse(s));
         currentDirty = true;
     } catch (error) {
-        alert('Failed to restore previous session!');
+        showModal('restore_fail_title', 'restore_fail_desc');
         console.error(error);
     }
     finally {
@@ -241,15 +237,13 @@ function pasteCard(id) {
     const targetCard = findNestedCard(id);
     const cb = window.localStorage.getItem('clipboard');
 
-    console.log('Pasting card ', cb);
-
     if (!cb || !targetCard)
         return;
 
     const o = JSON.parse(cb);
 
     if (o.cardType !== targetCard.cardType) {
-        console.log('Haha mismathching typess');
+        /* hdqadgf  invalid_paste*/
         return;
     }
 
@@ -355,7 +349,7 @@ function newIdsForCardObject(c, topLevelNewId = true) {
             if (!Object.hasOwn(o, k)) continue;
 
             const v = o[k];
-            
+
             if (k.endsWith('Cards') && Array.isArray(v)) {
                 const thisNesting = { id: myID, list: k };
                 const nestArray = [];
@@ -540,20 +534,20 @@ function renderProjectList() {
 }
 function getProject(pid) { return projects.find(x => x.id === pid); }
 function addProject(preserve = false) {
+    // This is a draft, and also there are changes!
+    if (isDraft() && !preserve) {
+        showModal('discard_before_title', 'discard_before_continue&discard_in0');
+        return;
+    }
+
     const pName = prompt(translate('enter_pname'), translate('pname_def'));
 
     if (pName == null || pName === '') {
-        alert(translate('pname_invalid'));
+        showModal('info', 'pname_invalid');
         return;
     }
     if (projects.find(p => p.name === pName)) {
-        alert(translate('pname_exists'));
-        return;
-    }
-
-    // This is a draft, and also there are changes!
-    if (currentProject == null && currentDirty && !preserve) {
-        alert('PLZ Save everything bfore trying to load other projectcies!');
+        showModal('info', 'pname_exists');
         return;
     }
 
@@ -588,8 +582,8 @@ function loadProject(pid) {
         throw new Error("Failed to load project with id: " + pid);
 
     // This is a draft, and also there are changes!
-    if (currentProject == null && currentDirty) {
-        alert('PLZ Save everything bfore trying to load other projectcies!');
+    if (isDraft()) {
+        showModal('discard_before_title', 'discard_before_continue&discard_in2');
         return;
     }
 
@@ -610,12 +604,12 @@ function renameProject(pid) {
     const newName = prompt(translate('project_rename'), translate('prename_def'));
 
     if (newName == null || newName === '') {
-        alert(translate('pname_invalid'));
+        showModal('info', 'pname_invalid');
         return;
     }
 
     if (newName === p.name || projects.find(p => p.name === newName)) {
-        alert(translate('pname_exists'));
+        showModal('info', 'pname_exists');
         return;
     }
 
@@ -644,7 +638,7 @@ function deleteProject(pid) {
     const response = prompt(translate('project_delete'));
 
     if (response !== translate('yes')) {
-        alert(translate('project_delete_fail'));
+        showModal('info', 'project_delete_fail');
         return;
     }
 
@@ -690,4 +684,58 @@ function saveCurrentDraft() {
     }
     else
         saveCurrentProject();
+}
+
+function createDraft() {
+    if (isDraft()) {
+        showModal('discard_before_title', 'discard_before_continue&discard_in1', [['cancel', () => { }], ['discard', () => {
+            switchToDraft();
+        }]]);
+    }
+}
+function switchToDraft() {
+    showDefaultDraft();
+    currentProject = null;
+    currentDirty = false;
+    window.localStorage.removeItem('currentProject');
+}
+function isDraft() { return currentProject === null && currentDirty; }
+
+
+
+/* MODALS */
+function showModal(title, desc, buttons) {
+    const modal = document.getElementById('modal');
+    modal.classList.remove('hidden');
+
+    modal.querySelector('h1').textContent = translate(title);
+    modal.querySelector('p').textContent = translate(desc);
+
+    buttons = buttons && Array.isArray(buttons) && buttons.length > 0 ? buttons : [['ok', () => { }]];
+
+    let b = document.getElementById('modal-button-0');
+    b.textContent = translate(buttons[0][0])
+    modalActions[0] = buttons[0][1];
+
+    b = document.getElementById('modal-button-1');
+
+    if (buttons.length === 2) {
+        b.classList.remove('hidden');
+        b.textContent = translate(buttons[1][0])
+        modalActions[1] = buttons[1][1];
+    }
+    else
+        b.classList.add('hidden');
+}
+function hideModal() {
+    const modal = document.getElementById('modal');
+    modal.classList.add('hidden');
+}
+
+function modalButtonClicked(btn) {
+    const act = modalActions[btn];
+    if (act && typeof act === 'function') {
+        act();
+        hideModal();
+    }
 }

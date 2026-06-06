@@ -24,6 +24,7 @@
             </div>
             <div class="toolbar-buttons toolbar-hiding">
                 <button type="button" class="control-btn tooltip" tooltip-text="Create new project" data-trkey="create_project|tt" onclick="addProject()"><i class="fas fa-plus"></i></button>
+                <button type="button" class="control-btn tooltip" tooltip-text="Create new draft" data-trkey="create_draft|tt" onclick="createDraft()"><i class="fas fa-sheet-plastic"></i></button>
             </div>
             <div class="toolbar-hiding" id="project-container">
             </div>
@@ -84,11 +85,11 @@
 
     <div id="modal" class="hidden">
         <div class="content">
-            <h1 data-trkey="restore_tit">Continue previous session?</h1>
-            <p data-trkey="restore_desc">There's saved data from last time. Would you like to continue, or start a new one?</p>
+            <h1></h1>
+            <p></p>
             <div class="modal-btns">
-                <button type="button" class="control-btn white-btn" onclick="restoreSession();" data-trkey="restore_cont">Continue editing</button>
-                <button type="button" class="control-btn red-btn" onclick="createNew();" data-trkey="restore_new">Start new</button>
+                <button type="button" id="modal-button-0" class="control-btn white-btn" onclick="modalButtonClicked(0)"></button>
+                <button type="button" id="modal-button-1" class="control-btn red-btn" onclick="modalButtonClicked(1)"></button>
             </div>
         </div>
     </div>

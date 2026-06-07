@@ -113,13 +113,13 @@ class Card {
                 </div>`;
     }
     static renderAddButtonSingle(t, list, cardType) {
-        return `<button type="button" class="control-btn tooltip" tooltip-text="${translate('add_card')}"  data-trkey="add_card|tt" onclick="event.stopPropagation(); addCardIntoList('${t.id}', '${list}', new ${cardType}({ id: '${t.id}', list: '${list}' }))"><i class="fas fa-plus"></i></button>`;
+        return `<button type="button" class="control-btn tooltip" tooltip-text="${translate('add_card')}" data-trkey="add_card|tt" onclick="event.stopPropagation(); addCardIntoList('${t.id}', '${list}', new ${cardType}({ id: '${t.id}', list: '${list}' }))"><i class="fas fa-plus"></i></button>`;
     }
     static renderAddButtonMultiple(t, list, options) {
         let inner = '';
         options.forEach(([trkey, icon, type]) => inner += `<div class="selector-option" onclick="event.stopPropagation(); addCardIntoList('${t.id}', '${list}', new ${type}({ id: '${t.id}', list: '${list}' }));"><i class="fas ${icon}"></i> <span data-trkey="${Card.sanitizeTrkey(trkey)}">${translate(trkey)}</span></div>`)
 
-        return `<button type="button" class="control-btn selector-btn">
+        return `<button type="button" class="control-btn selector-btn" onclick="event.stopPropagation();">
                     <i class="fas fa-plus"></i>
                     <div class="dropover-selector-wrapper">
                         <div class="dropover-selector">

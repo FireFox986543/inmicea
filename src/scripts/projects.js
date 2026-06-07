@@ -56,16 +56,18 @@ function renderProjectList() {
     });
 
     pc.innerHTML = html;
+    const displayer = document.getElementById('current-project-displayer')
+    displayer.classList.toggle('hidden', !currentProject);
+    displayer.textContent = currentProject ? getProject(currentProject).name : '';
 }
 
 function getProject(pid) { return projects.find(x => x.id === pid); }
 function addProject(preserve = false) {
     const pName = prompt(translate('enter_pname'), translate('pname_def'));
 
-    if (pName == null || pName === '') {
-        modals.showModal('info', 'pname_invalid');
-        return false;
-    }
+    if (!warnIfIncorrectName(pName, 50))
+        return;
+
     if (projects.find(p => p.name === pName)) {
         modals.showModal('info', 'pname_exists');
         return false;
@@ -130,10 +132,8 @@ function renameProjectBtnClick(pid) {
 
     const newName = prompt(translate('project_rename'), translate('prename_def'));
 
-    if (newName == null || newName === '') {
-        modals.showModal('info', 'pname_invalid');
+    if (!warnIfIncorrectName(newName, 50))
         return;
-    }
 
     if (newName === p.name || projects.find(p => p.name === newName)) {
         modals.showModal('info', 'pname_exists');

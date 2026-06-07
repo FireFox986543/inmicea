@@ -47,6 +47,7 @@ const _translateTable = {
     "create_draft": ['Create new draft', 'Új piszkozat létrehozása'],
     "enter_pname": ['Enter project name: ', 'Írja ide a projekt nevét: '],
     "pname_invalid": ['Invalid project name!', 'Érvénytelen projekt név'],
+    "pname_too_long": ['Project name is too long (max 50)!', 'A projekt neve túl hosszú (max 50 betű)!'],
     "pname_exists": ['Project with that name already exists!', 'Már létezik egy projekt ezzel a névvel!'],
     "pname_def": ['My best project', 'A legjobb projektem'],
     "project_delete": ['Enter the word "yes" to delete this project: ', 'Írja be az "igen" szót ahoz, hogy megsemmisítse a projektet: '],

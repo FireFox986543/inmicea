@@ -10,8 +10,9 @@
     <link rel="stylesheet" href="src/inmicea-page/fontawesome/css/regular.css">
     <link rel="stylesheet" href="src/inmicea-page/fontawesome/css/solid.css">
     <link rel="stylesheet" href="src/inmicea-page/fontawesome/css/brands.css">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="src/style.css">
     <link rel="shortcut icon" href="src/favicon.png" type="image/x-icon">
+    <script src="src/scripts/interface.js"></script>
 </head>
 
 <body>
@@ -28,8 +29,9 @@
             </div>
             <div class="toolbar-hiding" id="project-container">
             </div>
+            <div class="toolbar-collapsed-panel toolbar-hiding-reversed hidden" id="current-project-displayer"></div>
         </div>
-        <div style="flex-grow: 1;">
+        <div style="flex-grow: 1; min-width: 0;">
             <header>
                 <h1>INMICEA</h1>
                 <h2 data-trkey="tit2">The new generation webpage generator</h2>
@@ -54,7 +56,7 @@
                         <button type="button" class="control-btn purple-btn tooltip" tooltip-text="Save" data-trkey="save|tt" onclick="saveBtnClick()"><i class="fas fa-save"></i></button>
                         <button type="button" class="control-btn blue-btn tooltip" tooltip-text="Download" data-trkey="download|tt" onclick="downloadPage()"><i class="fas fa-file-arrow-down"></i></button>
                         <button type="button" class="control-btn blue-btn tooltip" tooltip-text="Open in newtab" data-trkey="open_newtab|tt" onclick="previewNewPage()"><i class="fas fa-arrow-up-right-from-square"></i></button>
-                        <button type="button" class="control-btn green-btn" onclick="preview()"><i class="fas fa-play"></i> <span data-trkey="preview">Preview</span></button>
+                        <button type="button" class="control-btn green-btn" onclick="preview()"><i class="fas fa-play"></i> <span data-trkey="preview" class="hide-800">Preview</span></button>
                         <div style="flex-grow: 1;"></div>
                         <button type="button" class="control-btn tooltip" tooltip-text="Undo changes" data-trkey="undo|tt" onclick="historyUndo()"><i class="fas fa-arrow-turn-left"></i></button>
                         <button type="button" class="control-btn tooltip" tooltip-text="Redo changes" data-trkey="redo|tt" onclick="historyRedo()"><i class="fas fa-arrow-turn-right"></i></button>
@@ -97,7 +99,6 @@
     <script src="src/scripts/helpers.js"></script>
     <script src="src/scripts/translator.js"></script>
     <script src="src/scripts/cards.js"></script>
-    <script src="src/scripts/interface.js"></script>
     <script src="src/scripts/script.js"></script>
     <script src="src/scripts/projects.js"></script>
 </body>

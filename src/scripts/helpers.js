@@ -12,5 +12,21 @@ function arrayDeleteAt(arr, idx) {
 function arrayMoveTo(arr, old_index, new_index) {
     arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
 };
+function warnIfIncorrectName(n, max) {
+    n = n ? removeMultispace(n) : null;
+    if (!n || n === '') {
+        modals.showModal('info', 'pname_invalid');
+        return false;
+    }
+    if (n.length > max) {
+        modals.showModal('info', 'pname_too_long');
+        return false;
+    }
+
+    return true;
+}
+function removeMultispace(s) {
+    return s.replace(/\s+/g, ' ').trim();
+}
 
 function cardButtonEligibleForClick(btn) { return btn && btn.computedStyleMap().get('opacity').value > .8; }

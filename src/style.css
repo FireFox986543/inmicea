@@ -39,6 +39,9 @@
 
     --dark-light-button: '\f186';
     --dark-light-button-color: #12308a;
+
+
+    --card-gutter: .77rem;
 }
 
 :root.dark-mode {
@@ -84,13 +87,13 @@ body {
     font-size: 1.3em;
     scroll-behavior: smooth;
     scrollbar-color: var(--dark) transparent;
+    height: 100dvh;
 }
 
 body {
     font-size: 1rem;
     background-color: var(--background);
     color: var(--text);
-    height: 100dvh;
 }
 
 header {
@@ -115,8 +118,8 @@ header h2 {
 }
 
 header a.float-button {
-    width: 50px;
-    height: 50px;
+    width: 2.4rem;
+    height: 2.4rem;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -168,7 +171,7 @@ main {
     display: flex;
     gap: 8px;
     background-color: var(--background);
-    padding: 16px;
+    padding: var(--card-gutter);
     height: calc(100% - 65px);
 }
 
@@ -178,6 +181,7 @@ main {
     border: 1px solid var(--border);
     border-radius: 4px;
     flex: 50%;
+    min-width: 0;
 }
 
 #viewer {
@@ -219,8 +223,8 @@ iframe {
 .card-container {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 16px;
+    gap: var(--card-gutter);
+    padding: var(--card-gutter);
     flex-grow: 1;
     overflow: hidden auto;
 }
@@ -255,8 +259,8 @@ iframe {
 
 .card.collapsed {
     overflow: hidden;
-    min-height: 60px;
-    max-height: 60px;
+    min-height: 2.88rem;
+    max-height: 2.88rem;
 }
 
 .card.collapsed .selector-btn {
@@ -294,7 +298,7 @@ iframe {
 }
 
 .card .card-content {
-    padding: 4px 16px 16px;
+    padding: 4px var(--card-gutter) var(--card-gutter);
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -310,7 +314,7 @@ iframe {
     text-align: left;
     display: flex;
     align-self: center;
-    height: 60px;
+    height: 2.88rem;
     cursor: pointer;
     user-select: none;
     -moz-user-select: none;
@@ -321,6 +325,7 @@ iframe {
     flex-grow: 1;
     display: flex;
     align-items: center;
+    white-space: nowrap;
 }
 
 .card .card-toolbar .card-right {
@@ -446,6 +451,7 @@ textarea,
     flex-grow: 1;
     height: 40px;
     border-radius: 4px;
+    min-width: 0;
 }
 
 textarea.vertical-resize {
@@ -751,13 +757,16 @@ textarea.vertical-resize {
 }
 
 #modal .content {
-    min-width: 600px;
     min-height: 500px;
     background-color: var(--background);
     border-radius: 8px;
     padding: 40px;
     display: flex;
     flex-direction: column;
+    width: 600px;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0 20px;
 }
 
 #modal p {
@@ -767,9 +776,9 @@ textarea.vertical-resize {
 #modal h1 {
     font-size: 2rem;
     color: var(--text);
-    padding-bottom: 16px;
+    padding-bottom: var(--card-gutter);
     border-bottom: 1px solid var(--border);
-    margin-bottom: 16px;
+    margin-bottom: var(--card-gutter);
 }
 
 #modal .modal-btns {
@@ -793,7 +802,7 @@ textarea.vertical-resize {
     width: 320px;
     overflow: hidden;
     border-right: 1px solid var(--dark);
-    margin-right: 16px;
+    margin-right: var(--card-gutter);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -863,10 +872,45 @@ textarea.vertical-resize {
     transition: opacity 60ms ease-out;
 }
 
+.toolbar-panel .toolbar-hiding-reversed {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 60ms ease-out;
+}
+
+.toolbar-panel.collapsed .toolbar-hiding-reversed {
+    opacity: 1;
+    pointer-events: all;
+    transition: opacity .2s .2s ease-out;
+}
+
 .toolbar-buttons {
     display: flex;
     gap: 8px;
     margin: 12px 0 20px;
+}
+
+.toolbar-collapsed-panel {
+    position: absolute;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    top: 80px;
+    font-size: .8rem;
+    color: var(--text);
+    background-color: var(--background-darker);
+    width: 40px;
+    margin: 0 auto;
+    max-width: 90%;
+    padding: 1rem .5rem;
+    height: auto;
+    max-height: 320px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    border-radius: 4px;
+    user-select: none;
+    -moz-user-select: none;
+    -webkit-user-drag: none;
 }
 
 #project-container {
@@ -932,4 +976,57 @@ textarea.vertical-resize {
 
 .project .dropover-selector {
     margin-right: 32px;
+}
+
+
+@media only screen and (max-width: 1296px) {
+    html, body {
+        font-size: 1.1em;
+    }
+    .card .card-field>span:first-child {
+        min-width: 200px;
+    }
+}
+@media only screen and (max-width: 1000px) {
+    html, body {
+        font-size: 1em;
+    }
+}
+@media only screen and (max-width: 800px) {
+    html, body {
+        font-size: .9em;
+    }
+    .card .card-field>span:first-child {
+        min-width: 170px;
+    }
+
+    .hide-800 { display: none !important;}
+}
+@media only screen and (max-width: 600px) {
+    .toolbar-panel {
+        margin-right: 0;
+    }
+    .toolbar-panel.collapsed {
+        min-width: 30px !important;
+        width: 30px !important;
+        max-width: 30px !important;
+    }
+    .toolbar-panel.collapsed .flippy-btn {
+        right: 0;
+        padding: 0;
+        padding-right: 6px;
+        text-align: right;
+    }
+    .toolbar-top {
+        display: none !important;
+    }
+
+    :root {
+        --card-gutter: .4rem;
+    }
+
+    header :is(h1, h2) {
+        text-align: right !important;
+        padding-right: 32px;
+    }
 }

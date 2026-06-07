@@ -76,6 +76,13 @@ const _translateTable = {
     "contact_form_card": ['Contact Form Card', 'Kapcsolati Űrlap Kártya'],
     "raw_html_card": ['Raw HTML Card', 'RAW HTML Kártya'],
     "gallery_card": ['Gallery Card', 'Galléria Kártya'],
+    "media_card": ['Media Card', 'Média Kártya'],
+    "video_in": ['Video - {0}', 'Videó - {0}'],
+    "audio": ['Audio', 'Hang'],
+    "url": ['URL'],
+    "media_tt_video": ['The URL linked to a local video file, possibly from the src folder of the project.', 'Az URL egy helyi videó fájl hivazkozásához, lehetőleg a SRC mappán belül.'],
+    "media_tt_youtube": ['The URL for a youtube video.', 'Az URL egy youtube videóhoz.'],
+    "media_tt_audio": ['The URL linked to a local audio file, possibly inside the SRC folder of the project.', `Az URL egy helyi hang fájl hivazkozásához, lehetőleg a SRC mappán belül.`],
 
     "fa_key_info": ['A fontawesome icon key', 'Egy fontawesome ikon azonosító'],
     "advanced": ['Advanced', 'Haladó'],
@@ -199,6 +206,8 @@ const _translateTable = {
     "has_msg": ['Has message field', 'Van üzenet mező'],
     "html": ['HTML'],
     "gallery_cols": ['Gallery columns number', 'Galléria oszlopok száma'],
+    "file": ['File', 'Fájl'],
+    "media_type": ['Media type', 'Média típus'],
 
     "def_wbpt": ['My first webpage', 'Az én első weboldalam'],
     "def_wbpa": ["It's me", 'Én vagyok'],

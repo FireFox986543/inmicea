@@ -117,6 +117,8 @@ function handleCard(card) {
             return `<h${card.level}>${card.heading}</h${card.level}>`;
         case 'GalleryCard':
             return handleGalleryCard(card);
+        case 'MediaCard':
+            return handleMediaCard(card);
         default:
             return renderRenderError("Failed to construct card from given type: " + type);
     }
@@ -131,9 +133,9 @@ function handleNavCard(c) {
 }
 function handleNavSubCards(arr) {
     const getMenuName = (c) => {
-        if(c.iconType === 'image')
+        if (c.iconType === 'image')
             return `<img src="${c.iconHref}" class="nav-icon"> ${c.menuName}`;
-        else if(c.iconType === 'fa')
+        else if (c.iconType === 'fa')
             return `<i class="${c.iconFa}"></i> &nbsp; ${c.menuName}`;
         else
             return c.menuName;
@@ -310,7 +312,7 @@ function handleContactForm(card) {
 }
 
 function handleGalleryCard(card) {
-    if(card.style === 'style2') {
+    if (card.style === 'style2') {
         let colAmount = Math.min(card.galleryCols, card.imageCards.length);
         let cols = new Array(colAmount);
         let inner = '';
@@ -322,7 +324,7 @@ function handleGalleryCard(card) {
         cols.forEach(c => {
             let thisInner = '';
             //c.forEach(c => { thisInner += `<div class="gallery-item">${c}</div>`; });
-            c.forEach(c => { thisInner += c; }); 
+            c.forEach(c => { thisInner += c; });
 
             inner += `<div class="gallery-column">
                         ${thisInner}
@@ -353,6 +355,27 @@ function handleGalleryCard(card) {
                     ${inner}
                 </section>
             </section>`;
+}
+
+function handleMediaCard(card) {
+    let mid = '';
+    if (card.type === 'youtube')
+        mid = `<iframe width="100000" height="100000" src="https://www.youtube-nocookie.com/embed/${getYTID(card.url) || '0'}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen style="width: 100%; max-width: 600px; height: auto; aspect-ratio: 16 / 9; margin: 0 auto;"></iframe>`
+    else if (card.type === 'video')
+        mid = `<video width="100000" height="100000" src="${card.url}" controls style="width: 100%; max-width: 600px; height: auto; aspect-ratio: 16 / 9; margin: 0 auto;"></video>`;
+    else
+        mid = `<audio src="${card.url}" controls></audio>`;
+
+    return `<section class="main" id="${card.sectionId}">
+                ${mid}
+            </section>`;
+}
+
+function getYTID(s) {
+    if (s.length === 11)
+        return s;
+
+    return /v=([a-zA-Z0-9_\-]{11})/.exec(s)[1];
 }
 
 function renderRenderError(err) {

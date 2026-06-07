@@ -629,6 +629,7 @@ class RawHTMLCard extends Card {
             </div>`;
     }
 }
+
 class GalleryCard extends Card {
     constructor() {
         super();
@@ -661,6 +662,34 @@ class GalleryCard extends Card {
     }
 }
 
+class MediaCard extends Card {
+    constructor(nesting) {
+        super(nesting);
+        this.cardType = 'MediaCard';
+        this.cardTitle = 'media_card';
+        this.icon = 'fa-cassette-tape';
+
+        this.type = 'file';
+        this.url = '';
+        this.sectionId = '';
+    }
+    onPropertyUpdate(hook) {
+        if(hook === 'type')
+            renderCard(this);
+    }
+
+    render() {
+        return `${Card.beginCard(this)}
+                ${Card.renderCardToolbar(this, true)}
+                <div class="card-content">
+                    ${Card.renderDropdown(this, 'media_type', 'type', [['video', 'video_in&file'], ['youtube', 'video_in&youtube'], ['audio', 'audio']])}
+                    ${Card.renderInfoTo(Card.renderTextField(this, 'url', 'url'), 'media_tt_' + this.type)}
+                    ${Card.renderAdvancedSection(this, Card.renderInfoTo(Card.renderTextField(this, 'section_id', 'sectionId'), 'section_id_tt'))}
+                </div>
+            </div>`;
+    }
+}
+
 function newCardFromType(type) {
     switch (type) {
         case 'HTMLDataCard': return new HTMLDataCard();
@@ -678,6 +707,7 @@ function newCardFromType(type) {
         case 'RawHTMLCard': return new RawHTMLCard();
         case 'HTMLHeadingCard': return new HTMLHeadingCard();
         case 'GalleryCard': return new GalleryCard();
+        case 'MediaCard': return new MediaCard();
         default:
             throw new Error("Failed to construct card from given type: " + type);
     }
